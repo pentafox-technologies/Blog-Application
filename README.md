@@ -1,2 +1,2 @@
 # Blog-Application
-A full stack responsive blog creation application
+A full stack responsive blog creation application using PERN stack
