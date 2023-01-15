@@ -1,26 +1,21 @@
 import express from "express";
-import pg from "pg";
-import dotenv from "dotenv";
+import db from "./db.js";
+import bodyparser from "body-parser";
 
-dotenv.config();
 
-const dbConnect = async() => {
-    const Pool = pg.Pool
-    try{
-        const pool = new Pool({
-            user: process.env.PGUSER,
-            host: process.env.PGHOST,
-            database: process.env.PGDATABASE,
-            password: process.env.PGPASSWORD,
-            port: process.env.PGPORT,
-        });
-        await pool.connect()
-        pool.query(`select * from "User"`, (err,res) => {
-            if(err) console.log(err.message);
-            else console.log(res.rows)
-        })
-    }
-    catch(err){console.log(err.message);}
-}
+const app = express();
 
-dbConnect();
+const PORT = 5000;
+
+
+app.use(bodyparser.json());
+app.use(express.json());
+
+app.listen(PORT, function () {
+console.log('Server is running on PORT:', PORT);
+});
+
+db.query(`select * from "User"`, (err,res) => {
+    if(err) console.log(err.message);
+    else console.log(res.rows)
+})
