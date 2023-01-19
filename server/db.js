@@ -1,4 +1,3 @@
-
 import pg from "pg";
 import dotenv from "dotenv";
 
@@ -12,7 +11,7 @@ const config = ({
     port: process.env.PGPORT,
 });
 
-const Pool = pg.Pool
+const Pool = pg.Pool;
 let db = new Pool(config);
 
 

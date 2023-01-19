@@ -18,4 +18,4 @@ console.log('Server is running on PORT:', PORT);
 db.query(`select * from "User"`, (err,res) => {
     if(err) console.log(err.message);
     else console.log(res.rows)
-})
+});
