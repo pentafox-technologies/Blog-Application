@@ -1,16 +1,28 @@
-const express = require('express');
+const express=require('express');
 const bodyparser=require('body-parser');
+// import bodyparser from "body-parser";
+
 
 const app=express();
 
-const articleRouter = require('./routes/articleRoute');
-const categoryRouter = require('./routes/categoryRoute');
-const userRouter = require('./routes/userRoute');
+const articleRouter=require('./routes/articleRoute');
+const categoryRouter=require('./routes/categoryRoute');
+const userRouter=require('./routes/userRoute');
 const supportRouter=require('./routes/supportRoute');
+// import supportRouter from "./routes/supportRoute.js"
+// import categoryRouter from "./routes/categoryRoute.js"
+
+app.use(express.json({limit: '10kb'}));
+app.use(express.urlencoded({extended: true, limit: '10kb'}));
+// app.use(morgan('dev'));
 
 app.use("/api/v1/article", articleRouter);
 app.use("/api/v1/support", supportRouter);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/user", userRouter);
 
-module.exports = app;
+// localhost:5000/api/v1/user/getAllUsers
+
+
+
+module.exports=app;
