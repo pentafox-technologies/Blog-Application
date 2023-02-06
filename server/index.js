@@ -1,4 +1,6 @@
-const app = require('./app');
+// Only the server here
+
+const app=require('./app');
 
 const PORT=5000;
 
