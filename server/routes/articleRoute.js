@@ -1,10 +1,11 @@
-const express = require('express');
-const articleController = require('../controllers/articleController');
+import express from "express"
 const router=express.Router();
 
-router.route('/').get(articleController.getAllArticle).post(articleController.createArticle);
-
-router.route('/:slug').get(articleController.getArticle).patch(articleController.updateArticle).delete(articleController.deleteArticle);
+router.get("/", (req, res, next) =>
+{
+    res.send("On article route")
+    console.log("On article route")
+})
 
 
 router.get("/create", (req, res) =>
@@ -12,4 +13,4 @@ router.get("/create", (req, res) =>
     res.send("Hello, this is create article")
 })
 
-module.exports = router;
+export default router;
