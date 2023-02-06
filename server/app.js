@@ -2,7 +2,8 @@ const express=require('express');
 const bodyparser=require('body-parser');
 // import bodyparser from "body-parser";
 
-const app=express()
+
+const app=express();
 
 // import userRouter from "./routes/userRoute.js"
 const articleRouter=require('./routes/articleRoute');
@@ -19,6 +20,7 @@ app.use("/api/v1/support", supportRouter);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/user", userRouter);
 
+// localhost:5000/api/v1/user/getAllUsers
 
 
 module.exports=app;
