@@ -1,0 +1,27 @@
+1.	Articles:
+	1.	Getting all posts
+	2.	Searching for a specific post 
+	3.	Save a Post
+	4.	Send for Approval
+	5.	Approve and Publish a Post
+	6.	Reject a Post
+	7.	Request for validation
+	8.	Delete a Post (only to admin)
+	9.	Adding a main category (only to admin)
+	10.	Adding a sub category
+
+2.	Users:
+	1.	User Login
+	2.	User Signup 
+	3.	Get a specific User Profile
+	4.	Promote to Moderator/admin (only to admin)
+	5.	Delete a User (only to admin)
+
+3.	Supports:
+	1.	Get supports for a Post
+	2.	Provide Support to a Post
+	3.	Deleting a support to a post
+
+4.	Logs:
+	1.	Creating logs
+	2.	Retrieving a information based on query (like user-post<50,  post-like>100)

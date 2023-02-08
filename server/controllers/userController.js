@@ -1,66 +1,176 @@
-const db = require('../db');
-exports.getAllUser = async (req, res, next) => {
-    const client = await db.connect();
-    try{
-        const users = await client.query(`SELECT * FROM "User"`);
+const db=require('../db');
+const bcrypt=require("bcryptjs")
+
+exports.getAllUser=async (req, res, next) =>
+{
+    const client=await db.connect();
+    try {
+        const users=await client.query(`SELECT * FROM "User"`);
         res.status(200).json({
             status: 'success',
             data: users.rows,
         });
-    } catch(err){
+    } catch(err) {
         console.log(err);
     }
 }
-exports.createUser = (req, res, next) => {
+exports.createUser=(req, res, next) =>
+{
     res.status(201).json({
         status: 'success'
     });
 };
 
-exports.getUser = (req, res, next) => {
-    res.status(200).json({
-        status: 'success',
-        data: {
-            data: req.params.slug
+exports.getUser=async (req, res, next) =>
+{
+    try {
+        const name=req.params.slug;
+        const client=await db.connect();
+        const user=await client.query(`select * from "User" where "userName" = $1`, [name])
+
+        if(user.rows.length==0) {
+            return res.status(404).json({
+                status: 'error',
+                message: "No user found with this name"
+            })
         }
-    });
+        res.status(200).json({
+            status: 'success',
+            data: {
+                user: user.rows
+            },
+        });
+    } catch(error) {
+        console.log(error);
+        res.status(400).json({
+            status: "error",
+            message: error
+        })
+    }
+
 };
 
-exports.getMe = async (req, res) => {
-    try{
-        const client = await db.connect();
-        console.log("😎😎",req.user);
-        const user = await client.query(`select * from "User" where "userName" = $1`, [req.user.userName]);
-        if(user.rows.length == 0){
+exports.getMe=async (req, res) =>
+{
+    try {
+        const client=await db.connect();
+        console.log("😎😎", req.user);
+        const user=await client.query(`select * from "User" where "userName" = $1`, [req.user.userName]);
+        if(user.rows.length==0) {
             return res.status(400).json({
-                status:'error',
+                status: 'error',
                 message: 'No User found with that name'
             });
         }
         res.status(200).json({
             status: 'success',
             data: {
-                user:user.rows
+                user: user.rows
             },
         });
 
-    } catch(err){
+    } catch(err) {
         console.log(err);
         res.status(400).json({
-            status:'error',
+            status: 'error',
             message: err
         });
     }
 };
 
-exports.updateUser = (req, res, next) => {
-    res.status(200).json({
-        status: 'success'
-    });
+exports.updateUser=async (req, res, next) =>
+{
+    try {
+        const user=req.body;
+        const client=await db.connect();
+        const update=await client.query(`update "User" set "firstName"=$1 where "userName" = $2`, [user.firstName, req.params.slug]);
+
+        res.status(200).json({
+            status: 'success',
+            data: update
+        });
+    } catch(error) {
+        console.log(error);
+        res.status(400).json({
+            status: 'error',
+            message: error
+        });
+    }
 };
 
-exports.deleteUser = (req, res, next) => {
-    res.status(204).json({
-        status: 'success'
-    });
+
+exports.updatePassword=async (req, res, next) =>
+{
+    try {
+        const client=await db.connect();
+        const password=await bcrypt.hash(req.body.password, 12);
+        const update=await client.query(`update "User" set "password"=$1 where "userName" = $2`, [password, req.params.slug]);
+
+        res.status(200).json({
+            status: 'success',
+            data: update
+        });
+    } catch(error) {
+        console.log(error);
+        res.status(400).json({
+            status: 'error',
+            message: error
+        });
+    }
+};
+
+exports.updateProfile=async (req, res, next) =>
+{
+    try {
+        const client=await db.connect();
+        const update=await client.query(`update "User" set "password"=$1 where "userName" = $2`, [req.body.profilePic, req.params.slug]);
+
+        res.status(200).json({
+            status: 'success',
+            data: update
+        });
+    } catch(error) {
+        console.log(error);
+        res.status(400).json({
+            status: 'error',
+            message: error
+        });
+    }
+};
+
+exports.updateMail=async (req, res, next) =>
+{
+    try {
+        const client=await db.connect();
+        const update=await client.query(`update "User" set "emailAddress"=$1 where "userName" = $2`, [req.body.emailAddress, req.params.slug]);
+
+        res.status(200).json({
+            status: 'success',
+            data: update
+        });
+    } catch(error) {
+        console.log(error);
+        res.status(400).json({
+            status: 'error',
+            message: error
+        });
+    }
+};
+
+exports.deleteUser=async (req, res, next) =>
+{
+    try {
+        const client=await db.connect();
+        await client.query(`delete from "User" where "userName" = $1`, [req.params.slug]);
+
+        res.status(200).json({
+            status: 'success',
+        });
+    } catch(error) {
+        console.log(error);
+        res.status(400).json({
+            status: 'error',
+            message: error
+        });
+    }
 };
