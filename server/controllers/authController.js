@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { promisify } = require('util');
+
 const db = require('../db');
 
 
@@ -76,11 +78,50 @@ exports.login = async (req, res) => {
     }
 };
 
+exports.protect = async (req, res, next) => {
+    try{
+        let token;
+        const client = await db.connect();
+        if (
+            req.headers.authorization &&
+            req.headers.authorization.startsWith('Bearer')
+        ) {
+            token = req.headers.authorization.split(' ')[1];
+        }
+        if (!token) {
+            return res.status(401).json({
+                status:'error',
+                message: 'You are not logged in! Please log in to get access'
+            });
+        }
+
+        const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+        const user = await client.query(`select * from "User" where "userName" = $1`, [decoded.userName]);
+
+        if(!user){
+            return res.status(401).json({
+                status:'error',
+                message: 'The token belonging to this user no longer exists'
+            });
+        }
+        
+        req.user = user.rows[0];
+        next();
+        
+    } catch(err) {
+        console.log(err);
+        res.status(400).json({
+            status:'error',
+            message: err
+        });
+    }
+    
+
+}
+
 exports.restrictTo = 
     (...roles) => 
     (req, res, next) => {
-        
-        
         
         next();
     }
