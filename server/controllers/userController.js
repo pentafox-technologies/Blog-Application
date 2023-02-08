@@ -1,8 +1,6 @@
 const db = require('../db');
 exports.getAllUser = async (req, res, next) => {
     const client = await db.connect();
-    const a = new Date();
-    const b = new Date();
     try{
         const users = await client.query(`SELECT * FROM "User"`);
         res.status(200).json({
@@ -26,6 +24,33 @@ exports.getUser = (req, res, next) => {
             data: req.params.slug
         }
     });
+};
+
+exports.getMe = async (req, res) => {
+    try{
+        const client = await db.connect();
+        console.log("😎😎",req.user);
+        const user = await client.query(`select * from "User" where "userName" = $1`, [req.user.userName]);
+        if(user.rows.length == 0){
+            return res.status(400).json({
+                status:'error',
+                message: 'No User found with that name'
+            });
+        }
+        res.status(200).json({
+            status: 'success',
+            data: {
+                user:user.rows
+            },
+        });
+
+    } catch(err){
+        console.log(err);
+        res.status(400).json({
+            status:'error',
+            message: err
+        });
+    }
 };
 
 exports.updateUser = (req, res, next) => {
