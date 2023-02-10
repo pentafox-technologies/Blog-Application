@@ -1,0 +1,21 @@
+apiVersion: "api.cerbos.dev/v1"
+derivedRoles:
+  name: common_roles
+  definitions:
+    - name: admin
+      parentRoles: ["member"]
+      condition:
+        match:
+          expr: request.principal.attr.userType == "admin"
+
+    - name: standard
+      parentRoles: ["member"]
+      condition:
+        match:
+          expr: request.principal.attr.userType == "standard"
+
+    - name: moderator
+      parentRoles: ["member"]
+      condition:
+        match:
+          expr: request.principal.attr.userType == "moderator"
