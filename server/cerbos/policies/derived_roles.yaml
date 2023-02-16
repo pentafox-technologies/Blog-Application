@@ -19,3 +19,9 @@ derivedRoles:
       condition:
         match:
           expr: request.principal.attr.userType == "moderator"
+
+    - name: anonymous
+      parentRoles: ["member"]
+      condition:
+        match:
+          expr: request.principal.attr.userType == "anonymous"
