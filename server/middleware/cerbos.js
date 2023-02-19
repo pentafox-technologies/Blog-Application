@@ -17,7 +17,7 @@ exports.isAllowed = async function(principal,resource,action) {
       id: "dummy",
       policyVersion: "default",
       roles: ["member"],
-      attributes: {userType: principal},
+      attributes: principal,
     },
     actions: [action]
   }
