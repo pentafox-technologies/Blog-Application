@@ -8,10 +8,10 @@ router.post('/signup',authController.signup);
 
 router.post('/login',authController.login);
 
-router.get('/getMe',/*authController.protect,*/ userController.getMe);
+router.get('/getMe',authController.protect, userController.getMe);
 
 router.route('/')
-    .get(/*authController.protect,*/ userController.getAllUser)
+    .get(authController.protect, userController.getAllUser)
     .post(userController.createUser);
 
 router.route('/:slug')
