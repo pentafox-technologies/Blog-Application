@@ -21,6 +21,7 @@ exports.signup = async (req, res) => {
         const token = jwt.sign({userName: req.body.userName}, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN
         });
+
         res.status(201).json({
             status: 'success',
             token,
@@ -35,7 +36,8 @@ exports.signup = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-    const { userName, password} = req.body;
+    const {userName, password}=req.body;
+
     if(!userName || !password){
         return res.status(400).json({
             status:'error',
@@ -63,6 +65,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign({userName}, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN
         });
+
         res.status(201).json({
             status: 'success',
             token,
