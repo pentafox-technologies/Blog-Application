@@ -19,3 +19,9 @@ derivedRoles:
       condition:
         match:
           expr: request.principal.attr.userType == "moderator"
+
+    - name: owner
+      parentRoles: ["member"]
+      condition:
+        match:
+          expr: request.principal.attr.userName == request.resource.attr.author

@@ -1,17 +1,26 @@
 const db=require('../db');
-const bcrypt=require("bcryptjs")
+const bcrypt=require("bcryptjs");
+const cerbos = require("./../middleware/cerbos");
 
 exports.getAllUser=async (req, res, next) =>
 {
     const client=await db.connect();
-    try {
-        const users=await client.query(`SELECT * FROM "User"`);
-        res.status(200).json({
-            status: 'success',
-            data: users.rows,
+    if(await cerbos.isAllowed(req.user,"user","getAll")) {
+            try {
+            const users=await client.query(`SELECT * FROM "User"`);
+            res.status(200).json({
+                status: 'success',
+                data: users.rows,
+            });
+        } catch(err) {
+            console.log(err);
+        }
+    }
+    else{
+        res.status(400).json({
+            status:'access denied',
+            message: err
         });
-    } catch(err) {
-        console.log(err);
     }
 }
 exports.createUser=(req, res, next) =>
@@ -52,30 +61,39 @@ exports.getUser=async (req, res, next) =>
 
 exports.getMe=async (req, res) =>
 {
-    try {
-        const client=await db.connect();
-        console.log("😎😎", req.user);
-        const user=await client.query(`select * from "User" where "userName" = $1`, [req.user.userName]);
-        if(user.rows.length==0) {
-            return res.status(400).json({
+    if(await cerbos.isAllowed(req.user,"user","getByUserName")) {
+            try {
+            const client=await db.connect();
+            console.log("😎😎", req.user);
+            const user=await client.query(`select * from "User" where "userName" = $1`, [req.user.userName]);
+            if(user.rows.length==0) {
+                return res.status(400).json({
+                    status: 'error',
+                    message: 'No User found with that name'
+                });
+            }
+            res.status(200).json({
+                status: 'success',
+                data: {
+                    user: user.rows
+                },
+            });
+
+        } catch(err) {
+            console.log(err);
+            res.status(400).json({
                 status: 'error',
-                message: 'No User found with that name'
+                message: err
             });
         }
-        res.status(200).json({
-            status: 'success',
-            data: {
-                user: user.rows
-            },
-        });
-
-    } catch(err) {
-        console.log(err);
+    }
+    else{
         res.status(400).json({
-            status: 'error',
+            status:'access denied',
             message: err
         });
     }
+    
 };
 
 exports.updateUser=async (req, res, next) =>

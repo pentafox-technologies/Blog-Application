@@ -9,9 +9,28 @@ resourcePolicy:
       effect: EFFECT_ALLOW
       derivedRoles:
         - admin
-        - anonymous
 
     - actions: ['delete']
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - admin
+
+    - actions: ['choose moderator']
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - admin
+
+    - actions: ['choose admin']
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - admin
+
+    - actions: ['getAll']
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - admin
+
+    - actions: ['getByUserName']
       effect: EFFECT_ALLOW
       derivedRoles:
         - admin

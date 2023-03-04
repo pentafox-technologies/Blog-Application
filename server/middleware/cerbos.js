@@ -12,6 +12,7 @@ exports.isAllowed = async function(principal,resource,action) {
       kind: resource,
       policyVersion: "default",
       id: "dummy",
+      attributes: resource,
     },
     principal: {
       id: "dummy",
