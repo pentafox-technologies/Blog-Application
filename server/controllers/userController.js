@@ -1,12 +1,12 @@
 const db=require('../db');
 const bcrypt=require("bcryptjs");
-const cerbos = require("./../middleware/cerbos");
+const cerbos=require("./../middleware/cerbos");
 
 exports.getAllUser=async (req, res, next) =>
 {
     const client=await db.connect();
-    if(await cerbos.isAllowed(req.user,"user","getAll")) {
-            try {
+    if(await cerbos.isAllowed(req.user, "user", "getAll")) {
+        try {
             const users=await client.query(`SELECT * FROM "User"`);
             res.status(200).json({
                 status: 'success',
@@ -16,10 +16,9 @@ exports.getAllUser=async (req, res, next) =>
             console.log(err);
         }
     }
-    else{
+    else {
         res.status(400).json({
-            status:'access denied',
-            message: err
+            status: 'access denied'
         });
     }
 }
@@ -61,8 +60,8 @@ exports.getUser=async (req, res, next) =>
 
 exports.getMe=async (req, res) =>
 {
-    if(await cerbos.isAllowed(req.user,"user","getByUserName")) {
-            try {
+    if(await cerbos.isAllowed(req.user, "user", "getByUserName")) {
+        try {
             const client=await db.connect();
             console.log("😎😎", req.user);
             const user=await client.query(`select * from "User" where "userName" = $1`, [req.user.userName]);
@@ -87,13 +86,13 @@ exports.getMe=async (req, res) =>
             });
         }
     }
-    else{
+    else {
         res.status(400).json({
-            status:'access denied',
+            status: 'access denied',
             message: err
         });
     }
-    
+
 };
 
 exports.updateUser=async (req, res, next) =>

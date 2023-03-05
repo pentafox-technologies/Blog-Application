@@ -226,5 +226,4 @@ exports.deleteArticle=async (req, res, next) =>
             message: err
         });
     }
-    
 };
