@@ -30,14 +30,12 @@ app.use("/api/v1/user", userRouter);
 //cerbos sample 
 app.get("/cerbos",authController.protect, async (req,res) => {
     
-    if(await cerbos.isAllowed(req.user,"post","delete")){
+    if(await cerbos.isAllowed(req.user,{resource:"article"},"delete")){
         res.send("can access");
     }
     else {
         res.send("cannot access");
     }
 })
-
-
 
 module.exports = app;

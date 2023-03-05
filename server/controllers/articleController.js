@@ -3,7 +3,7 @@ const slugify = require('slugify');
 const cerbos = require("./../middleware/cerbos");
 
 exports.createArticle = async (req, res) => {
-    if(await cerbos.isAllowed(req.user,"article","create")) {
+    if(await cerbos.isAllowed(req.user,{resource:"article"},"create")) {
         const client = await db.connect();
         try{                                       
             // splitting categories to array
@@ -114,7 +114,7 @@ exports.updateArticle = async (req, res) => {
 
     const client = await db.connect();
     const Article = await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
-
+    Article.resource="article";
     if(await cerbos.isAllowed(req.user,Article,"update")) {
         try{                       
 
@@ -200,7 +200,7 @@ exports.updateArticle = async (req, res) => {
 
 exports.deleteArticle=async (req, res, next) =>
 {
-    if(await cerbos.isAllowed(req.user,"article","delete")) {
+    if(await cerbos.isAllowed(req.user,{resource:"article"},"delete")) {
         const slug=req.params.slug;
 
         const client=await db.connect();
