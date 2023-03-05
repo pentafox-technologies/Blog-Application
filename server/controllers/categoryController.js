@@ -20,7 +20,7 @@ exports.createCategory = async (req, res, next) => {
 
 exports.createTopCategory = async (req, res, next) => {
     const client = await db.connect();
-    if(await cerbos.isAllowed(req.user,"category","create")) {
+    if(await cerbos.isAllowed(req.user,{resource:"category"},"create")) {
         try {
             // console.log(req.user);
             const newTopCategory = await client.query(`INSERT INTO "TopCategory" ("categoryName", "initializedBy", "dateCreated") VALUES (${req.body.categoryName}, ${req.user}), ${Date.now()}`)

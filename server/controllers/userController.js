@@ -5,7 +5,7 @@ const cerbos = require("./../middleware/cerbos");
 exports.getAllUser=async (req, res, next) =>
 {
     const client=await db.connect();
-    if(await cerbos.isAllowed(req.user,"user","getAll")) {
+    if(await cerbos.isAllowed(req.user,{resource:"user"},"getAll")) {
             try {
             const users=await client.query(`SELECT * FROM "User"`);
             res.status(200).json({
@@ -61,7 +61,7 @@ exports.getUser=async (req, res, next) =>
 
 exports.getMe=async (req, res) =>
 {
-    if(await cerbos.isAllowed(req.user,"user","getByUserName")) {
+    if(await cerbos.isAllowed(req.user,{resource:"user"},"getByUserName")) {
             try {
             const client=await db.connect();
             console.log("😎😎", req.user);
@@ -98,20 +98,28 @@ exports.getMe=async (req, res) =>
 
 exports.updateUser=async (req, res, next) =>
 {
-    try {
-        const user=req.body;
-        const client=await db.connect();
-        const update=await client.query(`update "User" set "firstName"=$1 where "userName" = $2`, [user.firstName, req.params.slug]);
+    if(await cerbos.isAllowed(req.user,{resource:"user", userName: req.params.slug},"update")) {
+            try {
+                const user=req.body;
+                const client=await db.connect();
+                const update=await client.query(`update "User" set "firstName"=$1 where "userName" = $2`, [user.firstName, req.params.slug]);
 
-        res.status(200).json({
-            status: 'success',
-            data: update
-        });
-    } catch(error) {
-        console.log(error);
+                res.status(200).json({
+                    status: 'success',
+                    data: update
+                });
+            } catch(error) {
+                console.log(error);
+                res.status(400).json({
+                    status: 'error',
+                    message: error
+                });
+            }
+    }
+    else{
         res.status(400).json({
-            status: 'error',
-            message: error
+            status:'access denied',
+            message: err
         });
     }
 };
@@ -119,76 +127,111 @@ exports.updateUser=async (req, res, next) =>
 
 exports.updatePassword=async (req, res, next) =>
 {
-    try {
-        const client=await db.connect();
-        const password=await bcrypt.hash(req.body.password, 12);
-        const update=await client.query(`update "User" set "password"=$1 where "userName" = $2`, [password, req.params.slug]);
+    if(await cerbos.isAllowed(req.user,{resource:"user", userName: req.params.slug},"update")) {
+            try {
+                const client=await db.connect();
+                const password=await bcrypt.hash(req.body.password, 12);
+                const update=await client.query(`update "User" set "password"=$1 where "userName" = $2`, [password, req.params.slug]);
 
-        res.status(200).json({
-            status: 'success',
-            data: update
-        });
-    } catch(error) {
-        console.log(error);
+                res.status(200).json({
+                    status: 'success',
+                    data: update
+                });
+            } catch(error) {
+                console.log(error);
+                res.status(400).json({
+                    status: 'error',
+                    message: error
+                });
+            }
+    }
+    else{
         res.status(400).json({
-            status: 'error',
-            message: error
+            status:'access denied',
+            message: err
         });
     }
+    
 };
 
 exports.updateProfile=async (req, res, next) =>
 {
-    try {
-        const client=await db.connect();
-        const update=await client.query(`update "User" set "password"=$1 where "userName" = $2`, [req.body.profilePic, req.params.slug]);
+    if(await cerbos.isAllowed(req.user,{resource:"user", userName: req.params.slug},"update")){
+            try {
+                const client=await db.connect();
+                const update=await client.query(`update "User" set "password"=$1 where "userName" = $2`, [req.body.profilePic, req.params.slug]);
 
-        res.status(200).json({
-            status: 'success',
-            data: update
-        });
-    } catch(error) {
-        console.log(error);
+                res.status(200).json({
+                    status: 'success',
+                    data: update
+                });
+            } catch(error) {
+                console.log(error);
+                res.status(400).json({
+                    status: 'error',
+                    message: error
+                });
+            }
+    }
+    else{
         res.status(400).json({
-            status: 'error',
-            message: error
+            status:'access denied',
+            message: err
         });
     }
 };
 
 exports.updateMail=async (req, res, next) =>
 {
-    try {
-        const client=await db.connect();
-        const update=await client.query(`update "User" set "emailAddress"=$1 where "userName" = $2`, [req.body.emailAddress, req.params.slug]);
+    if(await cerbos.isAllowed(req.user,{resource:"user", userName: req.params.slug},"update"))
+    {
+            try {
+                const client=await db.connect();
+                const update=await client.query(`update "User" set "emailAddress"=$1 where "userName" = $2`, [req.body.emailAddress, req.params.slug]);
 
-        res.status(200).json({
-            status: 'success',
-            data: update
-        });
-    } catch(error) {
-        console.log(error);
+                res.status(200).json({
+                    status: 'success',
+                    data: update
+                });
+            } catch(error) {
+                console.log(error);
+                res.status(400).json({
+                    status: 'error',
+                    message: error
+                });
+            }
+    }
+    else{
         res.status(400).json({
-            status: 'error',
-            message: error
+            status:'access denied',
+            message: err
         });
     }
+    
 };
 
 exports.deleteUser=async (req, res, next) =>
 {
-    try {
-        const client=await db.connect();
-        await client.query(`delete from "User" where "userName" = $1`, [req.params.slug]);
+    if(await cerbos.isAllowed(req.user,{resource:"user"},"update")) {
+        try {
+            const client=await db.connect();
+            await client.query(`delete from "User" where "userName" = $1`, [req.params.slug]);
 
-        res.status(200).json({
-            status: 'success',
-        });
-    } catch(error) {
-        console.log(error);
+            res.status(200).json({
+                status: 'success',
+            });
+        } catch(error) {
+            console.log(error);
+            res.status(400).json({
+                status: 'error',
+                message: error
+            });
+        }
+    }
+    else{
         res.status(400).json({
-            status: 'error',
-            message: error
+            status:'access denied',
+            message: err
         });
     }
 };
