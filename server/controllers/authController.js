@@ -117,8 +117,7 @@ exports.protect = async (req, res, next) => {
             status:'error',
             message: err
         });
-    }
-    
+    }   
 
 }
 

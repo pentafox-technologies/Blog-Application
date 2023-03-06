@@ -34,3 +34,8 @@ resourcePolicy:
       effect: EFFECT_ALLOW
       derivedRoles:
         - admin
+
+    - actions: ['update']
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - myself

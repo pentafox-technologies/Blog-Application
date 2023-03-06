@@ -25,3 +25,9 @@ derivedRoles:
       condition:
         match:
           expr: request.principal.attr.userName == request.resource.attr.author
+
+    - name: myself
+      parentRoles: ["member"]
+      condition:
+        match:
+          expr: request.principal.attr.userName == request.resource.attr.userName
