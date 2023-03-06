@@ -21,13 +21,6 @@ resourcePolicy:
       effect: EFFECT_ALLOW
       derivedRoles:
         - owner
-
-    - actions: ['support']
-      effect: EFFECT_ALLOW
-      derivedRoles:
-        - admin
-        - moderator
-        - standard
         
     - actions: ['send for review']
       effect: EFFECT_ALLOW
@@ -60,4 +53,10 @@ resourcePolicy:
     - actions: ['delete']
       effect: EFFECT_ALLOW
       derivedRoles:
+        - deleteableArticle
+
+    - actions: ['validate']
+      effect: EFFECT_ALLOW
+      derivedRoles:
         - admin
+        - moderator

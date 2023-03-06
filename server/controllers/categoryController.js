@@ -8,16 +8,6 @@ exports.getAllCategory = (req, res, next) => {
     });
 };
 
-exports.createCategory = async (req, res, next) => {
-    const client = await db.connect();
-    if(true) {
-        const newcategory = await client.query(`INSERT INTO "Category" ()`)
-    }
-    else {
-        res.send("cannot access");
-    }
-};
-
 exports.createTopCategory = async (req, res, next) => {
     const client = await db.connect();
     if(await cerbos.isAllowed(req.user,{resource:"category"},"create")) {
@@ -36,8 +26,10 @@ exports.createTopCategory = async (req, res, next) => {
             });
         }
     }
-    else {
-        res.send("cannot access");
+    else{
+        res.status(400).json({
+            message:'access denied',
+        });
     }
 };
 
@@ -68,12 +60,6 @@ exports.getCategory = (req, res, next) => {
         data: {
             data: req.params.slug
         }
-    });
-};
-
-exports.updateCategory = (req, res, next) => {
-    res.status(200).json({
-        status: 'success'
     });
 };
 

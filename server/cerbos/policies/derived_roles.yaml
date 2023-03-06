@@ -26,6 +26,18 @@ derivedRoles:
         match:
           expr: request.principal.attr.userName == request.resource.attr.author
 
+    - name: deleteableArticle
+      parentRoles: ["member"]
+      condition:
+        match:
+          any:
+            of:
+              - expr: request.resource.attr.userName == request.principal.attr.userName && request.resource.attr.status == "draft"
+              - expr: request.resource.attr.userName == request.principal.attr.userName && request.resource.attr.status == "pending_verification"
+              - expr: request.resource.attr.userName == request.principal.attr.userName && request.resource.attr.status == "pushback"
+              - expr: request.resource.attr.userName == request.principal.attr.userName && request.resource.attr.status == "rejected"
+              - expr: request.principal.attr.userType == "admin" && request.resource.attr.status == "published"
+
     - name: myself
       parentRoles: ["member"]
       condition:

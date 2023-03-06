@@ -1,0 +1,13 @@
+apiVersion: api.cerbos.dev/v1
+resourcePolicy:
+  version: "default"
+  importDerivedRoles:
+    - common_roles
+  resource: "supports"
+  rules:
+    - actions: ['create']
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - admin
+        - moderator
+        - standard

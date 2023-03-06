@@ -5,22 +5,12 @@ resourcePolicy:
     - common_roles
   resource: "user"
   rules:
-    - actions: ['create']
-      effect: EFFECT_ALLOW
-      derivedRoles:
-        - admin
-
     - actions: ['delete']
       effect: EFFECT_ALLOW
       derivedRoles:
         - admin
 
-    - actions: ['choose moderator']
-      effect: EFFECT_ALLOW
-      derivedRoles:
-        - admin
-
-    - actions: ['choose admin']
+    - actions: ['change role']
       effect: EFFECT_ALLOW
       derivedRoles:
         - admin

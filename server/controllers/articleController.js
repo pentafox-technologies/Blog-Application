@@ -64,10 +64,9 @@ exports.createArticle=async (req, res) =>
             });
         }
     }
-    else {
+    else{
         res.status(400).json({
-            status: 'access denied',
-            message: err
+            message:'access denied',
         });
     }
 };
@@ -115,7 +114,8 @@ exports.updateArticle=async (req, res) =>
 {
 
     const client=await db.connect();
-    const Article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
+    let Article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
+    Article=Article.rows[0];
     Article.resource="article";
     if(await cerbos.isAllowed(req.user, Article, "update")) {
         try {
@@ -191,23 +191,23 @@ exports.updateArticle=async (req, res) =>
             });
         }
     }
-    else {
+    else{
         res.status(400).json({
-            status: 'access denied',
-            message: err
+            message:'access denied',
         });
     }
-
 
 };
 
 exports.deleteArticle=async (req, res, next) =>
 {
-    if(await cerbos.isAllowed(req.user, {resource: "article"}, "delete")) {
-        const slug=req.params.slug;
-
-        const client=await db.connect();
-
+    
+    const slug=req.params.slug;
+    const client=await db.connect();
+    let Article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
+    Article=Article.rows[0];
+    Article.resource="article";
+    if(await cerbos.isAllowed(req.user, Article, "delete")) {
         try {
             const Articles=await client.query(`DELETE FROM "Article" WHERE slug like $1;`, [slug]);
             res.status(204).json({
@@ -223,10 +223,9 @@ exports.deleteArticle=async (req, res, next) =>
             });
         }
     }
-    else {
+    else{
         res.status(400).json({
-            status: 'access denied',
-            message: err
+            message:'access denied',
         });
     }
 };
@@ -249,47 +248,55 @@ exports.searchArticle = async (req, res) => {
 
 // Validation Part 
 
-exports.requestToValidate=async (req, res, next) =>
-{
-    const client=await db.connect();
-    const article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
+// exports.requestToValidate=async (req, res, next) =>
+// {
+//     if(await cerbos.isAllowed(req.user, {resource: "article"}, "validate")) {
+//         const client=await db.connect();
+//         const article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
 
-    try {
+//         try {
 
-        // Check whether article exist or not
-        if(article.rowCount<=0) {
-            res.status(200).json({
-                status: 'Request failed',
-                message: 'Article not found',
-            });
-        }
+//             // Check whether article exist or not
+//             if(article.rowCount<=0) {
+//                 res.status(200).json({
+//                     status: 'Request failed',
+//                     message: 'Article not found',
+//                 });
+//             }
 
-        // to check the log status
-        let articleStatus=await client.query(`SELECT * FROM "ArticleLogs" where article like $1`, [req.params.slug]);
+//             // to check the log status
+//             let articleStatus=await client.query(`SELECT * FROM "ArticleLogs" where article like $1`, [req.params.slug]);
 
-        if(!articleStatus) {
-            state='on_verification';
-            reason='Request validation';
+//             if(!articleStatus) {
+//                 state='on_verification';
+//                 reason='Request validation';
 
-            let newLog=await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason", "controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) returning *`, [req.params.slug, state, new Date(), reason, article.rows[0].author, req.user.userName])
+//                 let newLog=await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason", "controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) returning *`, [req.params.slug, state, new Date(), reason, article.rows[0].author, req.user.userName])
 
-            res.status(200).json({
-                status: 'Request approved',
-                log: newLog.rows,
-            });
-        }
-        else {
-            res.status(400).json({
-                status: 'Request failed',
-                message: 'Already on validation'
-            });
-        }
-    } catch(error) {
-        console.log(error);
-        res.status(400).json({
-            status: 'Request Failed',
-            message: error,
-        });
+//                 res.status(200).json({
+//                     status: 'Request approved',
+//                     log: newLog.rows,
+//                 });
+//             }
+//             else {
+//                 res.status(400).json({
+//                     status: 'Request failed',
+//                     message: 'Already on validation'
+//                 });
+//             }
+//         } catch(error) {
+//             console.log(error);
+//             res.status(400).json({
+//                 status: 'Request Failed',
+//                 message: error,
+//             });
 
-    }
-}
+//         }
+//     }
+//     else{
+//         res.status(400).json({
+//             message:'access denied',
+//         });
+//     }
+    
+// }

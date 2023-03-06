@@ -11,27 +11,33 @@ exports.getAllSupport = async (req, res, next) => {
             }
         });
     } catch (err) {
-        
     }
 };
 
 exports.createSupport = async (req, res, next) => {
-    try {
-        const client = await db.connect();
-        const username = req.user.username;
-        const article = await client.query(`SELECT * FROM "Article" WHERE "slug"=${slug}`);
-        const supportedTime = new Date.now();
-        const newSupport = await client.query(`INSERT INTO "Supports" ("article", "user", "supportTime") VALUES (${username}, ${article}, ${supportedTime})`);
-        res.status(200).json({
-            status: 'success',
-            data: newSupport.rows
-        });
-    } catch (err) {
-        res.status(500).json({
-            status: 'error',
-            data:{
-                err:err.message
-            }
+    if(await cerbos.isAllowed(req.user, {resource: "supports"}, "create")) {
+        try {
+            const client = await db.connect();
+            const username = req.user.username;
+            const article = await client.query(`SELECT * FROM "Article" WHERE "slug"=${slug}`);
+            const supportedTime = new Date.now();
+            const newSupport = await client.query(`INSERT INTO "Supports" ("article", "user", "supportTime") VALUES (${username}, ${article}, ${supportedTime})`);
+            res.status(200).json({
+                status: 'success',
+                data: newSupport.rows
+            });
+        } catch (err) {
+            res.status(500).json({
+                status: 'error',
+                data:{
+                    err:err.message
+                }
+            });
+        }
+    }
+    else{
+        res.status(400).json({
+            message:'access denied',
         });
     }
     
