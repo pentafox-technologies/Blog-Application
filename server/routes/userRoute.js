@@ -24,6 +24,7 @@ router.patch('/:slug/password', userController.updatePassword)
 router.patch('/:slug/email', userController.updateMail)
 router.patch('/:slug/profile', userController.updateProfile)
 
+router.post('/promote/:slug', userController.promoteUser);
 
 
 router.get("/create", (req, res) =>
