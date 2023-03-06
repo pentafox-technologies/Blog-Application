@@ -300,3 +300,75 @@ exports.searchArticle = async (req, res) => {
 //     }
     
 // }
+
+exports.requestForApproval = async (req, res) => {
+    try {
+        const client = await db.connect();
+        
+        const Article = await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['pending_verification',req.params.slug]);
+        res.status(200).json({
+            status: 'success',
+            message: 'Sent For verification'
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({
+            status:'error',
+            message: err
+        });
+    }
+    
+}
+
+exports.approveAndPublish = async (req, res) => {
+    try {
+        const client = await db.connect();
+        const Article = await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['published',req.params.slug]);
+        res.status(200).json({
+            status: 'success',
+            message: 'Approved And Published'
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({
+            status:'error',
+            message: err
+        });
+    }
+}
+
+exports.rejectPost = async (req, res) => {
+    try {
+        const client = await db.connect();
+        const Article = await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['rejected',req.params.slug]);
+        res.status(200).json({
+            status: 'success',
+            message: 'Rejected The Post'
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({
+            status:'error',
+            message: err
+        });
+    }
+}
+
+exports.getPendingVerication = async (req, res) => {
+    try{
+        const client = await db.connect();
+        const articles = await client.query(`SELECT * FROM "Article" WHERE "status" = ($1)`, ['pending_verification']);
+        res.status(200).json({
+            status: 'success',
+            data: articles.rows
+        });
+
+    } catch(err) {
+        console.log(err);
+        res.status(400).json({
+            status:'error',
+            message: err
+        });
+    }
+}
+
