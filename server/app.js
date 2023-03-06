@@ -10,6 +10,8 @@ const articleRouter = require('./routes/articleRoute');
 const categoryRouter = require('./routes/categoryRoute');
 const userRouter = require('./routes/userRoute');
 const supportRouter = require('./routes/supportRoute');
+const authController = require("./controllers/authController")
+const cerbos = require("./middleware/cerbos");
 // import supportRouter from "./routes/supportRoute.js"
 // import categoryRouter from "./routes/categoryRoute.js"
 
@@ -24,6 +26,17 @@ app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/user", userRouter);
 
 // localhost:5000/api/v1/user/getAllUsers
+
+//cerbos sample 
+app.get("/cerbos",authController.protect, async (req,res) => {
+    
+    if(await cerbos.isAllowed(req.user,"post","delete")){
+        res.send("can access");
+    }
+    else {
+        res.send("cannot access");
+    }
+})
 
 
 

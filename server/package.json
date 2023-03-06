@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@cerbos/grpc": "^0.8.2",
     "bcrypt": "^5.1.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.3",
@@ -18,6 +19,7 @@
     "nodemon": "^2.0.20",
     "pg": "^8.8.0",
     "promisify": "^0.0.3",
+    "util": "^0.12.5",
     "slugify": "^1.6.5"
   }
 }

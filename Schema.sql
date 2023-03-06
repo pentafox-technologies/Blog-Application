@@ -5,7 +5,7 @@ CREATE TYPE logstats AS ENUM ('draft', 'pending_verification', 'on_verification'
 
 CREATE TABLE "User" (
     "userName" VARCHAR(50) NOT NULL PRIMARY KEY,
-    "profilePic" BYTEA NOT NULL,
+    "profilePic" BYTEA,
     "firstName" VARCHAR(50) NOT NULL,
     "lastName" VARCHAR(50) NOT NULL,
     "emailAddress" TEXT NOT NULL,
