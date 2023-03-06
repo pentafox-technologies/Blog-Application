@@ -228,3 +228,17 @@ exports.deleteArticle=async (req, res, next) =>
     }
     
 };
+
+exports.searchArticle = async (req, res) => {
+    try {
+        const client = await db.connect();
+        const query = req.params.query;
+    } catch (err) {
+        res.status(404).data({
+            status:"error",
+            data:{
+                err: err.message
+            }
+        })
+    }
+}
