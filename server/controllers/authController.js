@@ -120,10 +120,3 @@ exports.protect = async (req, res, next) => {
     }   
 
 }
-
-exports.restrictTo = 
-    (...roles) => 
-    (req, res, next) => {
-        
-        next();
-    }
