@@ -249,7 +249,7 @@ exports.searchArticle = async (req, res) => {
 
 // Validation Part 
 
-exports.validateRequest=async (req, res, next) =>
+exports.requestToValidate=async (req, res, next) =>
 {
     const client=await db.connect();
     const article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
