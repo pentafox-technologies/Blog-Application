@@ -225,23 +225,29 @@ exports.deleteUser=async (req, res, next) =>
 
 exports.promoteUser=async (req, res, next) =>
 {
+    if(await cerbos.isAllowed(req.user, {resource: "user"}, "promoteUser")) {
+        try {
+            const client=await db.connect();
+            const id=req.params.slug;
 
-    try {
-        const client=await db.connect();
-        const id=req.params.slug;
+            const user=await client.query(`update "User" set "userType"=$2 where "userName" = $1`, [id, req.body.role])
 
-        const user=await client.query(`update "User" set "userType"=$2 where "userName" = $1`, [id, req.body.role])
+            res.status(200).json({
+                status: 'Request success',
+                message: user
+            });
 
-        res.status(200).json({
-            status: 'Request success',
-            message: user
-        });
-
-    } catch(error) {
-        console.log(error)
+        } catch(error) {
+            console.log(error)
+            res.status(400).json({
+                status: 'Request failed',
+                message: error
+            });
+        }
+    }
+    else{
         res.status(400).json({
-            status: 'Request failed',
-            message: error
+            message:'access denied',
         });
     }
 }

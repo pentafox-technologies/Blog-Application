@@ -201,31 +201,33 @@ exports.updateArticle=async (req, res) =>
 
 exports.deleteArticle=async (req, res, next) =>
 {
-    
-    const slug=req.params.slug;
-    const client=await db.connect();
-    let Article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
-    Article=Article.rows[0];
-    Article.resource="article";
-    if(await cerbos.isAllowed(req.user, Article, "delete")) {
-        try {
+    try {
+        const slug=req.params.slug;
+        const client=await db.connect();
+        let Article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
+        Article=Article.rows[0];
+        Article.resource="article";
+        console.log(req.user);
+        console.log(Article);
+        if(await cerbos.isAllowed(req.user, Article, "delete")) {
+        
             const Articles=await client.query(`DELETE FROM "Article" WHERE slug like $1;`, [slug]);
             res.status(204).json({
                 status: 'success',
                 data: Articles,
             });
 
-        } catch(error) {
-            console.log(error);
-            res.status(400).json({
-                status: 'error',
-                message: error
-            });
         }
-    }
     else{
         res.status(400).json({
             message:'access denied',
+        });
+    } 
+    }catch(error) {
+        console.log(error);
+        res.status(400).json({
+            status: 'error',
+            message: error
         });
     }
 };

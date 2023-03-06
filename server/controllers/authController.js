@@ -83,7 +83,6 @@ exports.login = async (req, res) => {
 
 exports.protect = async (req, res, next) => {
     try{
-        console.log('came');
         let token;
         const client = await db.connect();
         if (

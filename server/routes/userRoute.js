@@ -7,29 +7,20 @@ const router=express.Router();
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 
-router.post('/login',authController.login);
-
 router.get('/getMe',authController.protect, userController.getMe);
 
 router.route('/')
     .get(authController.protect, userController.getAllUser)
-    .post(userController.createUser);
 
 router.route('/:slug')
     .get(userController.getUser)
-    .patch(userController.updateUser)
-    .delete(userController.deleteUser);
+    .patch(authController.protect, userController.updateUser)
+    .delete(authController.protect, userController.deleteUser);
 
-router.patch('/:slug/password', userController.updatePassword)
-router.patch('/:slug/email', userController.updateMail)
-router.patch('/:slug/profile', userController.updateProfile)
+router.patch('/:slug/password',authController.protect,  userController.updatePassword)
+router.patch('/:slug/email',authController.protect,  userController.updateMail)
+router.patch('/:slug/profile',authController.protect,  userController.updateProfile)
 
-router.post('/promote/:slug', userController.promoteUser);
-
-
-router.get("/create", (req, res) =>
-{
-    res.send("Hello, this is create article")
-})
+router.post('/promote/:slug',authController.protect,  userController.promoteUser);
 
 module.exports=router;

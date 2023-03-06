@@ -10,7 +10,7 @@ resourcePolicy:
       derivedRoles:
         - admin
 
-    - actions: ['change role']
+    - actions: ['promoteUser']
       effect: EFFECT_ALLOW
       derivedRoles:
         - admin

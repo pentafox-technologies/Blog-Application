@@ -8,22 +8,22 @@ router.route('/').get(articleController.getAllArticle).post(authController.prote
 
 router.get('/getPendingVerification', authController.protect, articleController.getPendingVerication);
 
-router.route('/:slug').get(articleController.getArticle).patch(authController.protect, articleController.updateArticle).delete(articleController.deleteArticle);
-
 router.post('/requestForApproval/:slug',authController.protect ,articleController.requestForApproval);
 
 router.post('/approveandPublish/:slug',authController.protect ,articleController.approveAndPublish);
 
 router.post('/rejectPost/:slug',authController.protect ,articleController.rejectPost);
 
+router.route('/:slug').get(articleController.getArticle).patch(authController.protect, articleController.updateArticle).delete(authController.protect, articleController.deleteArticle);
+
 
 router.route('/search/:query').get(articleController.searchArticle)
 
-router.route('/validation/:slug').get(authController.protect, articleController.requestToValidate);
+//router.route('/validation/:slug').get(authController.protect, articleController.requestToValidate);
 
-router.get("/create", (req, res) =>
-{
-    res.send("Hello, this is create article")
-})
+// router.get("/create", (req, res) =>
+// {
+//     res.send("Hello, this is create article")
+// })
 
 module.exports = router;
