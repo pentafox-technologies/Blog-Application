@@ -302,73 +302,107 @@ exports.searchArticle = async (req, res) => {
 // }
 
 exports.requestForApproval = async (req, res) => {
-    try {
-        const client = await db.connect();
-        
-        const Article = await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['pending_verification',req.params.slug]);
-        res.status(200).json({
-            status: 'success',
-            message: 'Sent For verification'
-        });
-    } catch (err) {
-        console.log(err);
+    
+    const client=await db.connect();
+    let Article1=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
+    Article1=Article1.rows[0];
+    Article1.resource="article";
+
+    if(await cerbos.isAllowed(req.user, Article1, "requestForApproval")) {
+        try {
+            
+            const Article = await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['pending_verification',req.params.slug]);
+            res.status(200).json({
+                status: 'success',
+                message: 'Sent For verification'
+            });
+        } catch (err) {
+            console.log(err);
+            res.status(400).json({
+                status:'error',
+                message: err
+            });
+        }
+    }
+    else{
         res.status(400).json({
-            status:'error',
-            message: err
+            message:'access denied',
         });
     }
-    
 }
 
 exports.approveAndPublish = async (req, res) => {
-    try {
-        const client = await db.connect();
-        const Article = await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['published',req.params.slug]);
-        res.status(200).json({
-            status: 'success',
-            message: 'Approved And Published'
-        });
-    } catch (err) {
-        console.log(err);
+    if(await cerbos.isAllowed(req.user, {resource: "article"}, "approve and publish")) {
+        try {
+            const client = await db.connect();
+            const Article = await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['published',req.params.slug]);
+            res.status(200).json({
+                status: 'success',
+                message: 'Approved And Published'
+            });
+        } catch (err) {
+            console.log(err);
+            res.status(400).json({
+                status:'error',
+                message: err
+            });
+        }
+    }
+    else{
         res.status(400).json({
-            status:'error',
-            message: err
+            message:'access denied',
         });
     }
 }
 
 exports.rejectPost = async (req, res) => {
-    try {
-        const client = await db.connect();
-        const Article = await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['rejected',req.params.slug]);
-        res.status(200).json({
-            status: 'success',
-            message: 'Rejected The Post'
-        });
-    } catch (err) {
-        console.log(err);
+    if(await cerbos.isAllowed(req.user, {resource: "article"}, "reject")) {
+        try {
+            const client = await db.connect();
+            const Article = await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['rejected',req.params.slug]);
+            res.status(200).json({
+                status: 'success',
+                message: 'Rejected The Post'
+            });
+        } catch (err) {
+            console.log(err);
+            res.status(400).json({
+                status:'error',
+                message: err
+            });
+        }
+    }
+    else{
         res.status(400).json({
-            status:'error',
-            message: err
+            message:'access denied',
         });
     }
+    
 }
 
 exports.getPendingVerication = async (req, res) => {
-    try{
-        const client = await db.connect();
-        const articles = await client.query(`SELECT * FROM "Article" WHERE "status" = ($1)`, ['pending_verification']);
-        res.status(200).json({
-            status: 'success',
-            data: articles.rows
-        });
+    if(await cerbos.isAllowed(req.user, {resource: "article"}, "getPendingVerication")) {
+        try{
+            const client = await db.connect();
+            const articles = await client.query(`SELECT * FROM "Article" WHERE "status" = ($1)`, ['pending_verification']);
+            res.status(200).json({
+                status: 'success',
+                data: articles.rows
+            });
 
-    } catch(err) {
-        console.log(err);
+        } catch(err) {
+            console.log(err);
+            res.status(400).json({
+                status:'error',
+                message: err
+            });
+        }
+    }
+    else{
         res.status(400).json({
-            status:'error',
-            message: err
+            message:'access denied',
         });
     }
+    
 }
 

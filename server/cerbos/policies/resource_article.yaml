@@ -22,7 +22,7 @@ resourcePolicy:
       derivedRoles:
         - owner
         
-    - actions: ['send for review']
+    - actions: ['requestForApproval']
       effect: EFFECT_ALLOW
       derivedRoles:
         - owner
@@ -45,17 +45,18 @@ resourcePolicy:
         - admin
         - moderator
 
-    - actions: ['publish']
-      effect: EFFECT_ALLOW
-      derivedRoles:
-        - admin
-
     - actions: ['delete']
       effect: EFFECT_ALLOW
       derivedRoles:
         - deleteableArticle
 
     - actions: ['validate']
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - admin
+        - moderator
+
+    - actions: ['getPendingVerication']
       effect: EFFECT_ALLOW
       derivedRoles:
         - admin
