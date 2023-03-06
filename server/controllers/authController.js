@@ -118,14 +118,6 @@ exports.protect = async (req, res, next) => {
             status:'error',
             message: err
         });
-    }
-    
+    }   
 
 }
-
-exports.restrictTo = 
-    (...roles) => 
-    (req, res, next) => {
-        
-        next();
-    }

@@ -3,7 +3,7 @@ resourcePolicy:
   version: "default"
   importDerivedRoles:
     - common_roles
-  resource: "post"
+  resource: "article"
   rules:
     - actions: ['create']
       effect: EFFECT_ALLOW
@@ -12,12 +12,15 @@ resourcePolicy:
         - moderator
         - standard
 
+    - actions: ['update']
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - owner
+
     - actions: ['save']
       effect: EFFECT_ALLOW
       derivedRoles:
-        - admin
-        - moderator
-        - standard
+        - owner
 
     - actions: ['support']
       effect: EFFECT_ALLOW
@@ -29,9 +32,7 @@ resourcePolicy:
     - actions: ['send for review']
       effect: EFFECT_ALLOW
       derivedRoles:
-        - admin
-        - moderator
-        - standard
+        - owner
 
     - actions: ['approve and publish']
       effect: EFFECT_ALLOW
@@ -50,11 +51,6 @@ resourcePolicy:
       derivedRoles:
         - admin
         - moderator
-
-    - actions: ['choose moderator']
-      effect: EFFECT_ALLOW
-      derivedRoles:
-        - admin
 
     - actions: ['publish']
       effect: EFFECT_ALLOW

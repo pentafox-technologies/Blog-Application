@@ -17,6 +17,9 @@ router.post('/approveandPublish/:slug',authController.protect ,articleController
 router.post('/rejectPost/:slug',authController.protect ,articleController.rejectPost);
 
 
+router.route('/search/:query').get(articleController.searchArticle)
+
+router.route('/validation/:slug').get(authController.protect, articleController.requestToValidate);
 
 router.get("/create", (req, res) =>
 {

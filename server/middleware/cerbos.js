@@ -9,9 +9,10 @@ exports.isAllowed = async function(principal,resource,action) {
 
   const cerbosObject = {
     resource: {
-      kind: resource,
+      kind: resource.resource,
       policyVersion: "default",
       id: "dummy",
+      attributes: resource,
     },
     principal: {
       id: "dummy",
