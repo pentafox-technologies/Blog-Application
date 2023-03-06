@@ -231,11 +231,25 @@ exports.deleteArticle=async (req, res, next) =>
     }
 };
 
+exports.searchArticle = async (req, res) => {
+    try {
+        const client = await db.connect();
+        const query = req.params.query;
+    } catch (err) {
+        res.status(404).data({
+            status:"error",
+            data:{
+                err: err.message
+            }
+        })
+    }
+}
+
 
 
 // Validation Part 
 
-exports.validateRequest=async (req, res, next) =>
+exports.requestToValidate=async (req, res, next) =>
 {
     const client=await db.connect();
     const article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);

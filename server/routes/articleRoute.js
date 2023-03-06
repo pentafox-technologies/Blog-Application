@@ -8,7 +8,8 @@ router.route('/').get(articleController.getAllArticle).post(authController.prote
 
 router.route('/:slug').get(articleController.getArticle).patch(authController.protect, articleController.updateArticle).delete(articleController.deleteArticle);
 
-router.route('/validation/:slug').get(authController.protect, articleController.validateRequest);
+router.route('/search/:query').get(articleController.searchArticle)
+router.route('/validation/:slug').get(authController.protect, articleController.requestToValidate);
 
 router.get("/create", (req, res) =>
 {
