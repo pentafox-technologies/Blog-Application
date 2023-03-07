@@ -25,3 +25,8 @@
 4.	Logs:
 	1.	Creating logs
 	2.	Retrieving a information based on query (like user-post<50,  post-like>100)
+
+
+
+Docker Run Command :: 
+docker run --rm --name cerbos -v "$(pwd)/cerbos/policies:/policies" -p 3592:3592 -p 3593:3593 ghcr.io/cerbos/cerbos:latest
