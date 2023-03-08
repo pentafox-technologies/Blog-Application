@@ -6,25 +6,25 @@ derivedRoles:
       parentRoles: ["member"]
       condition:
         match:
-          expr: request.principal.attr.userType == "admin"
+          expr: request.principal.attr.userType == "admin" && request.principal.attr.userState == "active"
 
     - name: standard
       parentRoles: ["member"]
       condition:
         match:
-          expr: request.principal.attr.userType == "standard"
+          expr: request.principal.attr.userType == "standard" && request.principal.attr.userState == "active"
 
     - name: moderator
       parentRoles: ["member"]
       condition:
         match:
-          expr: request.principal.attr.userType == "moderator"
+          expr: request.principal.attr.userType == "moderator" && request.principal.attr.userState == "active"
 
     - name: owner
       parentRoles: ["member"]
       condition:
         match:
-          expr: request.principal.attr.userName == request.resource.attr.author
+          expr: request.principal.attr.userName == request.resource.attr.author && request.principal.attr.userState == "active"
 
     - name: deleteableArticle
       parentRoles: ["member"]
@@ -32,14 +32,14 @@ derivedRoles:
         match:
           any:
             of:
-              - expr: request.resource.attr.author == request.principal.attr.userName && request.resource.attr.status == "draft"
-              - expr: request.resource.attr.author == request.principal.attr.userName && request.resource.attr.status == "pending_verification"
-              - expr: request.resource.attr.author == request.principal.attr.userName && request.resource.attr.status == "pushback"
-              - expr: request.resource.attr.author == request.principal.attr.userName && request.resource.attr.status == "rejected"
-              - expr: request.principal.attr.userType == "admin" && request.resource.attr.status == "published"
+              - expr: request.resource.attr.author == request.principal.attr.userName && request.resource.attr.status == "draft" && request.principal.attr.userState == "active"
+              - expr: request.resource.attr.author == request.principal.attr.userName && request.resource.attr.status == "pending_verification" && request.principal.attr.userState == "active"
+              - expr: request.resource.attr.author == request.principal.attr.userName && request.resource.attr.status == "pushback" && request.principal.attr.userState == "active"
+              - expr: request.resource.attr.author == request.principal.attr.userName && request.resource.attr.status == "rejected" && request.principal.attr.userState == "active"
+              - expr: request.principal.attr.userType == "admin" && request.resource.attr.status == "published" && request.principal.attr.userState == "active"
 
     - name: myself
       parentRoles: ["member"]
       condition:
         match:
-          expr: request.principal.attr.userName == request.resource.attr.userName
+          expr: request.principal.attr.userName == request.resource.attr.userName && request.principal.attr.userState == "active"
