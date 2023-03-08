@@ -204,19 +204,18 @@ exports.deleteArticle=async (req, res, next) =>
     try {
         const slug=req.params.slug;
         const client=await db.connect();
-        let Article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
+        let Article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [slug]);
         Article=Article.rows[0];
         Article.resource="article";
-        console.log(req.user);
-        console.log(Article);
         if(await cerbos.isAllowed(req.user, Article, "delete")) {
         
+            await client.query(`DELETE FROM "CategoryMap" WHERE article like $1;`, [slug]);
             const Articles=await client.query(`DELETE FROM "Article" WHERE slug like $1;`, [slug]);
             res.status(204).json({
                 status: 'success',
+                message: "article deleted successfully",
                 data: Articles,
             });
-
         }
     else{
         res.status(400).json({
@@ -245,63 +244,6 @@ exports.searchArticle = async (req, res) => {
         })
     }
 }
-
-
-
-// Validation Part 
-
-// exports.requestToValidate=async (req, res, next) =>
-// {
-//     if(await cerbos.isAllowed(req.user, {resource: "article"}, "validate")) {
-//         const client=await db.connect();
-//         const article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
-
-//         try {
-
-//             // Check whether article exist or not
-//             if(article.rowCount<=0) {
-//                 res.status(200).json({
-//                     status: 'Request failed',
-//                     message: 'Article not found',
-//                 });
-//             }
-
-//             // to check the log status
-//             let articleStatus=await client.query(`SELECT * FROM "ArticleLogs" where article like $1`, [req.params.slug]);
-
-//             if(!articleStatus) {
-//                 state='on_verification';
-//                 reason='Request validation';
-
-//                 let newLog=await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason", "controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) returning *`, [req.params.slug, state, new Date(), reason, article.rows[0].author, req.user.userName])
-
-//                 res.status(200).json({
-//                     status: 'Request approved',
-//                     log: newLog.rows,
-//                 });
-//             }
-//             else {
-//                 res.status(400).json({
-//                     status: 'Request failed',
-//                     message: 'Already on validation'
-//                 });
-//             }
-//         } catch(error) {
-//             console.log(error);
-//             res.status(400).json({
-//                 status: 'Request Failed',
-//                 message: error,
-//             });
-
-//         }
-//     }
-//     else{
-//         res.status(400).json({
-//             message:'access denied',
-//         });
-//     }
-    
-// }
 
 exports.requestForApproval = async (req, res) => {
     
@@ -408,3 +350,44 @@ exports.getPendingVerication = async (req, res) => {
     
 }
 
+exports.selectToValidate=async (req, res, next) =>
+{
+    if(await cerbos.isAllowed(req.user, {resource: "article"}, "validate")) {
+        try {
+            const client=await db.connect();
+            const article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
+
+            // Check whether article exist or not
+            if(article.rowCount<=0) {
+                res.status(200).json({
+                    status: 'Request failed',
+                    message: 'Article not found',
+                });
+            }
+
+            state='on_verification';
+            reason='Request validation';
+
+            let newLog=await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason", "controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) returning *`, [req.params.slug, state, new Date(), reason, article.rows[0].author, req.user.userName])
+            let articleStatus=await client.query(`update "Article" set "status"=$1 where "slug" = $2`, [state, req.params.slug])
+
+            res.status(200).json({
+                status: 'Select for validation approved',
+                log: newLog.rows,
+            });
+        }
+        catch(error) {
+            console.log(error);
+            res.status(400).json({
+                status: 'Request Failed',
+                message: error,
+            });
+        }
+    }
+    else{
+        res.status(400).json({
+            message:'access denied',
+        });
+    }
+    
+}

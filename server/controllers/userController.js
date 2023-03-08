@@ -57,7 +57,6 @@ exports.getMe=async (req, res) =>
     if(await cerbos.isAllowed(req.user,{resource:"user"},"getByUserName")) {
             try {
             const client=await db.connect();
-            console.log("😎😎", req.user);
             const user=await client.query(`select * from "User" where "userName" = $1`, [req.user.userName]);
             if(user.rows.length==0) {
                 return res.status(400).json({
@@ -149,7 +148,7 @@ exports.updateProfile=async (req, res, next) =>
     if(await cerbos.isAllowed(req.user,{resource:"user", userName: req.params.slug},"update")){
             try {
                 const client=await db.connect();
-                const update=await client.query(`update "User" set "password"=$1 where "userName" = $2`, [req.body.profilePic, req.params.slug]);
+                const update=await client.query(`update "User" set "profilePic"=$1 where "userName" = $2`, [req.body.profilePic, req.params.slug]);
 
                 res.status(200).json({
                     status: 'success',
@@ -200,9 +199,16 @@ exports.updateMail=async (req, res, next) =>
 
 exports.deleteUser=async (req, res, next) =>
 {
-    if(await cerbos.isAllowed(req.user,{resource:"user"},"update")) {
+    if(await cerbos.isAllowed(req.user,{resource:"user"},"delete")) {
         try {
             const client=await db.connect();
+
+            await client.query(`Update "Article" set "author" = $1 where author = $2;`, ["deleted-user", req.params.slug]);
+            await client.query(`Update "TopCategory" set "initializedBy" = $1 where "initializedBy" = $2;`, ["deleted-user", req.params.slug]);
+            await client.query(`Update "CategorySet" set "initializedBy" = $1 where "initializedBy" = $2;`, ["deleted-user", req.params.slug]);
+            await client.query(`Update "Supports" set "user" = $1 where user = $2;`, ["deleted-user", req.params.slug]);
+            await client.query(`Update "ArticleLogs" set "controlFrom" = $1 where "controlFrom" = $2;`, ["deleted-user", req.params.slug]);
+            await client.query(`Update "ArticleLogs" set "controlTo" = $1 where "controlTo" = $2;`, ["deleted-user", req.params.slug]);
             await client.query(`delete from "User" where "userName" = $1`, [req.params.slug]);
 
             res.status(200).json({

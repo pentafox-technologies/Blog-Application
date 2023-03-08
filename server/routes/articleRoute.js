@@ -14,10 +14,11 @@ router.post('/approveandPublish/:slug',authController.protect ,articleController
 
 router.post('/rejectPost/:slug',authController.protect ,articleController.rejectPost);
 
-router.route('/:slug').get(articleController.getArticle).patch(authController.protect, articleController.updateArticle).delete(authController.protect, articleController.deleteArticle);
-
+router.route('/validation/:slug').get(authController.protect, articleController.selectToValidate);
 
 router.route('/search/:query').get(articleController.searchArticle)
+
+router.route('/:slug').get(articleController.getArticle).patch(authController.protect, articleController.updateArticle).delete(authController.protect, articleController.deleteArticle);
 
 //router.route('/validation/:slug').get(authController.protect, articleController.requestToValidate);
 

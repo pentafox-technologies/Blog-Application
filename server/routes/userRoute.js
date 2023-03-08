@@ -7,7 +7,7 @@ const router=express.Router();
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 
-router.get('/getMe',authController.protect, userController.getMe);
+router.post('/getMe',authController.protect, userController.getMe);
 
 router.route('/')
     .get(authController.protect, userController.getAllUser)
