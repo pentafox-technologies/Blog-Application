@@ -2,7 +2,7 @@ CREATE TYPE usertype AS ENUM ('admin', 'moderator', 'standard');
 CREATE TYPE stats AS ENUM ('draft', 'pending_verification', 'on_verification', 'published', 'pushback', 'rejected');
 CREATE TYPE visibilitySet AS ENUM ('not_applicable', 'public', 'private');
 CREATE TYPE logstats AS ENUM ('draft', 'pending_verification', 'on_verification', 'published', 'pushback', 'rejected', 'delete', 'control');
-CREATE TYPE visibilitySet AS ENUM ('active', 'inactive', 'deleted');
+CREATE TYPE userstate AS ENUM ('active', 'inactive', 'deleted');
 
 CREATE TABLE "User" (
     "userName" VARCHAR(50) NOT NULL PRIMARY KEY,
