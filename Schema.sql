@@ -1,5 +1,5 @@
 CREATE TYPE usertype AS ENUM ('admin', 'moderator', 'standard');
-CREATE TYPE stats AS ENUM ('draft', 'pending_verification', 'on_verification', 'published', 'pushback', 'rejected');
+CREATE TYPE stats AS ENUM ('draft', 'pending_verification', 'on_verification', 'published', 'pushback', 'rejected', 'deleted');
 CREATE TYPE visibilitySet AS ENUM ('not_applicable', 'public', 'private');
 CREATE TYPE logstats AS ENUM ('draft', 'pending_verification', 'on_verification', 'published', 'pushback', 'rejected', 'delete', 'control');
 CREATE TYPE userstate AS ENUM ('active', 'inactive', 'deleted');

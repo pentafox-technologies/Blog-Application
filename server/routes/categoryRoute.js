@@ -5,9 +5,10 @@ const router=express.Router();
 
 router.route('/').get(categoryController.getAllCategory);//.post(authController.protect, categoryController.createTopCategory);
 
-router.route('/:slug').get(categoryController.getCategory).patch(authController.protect, categoryController.updateCategory).delete(categoryController.deleteCategory);
-
 router.route('/topCategory').post(authController.protect, categoryController.createTopCategory)
+
+router.route('/:categoryName').get(categoryController.getCategory).patch(authController.protect, categoryController.updateCategory).delete(categoryController.deleteCategory);
+
 
 
 module.exports = router;

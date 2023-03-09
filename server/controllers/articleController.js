@@ -16,7 +16,7 @@ exports.createArticle=async (req, res) =>
                 const created=new Date();
                 let checkcategory=await client.query(`select * from "CategorySet" where "catName" like '${categories[i]}'`);
                 if(checkcategory.rows.length==0) {
-                    let categorizedUnder="Other"
+                    let categorizedUnder=req.body.topCategory;
                     let newCategory=await client.query(`insert into "CategorySet" ("catName", "categorizedUnder", "initializedBy", "dateCreated") values($1,$2,$3,$4) RETURNING *`, [categories[i], categorizedUnder, req.user.userName, created]);
                 }
             }
@@ -57,7 +57,6 @@ exports.createArticle=async (req, res) =>
             });
 
         } catch(err) {
-            console.log(err);
             res.status(400).json({
                 status: 'error',
                 message: err
@@ -75,14 +74,13 @@ exports.getAllArticle=async (req, res, next) =>
 {
     const client=await db.connect();
     try {
-        const Articles=await client.query(`select * from "Article";`);
+        const Articles=await client.query(`select * from "Article" where status!=$1 and visibility=$2;`,["deleted","public"]);
         res.status(201).json({
             status: 'success',
             data: Articles.rows,
         });
 
     } catch(error) {
-        console.log(error);
         res.status(400).json({
             status: 'error',
             message: error
@@ -96,13 +94,21 @@ exports.getArticle=async (req, res, next) =>
 
     const client=await db.connect();
     try {
-        const Article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [slug]);
-        res.status(201).json({
-            status: 'success',
-            data: Article.rows,
-        });
+        const Article=await client.query(`SELECT * FROM "Article" where slug = $1 and status!=$2 and visibility=$3;`, [slug,"deleted","public"]);
+        if(Article.rowCount==0){
+            res.status(201).json({
+                status: 'error',
+                message: 'no article found',
+            });
+        }
+        else{
+            res.status(201).json({
+                status: 'success',
+                data: Article.rows,
+            });
+        }
+        
     } catch(error) {
-        console.log(error);
         res.status(400).json({
             status: 'error',
             message: error
@@ -114,7 +120,7 @@ exports.updateArticle=async (req, res) =>
 {
 
     const client=await db.connect();
-    let Article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
+    let Article=await client.query(`SELECT * FROM "Article" where slug like $1 and status!=$2;`, [req.params.slug,"deleted"]);
     Article=Article.rows[0];
     Article.resource="article";
     if(await cerbos.isAllowed(req.user, Article, "update")) {
@@ -125,7 +131,6 @@ exports.updateArticle=async (req, res) =>
             if(req.body.category) {
                 categories=req.body.category.split(" ");
             }
-            console.log(categories);
             // here we are inserting into categorySet Table
             // And we will check whether that category does not exist, if true we will insert it by categorized under = "Other"
             if(categories.length>0) {
@@ -145,7 +150,6 @@ exports.updateArticle=async (req, res) =>
             // Create another array storing each set command
             // and assigning a number value for parameterized query
             let set=[];
-            console.log(req.body);
             let values=[];
             Object.keys(req.body).forEach(function(key, i)
             {
@@ -162,7 +166,6 @@ exports.updateArticle=async (req, res) =>
 
             // // Return a complete query string
             query=query.join(' ')
-            console.log(query);
 
 
             //  Query for creating article
@@ -184,7 +187,6 @@ exports.updateArticle=async (req, res) =>
             });
 
         } catch(err) {
-            console.log(err);
             res.status(400).json({
                 status: 'error',
                 message: err
@@ -204,17 +206,16 @@ exports.deleteArticle=async (req, res, next) =>
     try {
         const slug=req.params.slug;
         const client=await db.connect();
-        let Article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [slug]);
+        let Article=await client.query(`SELECT * FROM "Article" where slug like $1 and status!=$2;`, [slug,"deleted"]);
         Article=Article.rows[0];
         Article.resource="article";
         if(await cerbos.isAllowed(req.user, Article, "delete")) {
         
-            await client.query(`DELETE FROM "CategoryMap" WHERE article like $1;`, [slug]);
-            const Articles=await client.query(`DELETE FROM "Article" WHERE slug like $1;`, [slug]);
-            res.status(204).json({
+            //await client.query(`DELETE FROM "CategoryMap" WHERE article like $1;`, [slug]);
+            const Articles=await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['deleted',slug]);
+            res.status(200).json({
                 status: 'success',
                 message: "article deleted successfully",
-                data: Articles,
             });
         }
     else{
@@ -223,10 +224,9 @@ exports.deleteArticle=async (req, res, next) =>
         });
     } 
     }catch(error) {
-        console.log(error);
         res.status(400).json({
             status: 'error',
-            message: error
+            message: "Article not found"
         });
     }
 };
@@ -245,10 +245,10 @@ exports.searchArticle = async (req, res) => {
     }
 }
 
-exports.requestForApproval = async (req, res) => {
+exports.sendForApproval = async (req, res) => {
     
     const client=await db.connect();
-    let Article1=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
+    let Article1=await client.query(`SELECT * FROM "Article" where slug like $1 and status!=$2;`, [req.params.slug,'deleted']);
     Article1=Article1.rows[0];
     Article1.resource="article";
 
@@ -261,7 +261,6 @@ exports.requestForApproval = async (req, res) => {
                 message: 'Sent For verification'
             });
         } catch (err) {
-            console.log(err);
             res.status(400).json({
                 status:'error',
                 message: err
@@ -285,7 +284,6 @@ exports.approveAndPublish = async (req, res) => {
                 message: 'Approved And Published'
             });
         } catch (err) {
-            console.log(err);
             res.status(400).json({
                 status:'error',
                 message: err
@@ -309,7 +307,6 @@ exports.rejectPost = async (req, res) => {
                 message: 'Rejected The Post'
             });
         } catch (err) {
-            console.log(err);
             res.status(400).json({
                 status:'error',
                 message: err
@@ -335,7 +332,6 @@ exports.getPendingVerication = async (req, res) => {
             });
 
         } catch(err) {
-            console.log(err);
             res.status(400).json({
                 status:'error',
                 message: err
@@ -355,7 +351,7 @@ exports.selectToValidate=async (req, res, next) =>
     if(await cerbos.isAllowed(req.user, {resource: "article"}, "validate")) {
         try {
             const client=await db.connect();
-            const article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
+            const article=await client.query(`SELECT * FROM "Article" where slug = $1;`, [req.params.slug]);
 
             // Check whether article exist or not
             if(article.rowCount<=0) {
@@ -377,7 +373,6 @@ exports.selectToValidate=async (req, res, next) =>
             });
         }
         catch(error) {
-            console.log(error);
             res.status(400).json({
                 status: 'Request Failed',
                 message: error,
@@ -389,5 +384,36 @@ exports.selectToValidate=async (req, res, next) =>
             message:'access denied',
         });
     }
-    
+}
+
+exports.pushbackArticle = async (req,res) => {
+    if(await cerbos.isAllowed(req.user, {resource: "article"}, "pushback")) {
+        try {
+            const client = await db.connect();
+
+            const article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
+            // Check whether article exist or not
+            if(article.rowCount<=0) {
+                res.status(200).json({
+                    status: 'Request failed',
+                    message: 'Article not found',
+                });
+            }
+            const UpdatedArticle = await client.query('UPDATE "Article" SET "pushbackNotes" = ($1), status = ($2) WHERE "slug" = ($3)',[req.body.pushbackNotes,'pushback',req.params.slug]);
+            res.status(200).json({
+                status: 'success',
+                message: 'PushBack with notes'
+            });
+        } catch(err) {
+            res.status(400).json({
+                status:'error',
+                message: err
+            });
+        }
+    }
+    else{
+        res.status(400).json({
+            message:'access denied',
+        });
+    }
 }

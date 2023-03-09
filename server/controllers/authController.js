@@ -112,7 +112,6 @@ exports.protect = async (req, res, next) => {
         next();
         
     } catch(err) {
-        console.log(err);
         res.status(400).json({
             status:'error',
             message: err

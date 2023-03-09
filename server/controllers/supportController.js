@@ -77,13 +77,12 @@ exports.deleteSupport = async (req, res, next) => {
             });
         }
         await client.query(`DELETE FROM "Supports" WHERE "user"=$1 and "article" = $2`, [req.user.userName,req.params.slug]);
-        res.status(204).json({
+        res.status(200).json({
             status:"success",
             message : "removed support successfully"
         });
     }
     catch(err){
-        console.log(err)
         res.status(404).json({
             status: 'error',
             data:{

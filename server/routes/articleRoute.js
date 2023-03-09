@@ -8,7 +8,7 @@ router.route('/').get(articleController.getAllArticle).post(authController.prote
 
 router.get('/getPendingVerification', authController.protect, articleController.getPendingVerication);
 
-router.post('/requestForApproval/:slug',authController.protect ,articleController.requestForApproval);
+router.post('/sendForApproval/:slug',authController.protect ,articleController.sendForApproval);
 
 router.post('/approveandPublish/:slug',authController.protect ,articleController.approveAndPublish);
 
@@ -18,13 +18,8 @@ router.route('/validation/:slug').get(authController.protect, articleController.
 
 router.route('/search/:query').get(articleController.searchArticle)
 
+router.post('/pushbackArticle/:slug',authController.protect ,articleController.pushbackArticle);
+
 router.route('/:slug').get(articleController.getArticle).patch(authController.protect, articleController.updateArticle).delete(authController.protect, articleController.deleteArticle);
-
-//router.route('/validation/:slug').get(authController.protect, articleController.requestToValidate);
-
-// router.get("/create", (req, res) =>
-// {
-//     res.send("Hello, this is create article")
-// })
 
 module.exports = router;

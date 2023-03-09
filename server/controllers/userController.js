@@ -13,7 +13,6 @@ exports.getAllUser=async (req, res, next) =>
                 data: users.rows,
             });
         } catch(err) {
-            console.log(err);
         }
     }
     else{
@@ -54,7 +53,6 @@ exports.getUser=async (req, res, next) =>
         }
         
     } catch(error) {
-        console.log(error);
         res.status(400).json({
             status: "error",
             message: error
@@ -83,7 +81,6 @@ exports.getMe=async (req, res) =>
             });
 
         } catch(err) {
-            console.log(err);
             res.status(400).json({
                 status: 'error',
                 message: err
@@ -111,7 +108,6 @@ exports.updateUser=async (req, res, next) =>
                     data: update
                 });
             } catch(error) {
-                console.log(error);
                 res.status(400).json({
                     status: 'error',
                     message: error
@@ -139,7 +135,6 @@ exports.updatePassword=async (req, res, next) =>
                     data: update
                 });
             } catch(error) {
-                console.log(error);
                 res.status(400).json({
                     status: 'error',
                     message: error
@@ -166,7 +161,6 @@ exports.updateProfile=async (req, res, next) =>
                     data: update
                 });
             } catch(error) {
-                console.log(error);
                 res.status(400).json({
                     status: 'error',
                     message: error
@@ -193,7 +187,6 @@ exports.updateMail=async (req, res, next) =>
                     data: update
                 });
             } catch(error) {
-                console.log(error);
                 res.status(400).json({
                     status: 'error',
                     message: error
@@ -218,9 +211,9 @@ exports.deleteUser=async (req, res, next) =>
 
             res.status(200).json({
                 status: 'success',
+                message: 'user deleted successfully'
             });
         } catch(error) {
-            console.log(error);
             res.status(400).json({
                 status: 'error',
                 message: error
@@ -249,7 +242,6 @@ exports.promoteUser=async (req, res, next) =>
             });
 
         } catch(error) {
-            console.log(error)
             res.status(400).json({
                 status: 'Request failed',
                 message: error
