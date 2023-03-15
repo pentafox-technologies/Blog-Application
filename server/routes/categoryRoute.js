@@ -7,7 +7,7 @@ router.route('/').get(categoryController.getAllCategory);//.post(authController.
 
 router.route('/topCategory').post(authController.protect, categoryController.createTopCategory)
 
-router.route('/:categoryName').get(categoryController.getCategory).patch(authController.protect, categoryController.updateCategory).delete(categoryController.deleteCategory);
+router.route('/:categoryName').get(categoryController.getCategory).patch(authController.protect, categoryController.updateCategory)
 
 
 

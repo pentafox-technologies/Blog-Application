@@ -86,11 +86,7 @@ exports.getCategory=async (req, res, next) =>
     }
 };
 
-exports.deleteCategory = (req, res, next) => {
-    res.status(204).json({
-        status: 'success'
-    });
-};
+
 
 exports.updateCategory = async (req, res) => {
     if(await cerbos.isAllowed(req.user,{resource:"category"},"update")) {

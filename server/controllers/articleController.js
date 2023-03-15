@@ -50,10 +50,11 @@ exports.createArticle=async (req, res) =>
                 const categoryMap=await client.query(`insert into "CategoryMap" ("article", "category") values($1,$2) RETURNING *`, [newArticle.rows[0].slug, categories[i]]);
             }
 
+            await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason","controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) RETURNING *`, [slug, status, new Date(), "created Article", req.user.userName, req.user.userName]);
             // sending response finally ☺️
             res.status(201).json({
                 status: 'success',
-                data: newArticle
+                data: newArticle.rows
             });
 
         } catch(err) {
@@ -181,9 +182,11 @@ exports.updateArticle=async (req, res) =>
             }
 
             // sending response finally ☺️
+            await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason","controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) RETURNING *`, [Article.rows[0].slug, Article.rows[0].status, new Date(), "updated Article", req.user.userName, req.user.userName]);
+
             res.status(200).json({
                 status: 'success',
-                data: Article
+                data: Article.rows[0]
             });
 
         } catch(err) {
@@ -213,6 +216,9 @@ exports.deleteArticle=async (req, res, next) =>
         
             //await client.query(`DELETE FROM "CategoryMap" WHERE article like $1;`, [slug]);
             const Articles=await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['deleted',slug]);
+            //console.log(Article);
+            await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason","controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) RETURNING *`, [Article.slug, Article.status, new Date(), "deleted Article", req.user.userName, req.user.userName]);
+
             res.status(200).json({
                 status: 'success',
                 message: "article deleted successfully",
@@ -224,6 +230,7 @@ exports.deleteArticle=async (req, res, next) =>
         });
     } 
     }catch(error) {
+            console.log(error);
         res.status(400).json({
             status: 'error',
             message: "Article not found"
@@ -233,12 +240,21 @@ exports.deleteArticle=async (req, res, next) =>
 
 exports.searchArticle = async (req, res) => {
     try {
+
+        const query = req.params.query+"%";
         const client = await db.connect();
-        const query = req.params.query;
+        const result = await client.query(`SELECT * FROM "Article" where slug like $1 and status=$2;`, [query,"published"]);
+        res.status(200).json({
+            status: 'success',
+            data: {
+                data:result.rows
+            }
+        });
+
     } catch (err) {
-        res.status(404).data({
-            status:"error",
-            data:{
+        res.status(404).json({
+            status: "error",
+            data: {
                 err: err.message
             }
         })
@@ -256,6 +272,8 @@ exports.sendForApproval = async (req, res) => {
         try {
             
             const Article = await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['pending_verification',req.params.slug]);
+            await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason","controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) RETURNING *`, [Article1.slug, Article1.status, new Date(), "Send for Approval", req.user.userName, req.user.userName]);
+
             res.status(200).json({
                 status: 'success',
                 message: 'Sent For verification'
@@ -278,12 +296,16 @@ exports.approveAndPublish = async (req, res) => {
     if(await cerbos.isAllowed(req.user, {resource: "article"}, "approve and publish")) {
         try {
             const client = await db.connect();
-            const Article = await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['published',req.params.slug]);
+            await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['published',req.params.slug]);
+            let Article=await client.query(`SELECT * FROM "Article" where slug like $1 and status!=$2;`, [req.params.slug,'deleted']);
+            await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason","controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) RETURNING *`, [Article.rows[0].slug, Article.rows[0].status, new Date(), "Approved and Published", req.user.userName, Article.rows[0].author]);
+
             res.status(200).json({
                 status: 'success',
                 message: 'Approved And Published'
             });
         } catch (err) {
+            console.log(err)
             res.status(400).json({
                 status:'error',
                 message: err
@@ -301,7 +323,9 @@ exports.rejectPost = async (req, res) => {
     if(await cerbos.isAllowed(req.user, {resource: "article"}, "reject")) {
         try {
             const client = await db.connect();
-            const Article = await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['rejected',req.params.slug]);
+            await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['rejected',req.params.slug]);
+            let Article=await client.query(`SELECT * FROM "Article" where slug like $1 and status!=$2;`, [req.params.slug,'deleted']);
+            await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason","controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) RETURNING *`, [Article.rows[0].slug, Article.rows[0].status, new Date(), "Rejected", req.user.userName, Article.rows[0].author]);
             res.status(200).json({
                 status: 'success',
                 message: 'Rejected The Post'
@@ -399,7 +423,10 @@ exports.pushbackArticle = async (req,res) => {
                     message: 'Article not found',
                 });
             }
-            const UpdatedArticle = await client.query('UPDATE "Article" SET "pushbackNotes" = ($1), status = ($2) WHERE "slug" = ($3)',[req.body.pushbackNotes,'pushback',req.params.slug]);
+            await client.query('UPDATE "Article" SET "pushbackNotes" = ($1), status = ($2) WHERE "slug" = ($3)',[req.body.pushbackNotes,'pushback',req.params.slug]);
+            let Article=await client.query(`SELECT * FROM "Article" where slug like $1 and status!=$2;`, [req.params.slug,'deleted']);
+            await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason","controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) RETURNING *`, [Article.rows[0].slug, Article.rows[0].status, new Date(), "Pushback", req.user.userName, Article.rows[0].author]);
+
             res.status(200).json({
                 status: 'success',
                 message: 'PushBack with notes'
