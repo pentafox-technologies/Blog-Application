@@ -238,7 +238,8 @@ exports.deleteArticle=async (req, res, next) =>
     }
 };
 
-exports.searchArticle = async (req, res) => {
+exports.searchArticle=async (req, res) =>
+{
     try {
 
         const query = req.params.query+"%";
@@ -444,3 +445,5 @@ exports.pushbackArticle = async (req,res) => {
         });
     }
 }
+
+
