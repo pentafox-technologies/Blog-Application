@@ -231,14 +231,15 @@ exports.deleteArticle=async (req, res, next) =>
     }
 };
 
-exports.searchArticle = async (req, res) => {
+exports.searchArticle=async (req, res) =>
+{
     try {
-        const client = await db.connect();
-        const query = req.params.query;
-    } catch (err) {
+        const client=await db.connect();
+        const query=req.params.query;
+    } catch(err) {
         res.status(404).data({
-            status:"error",
-            data:{
+            status: "error",
+            data: {
                 err: err.message
             }
         })
@@ -249,12 +250,11 @@ exports.searchArticle = async (req, res) => {
 
 // Validation Part 
 
-exports.requestToValidate=async (req, res, next) =>
+exports.selectToValidate=async (req, res, next) =>
 {
-    const client=await db.connect();
-    const article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
-
     try {
+        const client=await db.connect();
+        const article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
 
         // Check whether article exist or not
         if(article.rowCount<=0) {
@@ -264,27 +264,18 @@ exports.requestToValidate=async (req, res, next) =>
             });
         }
 
-        // to check the log status
-        let articleStatus=await client.query(`SELECT * FROM "ArticleLogs" where article like $1`, [req.params.slug]);
+        state='on_verification';
+        reason='Request validation';
 
-        if(!articleStatus) {
-            state='on_verification';
-            reason='Request validation';
+        let newLog=await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason", "controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) returning *`, [req.params.slug, state, new Date(), reason, article.rows[0].author, req.user.userName])
+        let articleStatus=await client.query(`update "Article" set "status"=$1 where "slug" = $2`, [state, req.params.slug])
 
-            let newLog=await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason", "controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) returning *`, [req.params.slug, state, new Date(), reason, article.rows[0].author, req.user.userName])
-
-            res.status(200).json({
-                status: 'Request approved',
-                log: newLog.rows,
-            });
-        }
-        else {
-            res.status(400).json({
-                status: 'Request failed',
-                message: 'Already on validation'
-            });
-        }
-    } catch(error) {
+        res.status(200).json({
+            status: 'Select for validation approved',
+            log: newLog.rows,
+        });
+    }
+    catch(error) {
         console.log(error);
         res.status(400).json({
             status: 'Request Failed',
@@ -293,3 +284,5 @@ exports.requestToValidate=async (req, res, next) =>
 
     }
 }
+
+

@@ -9,5 +9,7 @@ router.route('/:slug').get(categoryController.getCategory).patch(categoryControl
 
 router.route('/topCategory').post(authController.protect, categoryController.createTopCategory)
 
+router.route('/topCategory/:slug').delete(authController.protect, categoryController.deleteTopCategory)
+
 
 module.exports = router;
