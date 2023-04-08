@@ -75,13 +75,30 @@ exports.getAllArticle=async (req, res, next) =>
 {
     const client=await db.connect();
     try {
-        const Articles=await client.query(`select * from "Article" where status!=$1 and visibility=$2;`,["deleted","public"]);
+        const Articles=await client.query(`select * from "Article" where status=$1;`,["published"]);
+        result=[];
+        for(var i=0;i<Articles.rows.length;++i){
+            let article = Articles.rows[i];
+            let tem = { slug: article.slug };
+            let subCat = await client.query(`select "category" from "CategoryMap" where article=$1`, [article.slug]);
+            let CName = await client.query(`select "categorizedUnder" from "CategorySet" where "catName"=$1`, [subCat.rows[0].category]);
+            tem = { ...tem, categoryName: CName.rows[0].categorizedUnder };
+            let publishedDate = await client.query(`select "updateTime" from "ArticleLogs" where "article"=$1 and "actionReason"=$2`, [article.slug, "Approved and Published"]);
+            tem = { ...tem, publishedDate: publishedDate.rows[0].updateTime, title: article.title, content: article.content };
+            result.push(tem);
+        }
+        //  const result = Articles.rows.map(async article => {
+            
+        //     return tem;
+        // })
+        console.log(result)
         res.status(201).json({
             status: 'success',
-            data: Articles.rows,
+            data: result,
         });
 
-    } catch(error) {
+    } 
+    catch(error) {
         res.status(400).json({
             status: 'error',
             message: error
