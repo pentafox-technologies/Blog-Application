@@ -2,6 +2,7 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import Navbar from '../components/navbar'
 import Link from 'next/link'
+import HomePage from './Home/index'
 
 export default function Home()
 {
@@ -13,6 +14,8 @@ export default function Home()
       </Head>
 
       <Navbar />
+      <br/>
+      <HomePage/>
     </div>
   )
 }
