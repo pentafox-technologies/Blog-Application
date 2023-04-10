@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyparser = require('body-parser');
+const cors = require("cors")
 // import bodyparser from "body-parser";
 
 
@@ -16,6 +17,7 @@ const cerbos = require("./middleware/cerbos");
 // import categoryRouter from "./routes/categoryRoute.js"
 
 app.use(express.json({ limit: '10kb' }));
+app.use(cors());
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 // app.use(morgan('dev'));
 

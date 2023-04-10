@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col';
 
 
 
-function articleCard() {
+function articleCard({Article}) {
   
   const isNonMobileScreens = useMediaQuery("(min-width:720px)");
 
@@ -26,16 +26,14 @@ function articleCard() {
         <Row>
           <Col md={5} ><Image src={articleCardImage} width={isNonMobileScreens ? "25%" : "100%"} height={isNonMobileScreens ? "25%" : "100%"} style={{display:"inline"}} alt='article image'/></Col>
           <Col md={7}>
-            <Row><p style={{display:"inline"}}> <a href='#' style={{textDecoration:"none", color:"blue"}}>Category Name</a> | Published Date</p></Row>
-            <Row><h3 style={{display:"inline", fontWeight: 'normal' }}>Some brief description about the Article</h3> <br/></Row>
-            <Row><p>5 min read - here we will have the starting few lines from the article for better understatnding of the article. It shpuld contains three lines in the card displayed</p></Row>
+            <Row><p style={{display:"inline"}}> <a href='#' style={{textDecoration:"none", color:"blue"}}>{Article.categoryName}</a> | {Article.publishedDate}</p></Row>
+            <Row><h3 style={{display:"inline", fontWeight: 'normal' }}>{Article.title}</h3> <br/></Row>
+            <Row><p>{Article.content}</p></Row>
           </Col>
         </Row>
       </Box>
     </div>
   )
-
-
 }
 
 export default articleCard

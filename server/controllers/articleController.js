@@ -91,7 +91,6 @@ exports.getAllArticle=async (req, res, next) =>
             
         //     return tem;
         // })
-        console.log(result)
         res.status(201).json({
             status: 'success',
             data: result,
