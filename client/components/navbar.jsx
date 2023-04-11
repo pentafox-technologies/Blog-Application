@@ -16,9 +16,10 @@ import NavLogo from "@mui/icons-material/BookRounded";
 
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
+import Link from 'next/link'
 
 const pages = ["Home", "Write", "Blogs"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["profile", "account", "dashboard", "logout"];
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -82,10 +83,10 @@ function Navbar() {
   }));
 
   return (
-    <AppBar position="static">
+    <AppBar position="static"style={{background:'white'}} >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <NavLogo sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <NavLogo sx={{ display: { xs: "none", md: "flex" }, mr: 1, color:'black' }} />
           <Typography
             variant="h6"
             noWrap
@@ -97,7 +98,7 @@ function Navbar() {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".1rem",
-              color: "inherit",
+              color: "black",
               textDecoration: "none",
             }}
           >
@@ -140,7 +141,7 @@ function Navbar() {
               ))}
             </Menu>
           </Box>
-          <NavLogo sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <NavLogo sx={{ display: { xs: "flex", md: "none" }, mr: 1, color:'black' }} />
           <Typography
             variant="h5"
             noWrap
@@ -164,13 +165,13 @@ function Navbar() {
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{ my: 2, color: "black", display: "block" }}
               >
                 {page}
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0, mr: 1.2 }}>
+          <Box sx={{ flexGrow: 0, mr: 1.2, color:'black' }}>
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />
@@ -206,7 +207,7 @@ function Navbar() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Link href={setting}>{setting}</Link>
                 </MenuItem>
               ))}
             </Menu>
