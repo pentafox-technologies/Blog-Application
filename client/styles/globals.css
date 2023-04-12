@@ -1,9 +1,11 @@
+
 html,
 body {
   padding: 0;
   margin: 0;
   font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
     Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    
 }
 
 a {
@@ -35,4 +37,12 @@ ul {
 button {
   padding: 0.5rem 1rem;
   font-weight: bold;
+}
+
+.Mui-selected, .MuiTab-textColorInherit, .MuiTab-textColorPrimary, .MuiTab-textColorSecondary, 	.MuiTabs-indicator{
+  color: black;
+}
+
+body{
+  background: #d1d1e9;
 }

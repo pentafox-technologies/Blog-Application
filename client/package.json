@@ -11,9 +11,11 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.11.16",
     "bootstrap": "^5.2.3",
+    "mui-image": "^1.0.7",
     "next": "latest",
     "react": "18.2.0",
     "react-bootstrap": "^2.7.2",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "styled-components": "^5.3.9"
   }
 }
