@@ -121,7 +121,7 @@ exports.getArticle=async (req, res, next) =>
         else{
             res.status(201).json({
                 status: 'success',
-                data: Article.rows,
+                data: Article.rows[0],
             });
         }
         
