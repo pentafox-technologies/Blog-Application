@@ -43,7 +43,7 @@ exports.createArticle=async (req, res) =>
             const visibilty="private";
 
             //  Query for creating article
-            const newArticle=await client.query(`insert into "Article" ("slug", "author","title","content","status","visibility") values($1,$2,$3,$4,$5,$6) RETURNING *`, [slug, req.user.userName, req.body.title, req.body.content, status, visibilty]);
+            const newArticle=await client.query(`insert into "Article" ("slug", "author","title","content","status","visibility","coverImage","description") values($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`, [slug, req.user.userName, req.body.title, req.body.content, status, visibilty,req.body.coverImage,req.body.description]);
 
             // we have to insert the category and article into categoryMap.
             for(let i=0;i<categories.length;i++) {
@@ -75,16 +75,15 @@ exports.getAllArticle=async (req, res, next) =>
 {
     const client=await db.connect();
     try {
-        const Articles=await client.query(`select * from "Article" where status=$1;`,["published"]);
+        const Articles=await client.query(`select "slug","title","coverImage","description" from "Article" where "status"=$1;`,["published"]);
         result=[];
         for(var i=0;i<Articles.rows.length;++i){
             let article = Articles.rows[i];
-            let tem = { slug: article.slug };
             let subCat = await client.query(`select "category" from "CategoryMap" where article=$1`, [article.slug]);
             let CName = await client.query(`select "categorizedUnder" from "CategorySet" where "catName"=$1`, [subCat.rows[0].category]);
-            tem = { ...tem, categoryName: CName.rows[0].categorizedUnder };
-            let publishedDate = await client.query(`select "updateTime" from "ArticleLogs" where "article"=$1 and "actionReason"=$2`, [article.slug, "Approved and Published"]);
-            tem = { ...tem, publishedDate: publishedDate.rows[0].updateTime, title: article.title, content: article.content };
+            // let tem = { ...Articles.rows[i], categoryName: CName.rows[0].categorizedUnder };
+            let publishedDate = await client.query(`select "updateTime" from "ArticleLogs" where "article"=$1 and "actionReason"=$2 ORDER BY "updateTime" DESC LIMIT 1`, [article.slug,"Approved and Published"]);
+            tem = { ...Articles.rows[i], categoryName: CName.rows[0].categorizedUnder, publishedDate: publishedDate.rows[0].updateTime};
             result.push(tem);
         }
         //  const result = Articles.rows.map(async article => {
@@ -98,6 +97,7 @@ exports.getAllArticle=async (req, res, next) =>
 
     } 
     catch(error) {
+        console.log(error)
         res.status(400).json({
             status: 'error',
             message: error
@@ -313,7 +313,7 @@ exports.approveAndPublish = async (req, res) => {
     if(await cerbos.isAllowed(req.user, {resource: "article"}, "approve and publish")) {
         try {
             const client = await db.connect();
-            await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['published',req.params.slug]);
+            await client.query('UPDATE "Article" SET status = $1, visibility = $2 WHERE "slug" = $3',['published','public',req.params.slug]);
             let Article=await client.query(`SELECT * FROM "Article" where slug like $1 and status!=$2;`, [req.params.slug,'deleted']);
             await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason","controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) RETURNING *`, [Article.rows[0].slug, Article.rows[0].status, new Date(), "Approved and Published", req.user.userName, Article.rows[0].author]);
 

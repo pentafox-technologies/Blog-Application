@@ -4,7 +4,7 @@ function articleViewing() {
 
     const [article,setArticle] = useState(null)
 
-    const slug = `this-article-is-just-for-testing-purposee6mnqlxk4mf`
+    const slug = `uiux-design-trends-in-2023bfvjpapeq4t`
 
     async function getArticle() {
         const requestOptions = {headers: {"Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InJrIiwiaWF0IjoxNjc4MTI1ODkwLCJleHAiOjE2ODU5MDE4OTB9.7gLX4JSaEr4_dMatxcOOMRkZjGzcsfRio8w4vRojypY`}};
