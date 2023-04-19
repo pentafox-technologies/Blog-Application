@@ -4,6 +4,7 @@ import { useMediaQuery } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import articleCardImage from "./../../public/articleCardImage.jpg";
+import { GlobalStyles } from "../../pages/ThemeConfig";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
@@ -65,7 +66,6 @@ function articleCard({ Article }) {
                     display: "inline",
                     fontSize: "1.3rem",
                     fontWeight: "bold",
-                    fontFamily: "Noto Serif Georgian",
                   }}
                 >
                   {Article.title}
@@ -77,7 +77,8 @@ function articleCard({ Article }) {
                 style={{
                   fontSize: "0.9rem",
                   marginTop: "0.5rem",
-                  fontFamily: "Noto Serif Georgian",
+                  textAlign: "justify",
+                  // fontFamily: "Noto Serif Georgian",
                 }}
               >
                 {Article.content}{" "}

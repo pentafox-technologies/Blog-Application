@@ -34,10 +34,9 @@ img {
 }
 
 .heading{
-  font-weight: 300;
+  font-weight: 600;
   font-size: 1.2rem;
-  font-weight: 400;
-  font-family: "Noto Serif Georgian";
+  text-transform: uppercase;
 }
 
 h1,
@@ -63,4 +62,8 @@ button {
 
 body{
   /* background: #d1d1e9; */
+}
+
+*::-webkit-scrollbar {
+  width: 0px;
 }

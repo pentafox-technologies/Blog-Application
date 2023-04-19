@@ -2,6 +2,7 @@ import React from "react";
 import ArticleCard from "./articleCard";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { GlobalStyles } from "../../pages/ThemeConfig";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFacebook,
