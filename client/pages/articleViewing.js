@@ -1,4 +1,5 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect} from 'react';
+import Navbar from '../components/navbar'
 
 function articleViewing() {
 
@@ -16,9 +17,15 @@ function articleViewing() {
     useEffect( ()=> {
         getArticle();
     },[])
+    useEffect( ()=> {
+        console.log(article);
+    },[article])
 
   return (
+    <>
+    <Navbar/> 
     <div  dangerouslySetInnerHTML={{__html:article}} ></div>
+    </>
   )
 }
 
