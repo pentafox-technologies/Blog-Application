@@ -1,11 +1,10 @@
 import Head from 'next/head';
-import {CssBaseline} from '@mui/material' 
+import {CssBaseline} from '@mui/material';
 import React,{useState} from 'react';
 import Login from '../components/Login';
 
-
-export default function login() {
-
+export default function login()
+{
   return (
     <>
         <Head>

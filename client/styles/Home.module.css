@@ -92,12 +92,12 @@
 .category{
   width: fit-content;
   font-size: 0.9rem;
-  background-color: #eaeaea;
+  background-color: #ffffff;
   border-radius: 0.5rem;
   padding: 0.6rem;
   margin: 0.5rem;
   text-decoration: none;
-  color: inherit;
+  color: #6c757d;
 }
 
 .socialLinks a{
