@@ -1,10 +1,12 @@
 import React, { useRef } from "react";
-import Navbar from "../components/navbar";
+import Navbar from "../components/Navbar";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import { faFloppyDisk, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Editor } from "@tinymce/tinymce-react";
+import MultipleTags from "../components/MultipleTags";
+import AutoComplete from "../components/AutoComplete";
 
 export default function MyEditor() {
   const editorRef = useRef(null);
@@ -32,6 +34,19 @@ export default function MyEditor() {
         .then((data) => console.log(data));
     }
   };
+
+  const categories = [
+    "Food",
+    "Sports",
+    "Vehicle",
+    "Technology",
+    "Bussiness",
+    "Politics",
+    "Miriam Wagner",
+    "Bradley Wilkerson",
+    "Virginia Andrews",
+    "Kelly Snyder",
+  ];
 
   return (
     <>
@@ -122,7 +137,9 @@ export default function MyEditor() {
             }}
           >
             <div className="description my-2">
-              <Form.Label>Description</Form.Label>
+              <Form.Label style={{ fontWeight: "600", color: "#363945" }}>
+                Description
+              </Form.Label>
 
               <Form.Control
                 as="textarea"
@@ -131,13 +148,31 @@ export default function MyEditor() {
               />
             </div>
             <hr />
+            <div className="topCategory">
+              <Form.Label style={{ fontWeight: "600", color: "#363945" }}>
+                Top Category
+              </Form.Label>
+              <AutoComplete name={"TopCategory"} data={categories} />
+            </div>
+            <hr />
+            <div className="Categories">
+              <Form.Label style={{ fontWeight: "600", color: "#363945" }}>
+                Sub Category
+              </Form.Label>
+              <MultipleTags name={"TopCategory"} data={categories} />
+            </div>
+            <hr />
             <div className="coverImage mt-4">
-              <Form.Label>Cover image</Form.Label>
+              <Form.Label style={{ fontWeight: "600", color: "#363945" }}>
+                Cover image
+              </Form.Label>
               <Form.Control type="file" className="text-secondary" />
             </div>
             <hr />
             <div className="mt-4">
-              <Form.Label>Last modification</Form.Label>
+              <Form.Label style={{ fontWeight: "600", color: "#363945" }}>
+                Last modification
+              </Form.Label>
               <p className="text-secondary">19/04/2023 18:27</p>
             </div>
           </div>

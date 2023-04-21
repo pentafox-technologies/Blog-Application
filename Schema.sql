@@ -41,7 +41,6 @@ CREATE TABLE "CategorySet" (
             REFERENCES "TopCategory"("categoryName")
 );
 
-
 CREATE TABLE "Article" (
     "slug" VARCHAR(500) NOT NULL PRIMARY KEY,
     "author" VARCHAR(50) NOT NULL,
