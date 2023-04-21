@@ -17,11 +17,16 @@ function HomePage() {
   const [categories, setCatgories] = useState([]);
 
   async function getArticles() {
-    // await fetch(`http://localhost:5000/api/v1/article`)
-    // .then(response => response.json())
-    // .then(data => {
-    //   setArticles({data})
-    // })
+    await fetch(`http://localhost:5000/api/v1/article`)
+    .then(response => response.json())
+    .then(data => {
+      // setArticles({data})
+      const articles = data.data.map(article => {
+        return {...article, coverImage:article.coverImage.toString('base64')}
+      })
+      setArticles(articles)
+      console.log(articles[0].coverImage.toString(`base64`))
+    })
     setCatgories([
       "Food blogs",
       "Programming",
@@ -30,32 +35,32 @@ function HomePage() {
       "Vehicle",
       "Content Creation",
     ]);
-    setArticles([
-      {
-        slug: "post-3dsx9r3nab6t",
-        categoryName: "Design",
-        publishedDate: "2023-03-15",
-        title: "UI/UX Design Trends 2023",
-        content:
-          "Yet another year is coming to a close. Many of the 2022 trends we anticipated, did find their use in digital products across our devices this year. As we are about to welcome 2023, we are taking a more careful",
-      },
-      {
-        slug: "post-3dsx9r3nab6t",
-        categoryName: "UI/UX  ",
-        publishedDate: "2023-03-15",
-        title: "Advanced Figma components tips & tricks: little gems we love",
-        content:
-          "As you all loved Advanced Figma Tips & Tricks and Prototyping Tips & Tricks, here is the third part: In this article, I’ll share some of my",
-      },
-      {
-        slug: "post-3dsx9r3nab6t",
-        categoryName: "Other",
-        publishedDate: "2023-03-15",
-        title: "How I Make $1.5k Monthly Passive Income at Age 28",
-        content:
-          "Steal the formula, upgrade your life — I never thought I’d make a dime from writing online. I’ve taken zero courses, didn’t study writing at school, had no mentors, nothing. There were no shortcuts in my",
-      },
-    ]);
+    // setArticles([
+    //   {
+    //     slug: "post-3dsx9r3nab6t",
+    //     categoryName: "Design",
+    //     publishedDate: "2023-03-15",
+    //     title: "UI/UX Design Trends 2023",
+    //     content:
+    //       "Yet another year is coming to a close. Many of the 2022 trends we anticipated, did find their use in digital products across our devices this year. As we are about to welcome 2023, we are taking a more careful",
+    //   },
+    //   {
+    //     slug: "post-3dsx9r3nab6t",
+    //     categoryName: "UI/UX  ",
+    //     publishedDate: "2023-03-15",
+    //     title: "Advanced Figma components tips & tricks: little gems we love",
+    //     content:
+    //       "As you all loved Advanced Figma Tips & Tricks and Prototyping Tips & Tricks, here is the third part: In this article, I’ll share some of my",
+    //   },
+    //   {
+    //     slug: "post-3dsx9r3nab6t",
+    //     categoryName: "Other",
+    //     publishedDate: "2023-03-15",
+    //     title: "How I Make $1.5k Monthly Passive Income at Age 28",
+    //     content:
+    //       "Steal the formula, upgrade your life — I never thought I’d make a dime from writing online. I’ve taken zero courses, didn’t study writing at school, had no mentors, nothing. There were no shortcuts in my",
+    //   },
+    // ]);
   }
 
   useEffect(() => {

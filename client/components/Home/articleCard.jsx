@@ -49,7 +49,7 @@ function articleCard({ Article }) {
                 >
                   {Article.categoryName}
                 </Link>{" "}
-                | {Article.publishedDate}
+                | {Article.publishedDate.slice(0,10)}
               </p>
             </Row>
             <Row>
@@ -81,7 +81,7 @@ function articleCard({ Article }) {
                   // fontFamily: "Noto Serif Georgian",
                 }}
               >
-                {Article.content}{" "}
+                {Article.description}{" "}
                 <Link
                   href="/"
                   style={{ textDecoration: "none", letterSpacing: "1px" }}
