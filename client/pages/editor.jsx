@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef,useState} from "react";
 import Navbar from "../components/navbar";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
@@ -8,8 +8,21 @@ import { Editor } from "@tinymce/tinymce-react";
 
 export default function MyEditor() {
   const editorRef = useRef(null);
+  const [formData, setFormData] = useState({
+        title: '',
+        content: '',
+        description: '',
+        coverImage: '',
+        category: "Testing",
+        topCategory: "Other",
+    });
 
-  const log = async () => {
+  const changeHandler = e => {
+    setFormData({...formData, [e.target.name]: e.target.value});
+  }
+
+  const sendArticle = async e => {
+    console.log(e.target.name)
     if (editorRef.current) {
       console.log(editorRef.current.getContent());
 
@@ -31,7 +44,11 @@ export default function MyEditor() {
         .then((response) => response.json())
         .then((data) => console.log(data));
     }
-  };
+  }
+
+  // const log = async () => {
+   
+  // };
 
   return (
     <>
@@ -48,12 +65,14 @@ export default function MyEditor() {
             <Form.Control
               type="text"
               id="title"
+              name="title"
               placeholder="Title"
               style={{
                 fontWeight: "600",
                 fontSize: "1.2rem",
                 padding: "0.5rem",
               }}
+              onChange={changeHandler}
             />
           </div>
           <div
@@ -101,13 +120,15 @@ export default function MyEditor() {
               padding: "1rem",
             }}
           >
-            <Button className="rounded-0 my-2">
+            <Button name="draft" className="rounded-0 my-2" onClick={sendArticle}>
               <FontAwesomeIcon className="mx-2" icon={faFloppyDisk} />
               Save to Draft
             </Button>
             <Button
+               name="pending_verification"
               className="rounded-0 my-2"
               style={{ background: "#f57c00", border: "inherit" }}
+              onClick={sendArticle}
             >
               <FontAwesomeIcon className="mx-2" icon={faPaperPlane} />
               Request for publishing
@@ -128,12 +149,14 @@ export default function MyEditor() {
                 as="textarea"
                 placeholder="Type the description..."
                 aria-label="With textarea"
+                name="description"
+                onChange={changeHandler}
               />
             </div>
             <hr />
             <div className="coverImage mt-4">
               <Form.Label>Cover image</Form.Label>
-              <Form.Control type="file" className="text-secondary" />
+              <Form.Control name="coverImage" onChange={changeHandler} type="file" className="text-secondary" />
             </div>
             <hr />
             <div className="mt-4">
