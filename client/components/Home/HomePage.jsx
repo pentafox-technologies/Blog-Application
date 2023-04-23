@@ -14,23 +14,29 @@ import styles from "../../styles/Home.module.css";
 
 function HomePage() {
   const [Articles, setArticles] = useState([]);
-  const [categories, setCatgories] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   async function getArticles() {
     await fetch(`http://localhost:5000/api/v1/article`)
     .then(response => response.json())
     .then(data => {
-
+      console.log(data)
       setArticles(data.data)
     })
-    setCatgories([
-      "Food blogs",
-      "Programming",
-      "Web Technology",
-      "UI/UX Design",
-      "Vehicle",
-      "Content Creation",
-    ]);
+    await fetch(`http://localhost:5000/api/v1/category`)
+      .then(response => response.json())
+      .then(data => {
+        const topCat = data.data.map(cat => {return cat.categoryName})
+        setCategories(topCat)
+      })
+    // setCatgories([
+    //   "Food blogs",
+    //   "Programming",
+    //   "Web Technology",
+    //   "UI/UX Design",
+    //   "Vehicle",
+    //   "Content Creation",
+    // ]);
     // setArticles([
     //   {
     //     slug: "post-3dsx9r3nab6t",

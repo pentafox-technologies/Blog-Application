@@ -28,13 +28,11 @@ export default function MyEditor() {
       .then(data => {
 
         const topCat = data.data.map(cat => {return cat.categoryName})
-        console.log(topCat)
         setTopCategories(topCat)
       })
       await fetch(`http://localhost:5000/api/v1/category/subCategory`)
       .then(response => response.json())
       .then(data => {
-        console.log(data.data)
         setSubCategories(data.data)
       })
     }
@@ -60,22 +58,17 @@ export default function MyEditor() {
 
   const setTopCategory = (value) => {
     setFormData({...formData,topCategory: value})
-    console.log(value)
   }
 
   const setSubCategory = (value) => {
     setFormData({...formData,category: value})
-    console.log(value)
   }
 
   const setContent = () => {
     setFormData({...formData,content:editorRef.current.getContent()})
-    console.log(editorRef.current.getContent())
   }
 
   const sendArticle = async e => {
-
-      console.log(formData)
 
       if(formData.title==='') {
         console.log("title required")
@@ -101,11 +94,16 @@ export default function MyEditor() {
           },
           body: JSON.stringify({...formData,status:e.target.name}),
         };
-
-        console.log(formData)
         await fetch("http://localhost:5000/api/v1/article", requestOptions)
           .then((response) => response.json())
-          .then((data) => console.log(data));
+          .then((data) => {
+            if(data.status==="success"){
+              console.log("Article created successfully")
+            }
+            else{
+              console.log("Article not created")
+            }
+          });
       }
 
 

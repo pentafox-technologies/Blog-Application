@@ -51,7 +51,7 @@ exports.createArticle=async (req, res) =>
             // Visibilty will be initially private
             const visibilty="private";
             //  Query for creating article
-            const newArticle=await client.query(`insert into "Article" ("slug", "author","title","content","status","visibility","coverImage","description") values($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`, [slug, req.user.userName, req.body.title, req.body.content, status, visibilty,req.body.coverImage,req.body.description]);
+            const newArticle=await client.query(`insert into "Article" ("slug", "author","title","content","status","visibility","coverImage","description","category") values($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`, [slug, req.user.userName, req.body.title, req.body.content, status, visibilty, req.body.coverImage, req.body.description, req.body.topCategory]);
 
             // we have to insert the category and article into categoryMap.
             req.body.category.map(async category => {
@@ -84,14 +84,14 @@ exports.getAllArticle=async (req, res, next) =>
 {
     const client=await db.connect();
     try {
-        const Articles=await client.query(`select "slug","title","coverImage","description" from "Article" where "status"=$1 and "visibility"=$2;`,["published","public"]);
+        const Articles=await client.query(`select "slug","title","coverImage","description","category" from "Article" where "status"=$1 and "visibility"=$2;`,["published","public"]);
         result=[];
         for(var i=0;i<Articles.rows.length;++i){
             let article = Articles.rows[i];
-            let subCat = await client.query(`select "category" from "CategoryMap" where article=$1`, [article.slug]);
-            let CName = await client.query(`select "categorizedUnder" from "CategorySet" where "catName"=$1`, [subCat.rows[0].category]);
+            // let subCat = await client.query(`select "category" from "CategoryMap" where article=$1`, [article.slug]);
+            // let CName = await client.query(`select "categorizedUnder" from "CategorySet" where "catName"=$1`, [subCat.rows[0].category]);
             let publishedDate = await client.query(`select "updateTime" from "ArticleLogs" where "article"=$1 and "actionReason"=$2 ORDER BY "updateTime" DESC LIMIT 1`, [article.slug,"Approved and Published"]);
-            tem = { ...Articles.rows[i], categoryName: CName.rows[0].categorizedUnder, publishedDate: publishedDate.rows[0].updateTime};
+            tem = { ...Articles.rows[i], publishedDate: publishedDate.rows[0].updateTime};
             result.push(tem);
         }
         

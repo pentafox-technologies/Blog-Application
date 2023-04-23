@@ -48,7 +48,7 @@ function articleCard({ Article }) {
                     fontWeight: "600",
                   }}
                 >
-                  {Article.categoryName}
+                  {Article.category}
                 </Link>{" "}
                 | {Article.publishedDate.slice(0,10)}
               </p>

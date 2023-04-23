@@ -50,11 +50,15 @@ CREATE TABLE "Article" (
     "pushbackNotes" TEXT DEFAULT NULL,
     "visibility" visibilitySet NOT NULL,
     "viewCount" NUMERIC NOT NULL DEFAULT 0,
-    "CoverImage" TEXT,
-    "Description" TEXT,
+    "category" VARCHAR(50) NOT NULL,
+    "CoverImage" TEXT NOT NULL,
+    "Description" TEXT NOT NULL,
     CONSTRAINT fk_Article_User
         FOREIGN KEY ("author")
             REFERENCES "User"("userName")
+    CONSTRAINT fk_Article_TopCategory
+        FOREIGN KEY ("category")
+            REFERENCES "TopCategory"("categoryName")
 );
 
 
