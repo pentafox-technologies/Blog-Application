@@ -10,6 +10,7 @@ import Col from "react-bootstrap/Col";
 
 function articleCard({ Article }) {
   const isNonMobileScreens = useMediaQuery("(min-width:720px)");
+  const Base64string = Article.coverImage?.slice(Article.coverImage.search(',')+1)
 
   return (
     <div>
@@ -28,9 +29,9 @@ function articleCard({ Article }) {
         <Row>
           <Col md={5}>
             <Image
-              src={articleCardImage}
-              width={isNonMobileScreens ? "25%" : "90%"}
-              height={isNonMobileScreens ? "25%" : "90%"}
+              src={`data: image/png; base64, ${Base64string}`}
+              width={isNonMobileScreens ? "250" : "90%"}
+              height={isNonMobileScreens ? "250" : "90%"}
               style={{ display: "inline" }}
               alt="article image"
             />

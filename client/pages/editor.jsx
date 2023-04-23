@@ -1,5 +1,5 @@
-import React, { useRef,useState} from "react";
-import Navbar from "../components/Navbar";
+import React, { useRef,useState,useEffect} from "react";
+import Navbar from "../components/navbar";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import { faFloppyDisk, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
@@ -15,45 +15,106 @@ export default function MyEditor() {
         content: '',
         description: '',
         coverImage: '',
-        category: "Testing",
-        topCategory: "Other",
+        category: "",
+        topCategory: "",
     });
+
+    const [topCategories,setTopCategories] = useState([]);
+    const [subCategories,setSubCategories] = useState([]);
+
+    const getCategories = async () => {
+      await fetch(`http://localhost:5000/api/v1/category`)
+      .then(response => response.json())
+      .then(data => {
+
+        const topCat = data.data.map(cat => {return cat.categoryName})
+        console.log(topCat)
+        setTopCategories(topCat)
+      })
+      await fetch(`http://localhost:5000/api/v1/category/subCategory`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.data)
+        setSubCategories(data.data)
+      })
+    }
+
+    useEffect(() => {
+      getCategories();
+    },[])
+
+    const toBase64 = file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+  });
 
   const changeHandler = e => {
     setFormData({...formData, [e.target.name]: e.target.value});
   }
 
-  const sendArticle = async e => {
-    console.log(e.target.name)
-    if (editorRef.current) {
-      console.log(editorRef.current.getContent());
-
-      const requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InJrIiwiaWF0IjoxNjc4MTI1ODkwLCJleHAiOjE2ODU5MDE4OTB9.7gLX4JSaEr4_dMatxcOOMRkZjGzcsfRio8w4vRojypY`,
-        },
-        body: JSON.stringify({
-          title: "This Article is Just for Testing Purpose",
-          content: editorRef.current.getContent(),
-          category: "Testing",
-          topCategory: "Other",
-        }),
-      };
-
-      await fetch("http://localhost:5000/api/v1/article", requestOptions)
-        .then((response) => response.json())
-        .then((data) => console.log(data));
-    }
+  const setCoverImage = async e => {
+    setFormData({...formData,coverImage: await toBase64(e.target.files[0])})
   }
 
-  // const log = async () => {
-   
-  // };
+  const setTopCategory = (value) => {
+    setFormData({...formData,topCategory: value})
+    console.log(value)
+  }
+
+  const setSubCategory = (value) => {
+    setFormData({...formData,category: value})
+    console.log(value)
+  }
+
+  const setContent = () => {
+    setFormData({...formData,content:editorRef.current.getContent()})
+    console.log(editorRef.current.getContent())
+  }
+
+  const sendArticle = async e => {
+
+      console.log(formData)
+
+      if(formData.title==='') {
+        console.log("title required")
+      }
+      // else if(formData.description==='') {
+      //   console.log("description required")
+      // }
+      // else if(formData.coverImage==='') {
+      //   console.log("coverImage required")
+      // }
+      // else if(formData.category==='') {
+      //   console.log("category required")
+      // }
+      // else if(formData.topCategory==='') {
+      //   console.log("topCategory required")
+      // }
+      else{
+        const requestOptions = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InJrIiwiaWF0IjoxNjc4MTI1ODkwLCJleHAiOjE2ODU5MDE4OTB9.7gLX4JSaEr4_dMatxcOOMRkZjGzcsfRio8w4vRojypY`,
+          },
+          body: JSON.stringify({...formData,status:e.target.name}),
+        };
+
+        console.log(formData)
+        await fetch("http://localhost:5000/api/v1/article", requestOptions)
+          .then((response) => response.json())
+          .then((data) => console.log(data));
+      }
+
+
+
+      
+  }
 
   const categories = [
-    "Food",
+    "Food blogs",
     "Sports",
     "Vehicle",
     "Technology",
@@ -99,6 +160,7 @@ export default function MyEditor() {
             }}
           >
             <Editor
+              onChange={setContent}
               apiKey="qzn9edvv53zrmyl73stphbo9mo6i8pqbdiyixeke877aj4xp"
               onInit={(evt, editor) => (editorRef.current = editor)}
               init={{
@@ -175,21 +237,21 @@ export default function MyEditor() {
               <Form.Label style={{ fontWeight: "600", color: "#363945" }}>
                 Top Category
               </Form.Label>
-              <AutoComplete name={"TopCategory"} data={categories} />
+              <AutoComplete name={"TopCategory"} data={topCategories} getTopCaregory = {setTopCategory} />
             </div>
             <hr />
             <div className="Categories">
               <Form.Label style={{ fontWeight: "600", color: "#363945" }}>
                 Sub Category
               </Form.Label>
-              <MultipleTags name={"TopCategory"} data={categories} />
+              <MultipleTags name={"SubCategory"} data={subCategories} getSubCaregory = {setSubCategory} />
             </div>
             <hr />
             <div className="coverImage mt-4">
               <Form.Label style={{ fontWeight: "600", color: "#363945" }}>
                 Cover image
               </Form.Label>
-              <Form.Control name="coverImage" onChange={changeHandler} type="file" className="text-secondary" />
+              <Form.Control name="coverImage" onChange={setCoverImage} type="file" className="text-secondary" />
             </div>
             <hr />
             <div className="mt-4">

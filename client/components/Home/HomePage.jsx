@@ -20,12 +20,8 @@ function HomePage() {
     await fetch(`http://localhost:5000/api/v1/article`)
     .then(response => response.json())
     .then(data => {
-      // setArticles({data})
-      const articles = data.data.map(article => {
-        return {...article, coverImage:article.coverImage.toString('base64')}
-      })
-      setArticles(articles)
-      console.log(articles[0].coverImage.toString(`base64`))
+
+      setArticles(data.data)
     })
     setCatgories([
       "Food blogs",

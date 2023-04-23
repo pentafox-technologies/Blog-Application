@@ -50,7 +50,7 @@ CREATE TABLE "Article" (
     "pushbackNotes" TEXT DEFAULT NULL,
     "visibility" visibilitySet NOT NULL,
     "viewCount" NUMERIC NOT NULL DEFAULT 0,
-    "CoverImage" BYTEA,
+    "CoverImage" TEXT,
     "Description" TEXT,
     CONSTRAINT fk_Article_User
         FOREIGN KEY ("author")

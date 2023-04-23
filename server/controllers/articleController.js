@@ -1,25 +1,34 @@
 const db=require('../db');
 const slugify=require('slugify');
 const cerbos=require("./../middleware/cerbos");
+const fs = require('fs');
 
 exports.createArticle=async (req, res) =>
 {
+    
     if(await cerbos.isAllowed(req.user, {resource: "article"}, "create")) {
         const client=await db.connect();
         try {
-            // splitting categories to array
-            const categories=req.body.category.split(" ");
+
+            req.body.category.map(async category => {
+                const created=new Date();
+                let checkcategory=await client.query(`select * from "CategorySet" where "catName" like '${category}'`);
+                if(checkcategory.rows.length==0) {
+                    let categorizedUnder=req.body.topCategory;
+                    let newCategory=await client.query(`insert into "CategorySet" ("catName", "categorizedUnder", "initializedBy", "dateCreated") values($1,$2,$3,$4) RETURNING *`, [category, categorizedUnder, req.user.userName, created]);
+                }
+            })
 
             // here we are inserting into categorySet Table
             // And we will check whether that category does not exist, if true we will insert it by categorized under = "Other"
-            for(let i=0;i<categories.length;i++) {
-                const created=new Date();
-                let checkcategory=await client.query(`select * from "CategorySet" where "catName" like '${categories[i]}'`);
-                if(checkcategory.rows.length==0) {
-                    let categorizedUnder=req.body.topCategory;
-                    let newCategory=await client.query(`insert into "CategorySet" ("catName", "categorizedUnder", "initializedBy", "dateCreated") values($1,$2,$3,$4) RETURNING *`, [categories[i], categorizedUnder, req.user.userName, created]);
-                }
-            }
+            // for(let i=0;i<categories.length;i++) {
+            //     const created=new Date();
+            //     let checkcategory=await client.query(`select * from "CategorySet" where "catName" like '${categories[i]}'`);
+            //     if(checkcategory.rows.length==0) {
+            //         let categorizedUnder=req.body.topCategory;
+            //         let newCategory=await client.query(`insert into "CategorySet" ("catName", "categorizedUnder", "initializedBy", "dateCreated") values($1,$2,$3,$4) RETURNING *`, [categories[i], categorizedUnder, req.user.userName, created]);
+            //     }
+            // }
 
             // Initially we are creating slug based on title
             let slug=slugify(req.body.title, {lower: true})+Math.random().toString(36).slice(2);
@@ -37,22 +46,22 @@ exports.createArticle=async (req, res) =>
             }
 
             // Initially when creating status will always be draft
-            const status="draft";
+            const status=req.body.status;
 
             // Visibilty will be initially private
             const visibilty="private";
-
             //  Query for creating article
             const newArticle=await client.query(`insert into "Article" ("slug", "author","title","content","status","visibility","coverImage","description") values($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`, [slug, req.user.userName, req.body.title, req.body.content, status, visibilty,req.body.coverImage,req.body.description]);
 
             // we have to insert the category and article into categoryMap.
-            for(let i=0;i<categories.length;i++) {
-                const categoryMap=await client.query(`insert into "CategoryMap" ("article", "category") values($1,$2) RETURNING *`, [newArticle.rows[0].slug, categories[i]]);
-            }
+            req.body.category.map(async category => {
+                await client.query(`insert into "CategoryMap" ("article", "category") values($1,$2) RETURNING *`, [newArticle.rows[0].slug, category]);
+            })
 
             await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason","controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) RETURNING *`, [slug, status, new Date(), "created Article", req.user.userName, req.user.userName]);
             // sending response finally ☺️
             res.status(201).json({
+                // "headers": { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
                 status: 'success',
                 data: newArticle.rows
             });
@@ -75,21 +84,17 @@ exports.getAllArticle=async (req, res, next) =>
 {
     const client=await db.connect();
     try {
-        const Articles=await client.query(`select "slug","title","coverImage","description" from "Article" where "status"=$1;`,["published"]);
+        const Articles=await client.query(`select "slug","title","coverImage","description" from "Article" where "status"=$1 and "visibility"=$2;`,["published","public"]);
         result=[];
         for(var i=0;i<Articles.rows.length;++i){
             let article = Articles.rows[i];
             let subCat = await client.query(`select "category" from "CategoryMap" where article=$1`, [article.slug]);
             let CName = await client.query(`select "categorizedUnder" from "CategorySet" where "catName"=$1`, [subCat.rows[0].category]);
-            // let tem = { ...Articles.rows[i], categoryName: CName.rows[0].categorizedUnder };
             let publishedDate = await client.query(`select "updateTime" from "ArticleLogs" where "article"=$1 and "actionReason"=$2 ORDER BY "updateTime" DESC LIMIT 1`, [article.slug,"Approved and Published"]);
             tem = { ...Articles.rows[i], categoryName: CName.rows[0].categorizedUnder, publishedDate: publishedDate.rows[0].updateTime};
             result.push(tem);
         }
-        //  const result = Articles.rows.map(async article => {
-            
-        //     return tem;
-        // })
+        
         res.status(201).json({
             status: 'success',
             data: result,
@@ -97,7 +102,6 @@ exports.getAllArticle=async (req, res, next) =>
 
     } 
     catch(error) {
-        console.log(error)
         res.status(400).json({
             status: 'error',
             message: error
@@ -112,6 +116,7 @@ exports.getArticle=async (req, res, next) =>
     const client=await db.connect();
     try {
         const Article=await client.query(`SELECT * FROM "Article" where slug = $1 and status!=$2 and visibility=$3;`, [slug,"deleted","public"]);
+        
         if(Article.rowCount==0){
             res.status(201).json({
                 status: 'error',
@@ -230,9 +235,7 @@ exports.deleteArticle=async (req, res, next) =>
         Article.resource="article";
         if(await cerbos.isAllowed(req.user, Article, "delete")) {
         
-            //await client.query(`DELETE FROM "CategoryMap" WHERE article like $1;`, [slug]);
             const Articles=await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['deleted',slug]);
-            //console.log(Article);
             await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason","controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) RETURNING *`, [Article.slug, Article.status, new Date(), "deleted Article", req.user.userName, req.user.userName]);
 
             res.status(200).json({
@@ -246,7 +249,6 @@ exports.deleteArticle=async (req, res, next) =>
         });
     } 
     }catch(error) {
-            console.log(error);
         res.status(400).json({
             status: 'error',
             message: "Article not found"
@@ -322,7 +324,6 @@ exports.approveAndPublish = async (req, res) => {
                 message: 'Approved And Published'
             });
         } catch (err) {
-            console.log(err)
             res.status(400).json({
                 status:'error',
                 message: err
