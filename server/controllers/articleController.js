@@ -19,17 +19,6 @@ exports.createArticle=async (req, res) =>
                 }
             })
 
-            // here we are inserting into categorySet Table
-            // And we will check whether that category does not exist, if true we will insert it by categorized under = "Other"
-            // for(let i=0;i<categories.length;i++) {
-            //     const created=new Date();
-            //     let checkcategory=await client.query(`select * from "CategorySet" where "catName" like '${categories[i]}'`);
-            //     if(checkcategory.rows.length==0) {
-            //         let categorizedUnder=req.body.topCategory;
-            //         let newCategory=await client.query(`insert into "CategorySet" ("catName", "categorizedUnder", "initializedBy", "dateCreated") values($1,$2,$3,$4) RETURNING *`, [categories[i], categorizedUnder, req.user.userName, created]);
-            //     }
-            // }
-
             // Initially we are creating slug based on title
             let slug=slugify(req.body.title, {lower: true})+Math.random().toString(36).slice(2);
 
@@ -88,8 +77,6 @@ exports.getAllArticle=async (req, res, next) =>
         result=[];
         for(var i=0;i<Articles.rows.length;++i){
             let article = Articles.rows[i];
-            // let subCat = await client.query(`select "category" from "CategoryMap" where article=$1`, [article.slug]);
-            // let CName = await client.query(`select "categorizedUnder" from "CategorySet" where "catName"=$1`, [subCat.rows[0].category]);
             let publishedDate = await client.query(`select "updateTime" from "ArticleLogs" where "article"=$1 and "actionReason"=$2 ORDER BY "updateTime" DESC LIMIT 1`, [article.slug,"Approved and Published"]);
             tem = { ...Articles.rows[i], publishedDate: publishedDate.rows[0].updateTime};
             result.push(tem);
