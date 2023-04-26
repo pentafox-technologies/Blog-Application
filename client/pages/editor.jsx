@@ -97,11 +97,11 @@ export default function MyEditor() {
         await fetch("http://localhost:5000/api/v1/article", requestOptions)
           .then((response) => response.json())
           .then((data) => {
-            if(data.status==="success"){
-              console.log("Article created successfully")
-            }
-            else{
-              console.log("Article not created")
+            console.log(data);
+            if (data.status === "success") {
+              console.log("Article created successfully");
+            } else {
+              console.log("Article not created");
             }
           });
       }
@@ -195,12 +195,16 @@ export default function MyEditor() {
               padding: "1rem",
             }}
           >
-            <Button name="draft" className="rounded-0 my-2" onClick={sendArticle}>
+            <Button
+              name="draft"
+              className="rounded-0 my-2"
+              onClick={sendArticle}
+            >
               <FontAwesomeIcon className="mx-2" icon={faFloppyDisk} />
               Save to Draft
             </Button>
             <Button
-               name="pending_verification"
+              name="pending_verification"
               className="rounded-0 my-2"
               style={{ background: "#f57c00", border: "inherit" }}
               onClick={sendArticle}
@@ -235,29 +239,36 @@ export default function MyEditor() {
               <Form.Label style={{ fontWeight: "600", color: "#363945" }}>
                 Top Category
               </Form.Label>
-              <AutoComplete name={"TopCategory"} data={topCategories} getTopCaregory = {setTopCategory} />
+              <AutoComplete
+                name={"TopCategory"}
+                data={topCategories}
+                getTopCaregory={setTopCategory}
+              />
             </div>
             <hr />
             <div className="Categories">
               <Form.Label style={{ fontWeight: "600", color: "#363945" }}>
                 Sub Category
               </Form.Label>
-              <MultipleTags name={"SubCategory"} data={subCategories} getSubCaregory = {setSubCategory} />
+              <MultipleTags
+                name={"SubCategory"}
+                data={subCategories}
+                getSubCaregory={setSubCategory}
+              />
             </div>
             <hr />
             <div className="coverImage mt-4">
               <Form.Label style={{ fontWeight: "600", color: "#363945" }}>
                 Cover image
               </Form.Label>
-              <Form.Control name="coverImage" onChange={setCoverImage} type="file" className="text-secondary" />
+              <Form.Control
+                name="coverImage"
+                onChange={setCoverImage}
+                type="file"
+                className="text-secondary"
+              />
             </div>
             <hr />
-            <div className="mt-4">
-              <Form.Label style={{ fontWeight: "600", color: "#363945" }}>
-                Last modification
-              </Form.Label>
-              <p className="text-secondary">19/04/2023 18:27</p>
-            </div>
           </div>
         </div>
       </div>

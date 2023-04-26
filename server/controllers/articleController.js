@@ -25,7 +25,8 @@ exports.createArticle=async (req, res) =>
             // Checking whether sulg already exists
             // running this loop until we get unique slug
             while(true) {
-                temp=await client.query(`select * from "Article" where slug like '${slug}'`);
+                temp=await client.query(`select * from "Article" where slug like $1`, [slug]);
+                console.log(temp)
                 if(temp.rows.length>0) {
                     slug=slugify(req.body.title, {lower: true})+Math.random().toString(36).slice(2);
                 }
@@ -56,6 +57,7 @@ exports.createArticle=async (req, res) =>
             });
 
         } catch(err) {
+            console.log(err)
             res.status(400).json({
                 status: 'error',
                 message: err

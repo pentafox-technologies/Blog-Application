@@ -5,7 +5,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 
 export default function AutoComplete({ name, data, getTopCaregory }) {
   return (
-    <Stack spacing={2} sx={{ width: 300 }}>
+    <Stack spacing={2} sx={{ width: "auto " }}>
       <Autocomplete
         id="free-solo-demo"
         freeSolo
