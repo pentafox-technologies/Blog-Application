@@ -83,6 +83,51 @@
   height: 1em;
 }
 
+.categories{
+  display: flex;
+  flex-wrap: wrap;
+  width: 60%;
+}
+
+.category{
+  width: fit-content;
+  font-size: 0.9rem;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 0.6rem;
+  margin: 0.5rem;
+  text-decoration: none;
+  color: #6c757d;
+}
+
+.socialLinks a{
+  text-decoration: none;
+}
+
+.facebook:hover{
+  color: #2e509a !important;
+  transform: scale(1.1);
+  transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.twitter:hover{
+  color: #1D9BF0 !important;
+  transform: scale(1.1);
+  transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.youtube:hover{
+  color: #FF0000 !important;
+  transform: scale(1.1);
+  transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.instagram:hover{
+  color:  #F56040  !important;
+  transform: scale(1.1);
+  transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;

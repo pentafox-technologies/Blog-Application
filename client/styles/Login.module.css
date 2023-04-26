@@ -1,0 +1,23 @@
+.glitch{
+    color: rgb(88, 88, 88);
+}
+
+/* .grid{
+    background-color: brown;
+} */
+
+@media (max-width: 850px) {
+    .grid{
+        padding: 0 30px;
+        margin-left: -5px;
+    }
+    .gridpasslabel{
+        padding: 0 35px;
+    }
+    .forgot{
+        padding-right: 10px;
+    }
+    .card{
+        margin-bottom: 30px;
+    }
+}

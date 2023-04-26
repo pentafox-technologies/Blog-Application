@@ -41,7 +41,6 @@ CREATE TABLE "CategorySet" (
             REFERENCES "TopCategory"("categoryName")
 );
 
-
 CREATE TABLE "Article" (
     "slug" VARCHAR(500) NOT NULL PRIMARY KEY,
     "author" VARCHAR(50) NOT NULL,
@@ -51,9 +50,15 @@ CREATE TABLE "Article" (
     "pushbackNotes" TEXT DEFAULT NULL,
     "visibility" visibilitySet NOT NULL,
     "viewCount" NUMERIC NOT NULL DEFAULT 0,
+    "category" VARCHAR(50) NOT NULL,
+    "coverImage" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
     CONSTRAINT fk_Article_User
         FOREIGN KEY ("author")
-            REFERENCES "User"("userName")
+            REFERENCES "User"("userName"),
+    CONSTRAINT fk_Article_TopCategory
+        FOREIGN KEY ("category")
+            REFERENCES "TopCategory"("categoryName")
 );
 
 

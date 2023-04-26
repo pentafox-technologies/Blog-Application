@@ -1,0 +1,9 @@
+/* .name{
+    padding: 20px 450px;
+} */
+
+@media (max-width: 550px) {
+    .name{
+        padding: 0px;
+    }
+}

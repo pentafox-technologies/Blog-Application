@@ -2,18 +2,43 @@ const db = require('../db');
 const cerbos = require("./../middleware/cerbos");
 
 exports.getAllCategory = async (req, res, next) => {
-    const client = await db.connect();
-    const cat = await client.query(`select "categoryName" from "TopCategory"`);
-    let categories = new Array();
-    for(var i=0;i<cat.rows.length;++i){
-        if(!categories.includes(cat.rows[i].categoryName)) {
-            categories.push(cat.rows[i].categoryName);
-        }
+    try{
+        const client = await db.connect();
+        const categories = await client.query(`select "categoryName" from "TopCategory"`);
+        res.status(201).json({
+            status: 'success',
+            data: categories.rows,
+        });
+    } catch (err) {
+        res.status(400).json({
+            status:'error',
+            message: err
+        });
     }
-    res.status(201).json({
-        status: 'success',
-        data: categories,
-    });
+    
+};
+
+exports.getAllSubCategory = async (req, res, next) => {
+    try{
+        const client = await db.connect();
+        const cat = await client.query(`select "catName" from "CategorySet"`);
+        let categories = new Array();
+        for(var i=0;i<cat.rows.length;++i){
+            if(!categories.includes(cat.rows[i].catName)) {
+                categories.push(cat.rows[i].catName);
+            }
+        }
+        res.status(201).json({
+            status: 'success',
+            data: categories,
+        });
+    } catch (err) {
+        res.status(400).json({
+            status:'error',
+            message: err
+        });
+    }
+    
 };
 
 exports.createTopCategory = async (req, res, next) => {
