@@ -7,8 +7,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Editor } from "@tinymce/tinymce-react";
 import MultipleTags from "../components/MultipleTags";
 import AutoComplete from "../components/AutoComplete";
+import { useRouter } from 'next/router'
+import Alert from '@mui/material/Alert';
 
 export default function MyEditor() {
+  let router= useRouter()
   const editorRef = useRef(null);
   const [formData, setFormData] = useState({
         title: '',
@@ -18,6 +21,7 @@ export default function MyEditor() {
         category: "",
         topCategory: "",
     });
+    const [warning,setWarning] = useState({state:false,msg:''});
 
     const [topCategories,setTopCategories] = useState([]);
     const [subCategories,setSubCategories] = useState([]);
@@ -71,20 +75,29 @@ export default function MyEditor() {
   const sendArticle = async e => {
 
       if(formData.title==='') {
-        console.log("title required")
+        setWarning({status:true,msg:"Article Title is Required"})
+        // alert("Article Title is required")
       }
-      // else if(formData.description==='') {
-      //   console.log("description required")
-      // }
-      // else if(formData.coverImage==='') {
-      //   console.log("coverImage required")
-      // }
-      // else if(formData.category==='') {
-      //   console.log("category required")
-      // }
-      // else if(formData.topCategory==='') {
-      //   console.log("topCategory required")
-      // }
+      else if(formData.content==='') {
+        setWarning({status:true,msg:"Article cannot be Empty"})
+        // alert("Article cannot be Empty")
+      }
+      else if(formData.description==='') {
+        setWarning({status:true,msg:"Article Description is required"})
+        // alert("Article Description is required")
+      }
+      else if(formData.topCategory==='') {
+        setWarning({status:true,msg:"Article TopCategory is required"})
+        // alert("Article TopCategory is required")
+      }
+      else if(formData.category==='') {
+        setWarning({status:true,msg:"Article Category is required"})
+        // alert("Article Category is required")
+      }
+      else if(formData.coverImage==='') {
+        setWarning({status:true,msg:"CoverImage is required"})
+        // alert("CoverImage is required")
+      }
       else{
         const requestOptions = {
           method: "POST",
@@ -96,11 +109,14 @@ export default function MyEditor() {
         };
         await fetch("http://localhost:5000/api/v1/article", requestOptions)
           .then((response) => response.json())
-          .then((data) => {
+          .then(async (data) => {
             if(data.status==="success"){
-              console.log("Article created successfully")
+              setWarning({status:false,msg:"CoverImage is required"})
+              alert("Article created successfully")
+              router.push('/');
             }
             else{
+              setWarning({status:true,msg:"Some error occured in the server"})
               console.log("Article not created")
             }
           });
@@ -135,6 +151,7 @@ export default function MyEditor() {
             padding: "0 1rem",
           }}
         >
+          {warning.status && <Alert severity="error">{warning.msg}</Alert>}
           <div className="artilceTitle" style={{ padding: "0.8rem" }}>
             <Form.Control
               type="text"
