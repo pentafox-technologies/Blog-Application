@@ -83,7 +83,7 @@ function articleCard({ Article }) {
                   // fontFamily: "Noto Serif Georgian",
                 }}
               >
-                {Article.description}{" "}
+                {Article.description.slice(0,250)}{" "}
                 <Link
                   href="/"
                   style={{ textDecoration: "none", letterSpacing: "1px" }}
