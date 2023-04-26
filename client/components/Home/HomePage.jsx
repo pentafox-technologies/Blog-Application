@@ -78,16 +78,19 @@ function HomePage() {
         <div className="recommendations">
           <h2 className="heading">Recommended Category</h2>
           <div className={styles.categories}>
-            {categories.map((category) => (
-              <Link href="/" className={styles.category}>
-                {category}
-              </Link>
-            ))}
+            {categories
+              .sort()
+              .slice(0, 8)
+              .map((category) => (
+                <Link href="/" className={styles.category}>
+                  {category}
+                </Link>
+              ))}
           </div>
         </div>
         <div className="aboutUs">
           <h2 className="heading mt-5">About Us</h2>
-          <p>
+          <p style={{ textAlign: "justify", marginRight: "1rem" }}>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit.
             Cupiditate, error officia dignissimos quaerat aperiam sapiente
             soluta accusantium rerum commodi non dolorum optio iusto est. Eos

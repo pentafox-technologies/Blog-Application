@@ -28,16 +28,16 @@ function articleCard({ Article }) {
         }}
       >
         <Row>
-          <Col md={5}>
+          <Col md={4}>
             <Image
               src={`data: image/png; base64, ${Base64string}`}
               width={isNonMobileScreens ? "250" : window.innerWidth}
-              height={isNonMobileScreens ? "250" : window.innerHeight/5}
-              style={{ display: "inline" }}
+              height={isNonMobileScreens ? "250" : window.innerHeight / 5}
+              style={{ display: "inline", height: "25vh" }}
               alt="article image"
             />
           </Col>
-          <Col md={7}>
+          <Col md={8}>
             <Row>
               <p style={{ display: "inline" }}>
                 {" "}
@@ -51,7 +51,7 @@ function articleCard({ Article }) {
                 >
                   {Article.category}
                 </Link>{" "}
-                | {Article.publishedDate.slice(0,10)}
+                | {Article.publishedDate.slice(0, 10)}
               </p>
             </Row>
             <Row>
@@ -83,7 +83,7 @@ function articleCard({ Article }) {
                   // fontFamily: "Noto Serif Georgian",
                 }}
               >
-                {Article.description.slice(0,250)}{" "}
+                {Article.description.slice(0, 250)}{" "}
                 <Link
                   href="/"
                   style={{ textDecoration: "none", letterSpacing: "1px" }}
