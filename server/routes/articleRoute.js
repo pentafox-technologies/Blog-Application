@@ -1,10 +1,12 @@
 const express = require('express');
 const articleController = require('../controllers/articleController');
 const authController = require('../controllers/authController');
+const multer = require('./../middleware/multer');
+
 
 const router=express.Router();
 
-router.route('/').get(articleController.getAllArticle).post(authController.protect, articleController.createArticle);
+router.route('/').get(articleController.getAllArticle).post(authController.protect, multer.upload.single("coverImage") ,articleController.createArticle);
 
 router.get('/getPendingVerification', authController.protect, articleController.getPendingVerication);
 

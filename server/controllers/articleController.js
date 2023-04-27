@@ -1,11 +1,9 @@
 const db=require('../db');
 const slugify=require('slugify');
 const cerbos=require("./../middleware/cerbos");
-const fs = require('fs');
 
 exports.createArticle=async (req, res) =>
 {
-    
     if(await cerbos.isAllowed(req.user, {resource: "article"}, "create")) {
         const client=await db.connect();
         try {
@@ -26,7 +24,6 @@ exports.createArticle=async (req, res) =>
             // running this loop until we get unique slug
             while(true) {
                 temp=await client.query(`select * from "Article" where slug like $1`, [slug]);
-                console.log(temp)
                 if(temp.rows.length>0) {
                     slug=slugify(req.body.title, {lower: true})+Math.random().toString(36).slice(2);
                 }
@@ -41,7 +38,7 @@ exports.createArticle=async (req, res) =>
             // Visibilty will be initially private
             const visibilty="private";
             //  Query for creating article
-            const newArticle=await client.query(`insert into "Article" ("slug", "author","title","content","status","visibility","coverImage","description","category") values($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`, [slug, req.user.userName, req.body.title, req.body.content, status, visibilty, req.body.coverImage, req.body.description, req.body.topCategory]);
+            const newArticle=await client.query(`insert into "Article" ("slug", "author","title","content","status","visibility","coverImage","description","category") values($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`, [slug, req.user.userName, req.body.title, req.body.content, status, visibilty, req.file.filename, req.body.description, req.body.topCategory]);
 
             // we have to insert the category and article into categoryMap.
             req.body.category.map(async category => {
@@ -57,7 +54,6 @@ exports.createArticle=async (req, res) =>
             });
 
         } catch(err) {
-            console.log(err)
             res.status(400).json({
                 status: 'error',
                 message: err

@@ -16,14 +16,19 @@ const cerbos = require("./middleware/cerbos");
 // import supportRouter from "./routes/supportRoute.js"
 // import categoryRouter from "./routes/categoryRoute.js"
 
-// app.use(express.json({ limit: '10kb' }));
+
+
+app.use(express.json({ extended: true}));
 app.use(cors());
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use('/coverImage' ,express.static('public/assets/articleCoverImages'));
+// app.use('/images', express.static(__dirname + 'public/assets/articleCoverImages'));
 // app.use(morgan('dev'));
-
 // app.use("/user", userRouter);
+
+
 app.use("/api/v1/article", articleRouter);
 app.use("/api/v1/support", supportRouter);
 app.use("/api/v1/category", categoryRouter);
