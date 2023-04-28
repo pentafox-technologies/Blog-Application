@@ -3,7 +3,7 @@ import { Box } from "@mui/material/";
 import { useMediaQuery } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
-import ArticleViewing from "../../pages/articleViewing";
+import { GlobalStyles } from "../../public/ThemeConfig";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
@@ -14,11 +14,6 @@ function articleCard({ Article }) {
   );
   console.log(window.innerWidth);
 
-  const handleArticle = () => {
-    console.log(Article.slug);
-    // <ArticleViewing slug={Article.slug} />;
-  };
-
   return (
     <div>
       <Box
@@ -26,15 +21,17 @@ function articleCard({ Article }) {
           display: "flex",
           flexWrap: "wrap",
           alignItems: "center",
-          boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
-          margin: "1.5rem 2rem",
+          boxShadow:
+            "rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px",
+          margin: "1.5rem 0rem",
           padding: "1rem",
-          backgroundColor: "white",
+          backgroundColor: "inherit",
           borderRadius: "1rem",
+          justifyContent: "center",
         }}
       >
         <Row>
-          <Col md={4}>
+          <Col md={12} className="flex dir">
             <Image
               src={`data: image/png; base64, ${Base64string}`}
               width={isNonMobileScreens ? "250" : window.innerWidth}
@@ -42,8 +39,6 @@ function articleCard({ Article }) {
               style={{ display: "inline", height: "25vh" }}
               alt="article image"
             />
-          </Col>
-          <Col md={8}>
             <Row>
               <p style={{ display: "inline" }}>
                 {" "}
@@ -52,7 +47,6 @@ function articleCard({ Article }) {
                   style={{
                     textDecoration: "none",
                     color: "blue",
-                    fontWeight: "600",
                   }}
                 >
                   {Article.category}
@@ -61,36 +55,24 @@ function articleCard({ Article }) {
               </p>
             </Row>
             <Row>
-              <h3
-                className="textLink"
-                onClick={handleArticle}
+              <Link
+                href="/"
                 style={{
                   display: "inline",
-                  fontSize: "1.3rem",
-                  fontWeight: "bold",
+                  textDecoration: "none",
+                  color: "black",
                 }}
               >
-                {Article.title}
-              </h3>{" "}
-            </Row>
-            <Row>
-              <p
-                style={{
-                  fontSize: "0.9rem",
-                  marginTop: "0.5rem",
-                  textAlign: "justify",
-                  // fontFamily: "Noto Serif Georgian",
-                }}
-              >
-                {Article.description.slice(0, 250)}{" "}
-                <Link
-                  href="/"
-                  style={{ textDecoration: "none", letterSpacing: "1px" }}
+                <h3
+                  style={{
+                    display: "inline",
+                    fontSize: "1.3rem",
+                    fontWeight: "bold",
+                  }}
                 >
-                  {" "}
-                  ...Read more
-                </Link>
-              </p>
+                  {Article.title}
+                </h3>
+              </Link>{" "}
             </Row>
           </Col>
         </Row>

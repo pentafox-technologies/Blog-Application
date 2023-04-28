@@ -1,8 +1,8 @@
 import React from "react";
 import ArticleCard from "./articleCard";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import Link from "next/link";
-import { GlobalStyles } from "../../pages/ThemeConfig";
+import { GlobalStyles } from "../../public/ThemeConfig";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFacebook,
@@ -18,63 +18,52 @@ function HomePage() {
 
   async function getArticles() {
     await fetch(`http://localhost:5000/api/v1/article`)
-    .then(response => response.json())
-    .then(data => {
-      setArticles(data.data)
-    })
+      .then((response) => response.json())
+      .then((data) => {
+        setArticles(data.data);
+      });
     await fetch(`http://localhost:5000/api/v1/category`)
-      .then(response => response.json())
-      .then(data => {
-        const topCat = data.data.map(cat => {return cat.categoryName})
-        setCategories(topCat)
-      })
-    // setCatgories([
-    //   "Food blogs",
-    //   "Programming",
-    //   "Web Technology",
-    //   "UI/UX Design",
-    //   "Vehicle",
-    //   "Content Creation",
-    // ]);
-    // setArticles([
-    //   {
-    //     slug: "post-3dsx9r3nab6t",
-    //     categoryName: "Design",
-    //     publishedDate: "2023-03-15",
-    //     title: "UI/UX Design Trends 2023",
-    //     content:
-    //       "Yet another year is coming to a close. Many of the 2022 trends we anticipated, did find their use in digital products across our devices this year. As we are about to welcome 2023, we are taking a more careful",
-    //   },
-    //   {
-    //     slug: "post-3dsx9r3nab6t",
-    //     categoryName: "UI/UX  ",
-    //     publishedDate: "2023-03-15",
-    //     title: "Advanced Figma components tips & tricks: little gems we love",
-    //     content:
-    //       "As you all loved Advanced Figma Tips & Tricks and Prototyping Tips & Tricks, here is the third part: In this article, I’ll share some of my",
-    //   },
-    //   {
-    //     slug: "post-3dsx9r3nab6t",
-    //     categoryName: "Other",
-    //     publishedDate: "2023-03-15",
-    //     title: "How I Make $1.5k Monthly Passive Income at Age 28",
-    //     content:
-    //       "Steal the formula, upgrade your life — I never thought I’d make a dime from writing online. I’ve taken zero courses, didn’t study writing at school, had no mentors, nothing. There were no shortcuts in my",
-    //   },
-    // ]);
+      .then((response) => response.json())
+      .then((data) => {
+        const topCat = data.data.map((cat) => {
+          return cat.categoryName;
+        });
+        setCategories(topCat);
+      });
   }
 
   useEffect(() => {
     getArticles();
   }, []);
 
+  // To stick the right side area of home page
+
+  const div = useRef();
+
+  useLayoutEffect(() => {
+    const divAnimate = div.current.getBoundingClientRect().top;
+    const onScroll = () => {
+      if (divAnimate < window.scrollY) {
+        div.current.style.position = "fixed";
+        div.current.style.top = 0;
+        div.current.style.right = 0;
+      } else {
+        div.current.style.position = "relative";
+      }
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <div className="row">
       <div className="col-md-8">
         {Articles &&
-          Articles.map((article) => <ArticleCard Article={article} />)}
+          Articles.map((article) => (
+            <ArticleCard key={article.slug} Article={article} />
+          ))}
       </div>
-      <div className="col-md-4 mt-4 position-sticky">
+      <div ref={div} className="col-md-4 pt-4">
         <div className="recommendations">
           <h2 className="heading">Recommended Category</h2>
           <div className={styles.categories}>

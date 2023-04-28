@@ -67,3 +67,39 @@ body{
 *::-webkit-scrollbar {
   width: 0px;
 }
+
+.articleBody{
+  max-width: 10rem;
+  margin: auto;
+}
+
+.flex{
+  display: flex;
+  align-items: center;
+}
+
+.dir{
+  flex-direction: column;
+}
+
+.profile{
+  height: 8vh;
+  width: 8vh;
+  border-radius: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.articleText{
+  letter-spacing: -0.0003;
+  line-height: 32px;
+  color: rgba(41, 41, 41, 1) !important;
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+.textLink{
+  cursor: pointer;
+}

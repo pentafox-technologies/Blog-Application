@@ -1,7 +1,6 @@
 import '../styles/globals.css';
-import "../styles/articleView.css";
 import { ThemeProvider } from "styled-components"
-import { lightTheme, darkTheme, GlobalStyles } from "./ThemeConfig" 
+import {lightTheme, darkTheme, GlobalStyles} from "../public/ThemeConfig" 
 
 import 'bootstrap/dist/css/bootstrap.css'
 
