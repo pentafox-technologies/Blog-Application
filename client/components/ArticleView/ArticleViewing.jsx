@@ -5,7 +5,7 @@ import ArticleCard from "./ArticleCard";
 import Image3 from "../../public/images/profilepic.jpg";
 import { Typography } from "@mui/material";
 
-export default function ArticleViewing() {
+export default function ArticleViewing({ slug }) {
   const [relatedArticles, setRelatedArticles] = useState([]);
   const [article, setArticle] = useState(null);
   const [author, setAuthor] = useState(null);
@@ -14,7 +14,7 @@ export default function ArticleViewing() {
   const [title, setTitle] = useState(null);
   const [coverImage, setCoverImage] = useState(null);
 
-  const slug = "10-open-source-projects-for-web-developers-in-2023ciw5lfs00hj";
+  // const slug = "10-open-source-projects-for-web-developers-in-2023ciw5lfs00hj";
   const isNonMobileScreens = useMediaQuery("(min-width:720px)");
   var Base64string;
 
@@ -46,7 +46,7 @@ export default function ArticleViewing() {
 
   useEffect(() => {
     getArticle();
-  }, []);
+  }, [slug]);
 
   useEffect(() => {
     Base64string = coverImage?.slice(coverImage.search(",") + 1);

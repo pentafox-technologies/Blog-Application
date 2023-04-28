@@ -7,8 +7,6 @@ import TextField from '@mui/material/TextField';
 export default function Posts(props) {
     const { children, value, index, ...other } = props;
 
-
-
     return (
       <div
         role="tabpanel"

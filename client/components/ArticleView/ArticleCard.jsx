@@ -56,7 +56,7 @@ function articleCard({ Article }) {
             </Row>
             <Row>
               <Link
-                href="/"
+                href={`/post/${Article.slug}`}
                 style={{
                   display: "inline",
                   textDecoration: "none",

@@ -3,17 +3,21 @@ import { Box } from "@mui/material/";
 import { useMediaQuery } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
-import ArticleViewing from "../../pages/articleViewing";
+import ArticleViewing from "../../pages/post/[slug]";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 function articleCard({ Article }) {
   const isNonMobileScreens = useMediaQuery("(min-width:720px)");
-  console.log(Article);
+  // console.log(Article);
+
   const API = `http://localhost:5000`;
   const myLoader = ({ src }) => {
     return `${API}/coverImage/${Article.coverImage}`;
   };
+  const Base64string = Article.coverImage?.slice(
+    Article.coverImage.search(",") + 1
+  );
 
   return (
     <div>
@@ -33,7 +37,8 @@ function articleCard({ Article }) {
           <Col md={4}>
             <Image
               loader={myLoader}
-              src={`${API}/coverImage/${Article}`}
+              // src={`${API}/coverImage/${Article}`}
+              src={`data: image/png; base64, ${Base64string}`}
               width={isNonMobileScreens ? "250" : window.innerWidth}
               height={isNonMobileScreens ? "250" : window.innerHeight / 5}
               style={{ display: "inline", height: "25vh" }}
@@ -58,17 +63,18 @@ function articleCard({ Article }) {
               </p>
             </Row>
             <Row>
-              <h3
-                className="textLink"
-                onClick={handleArticle}
-                style={{
-                  display: "inline",
-                  fontSize: "1.3rem",
-                  fontWeight: "bold",
-                }}
-              >
-                {Article.title}
-              </h3>{" "}
+              <Link className="Links" href={`/post/${Article.slug}`}>
+                <h3
+                  className="textLink"
+                  style={{
+                    display: "inline",
+                    fontSize: "1.3rem",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {Article.title}
+                </h3>
+              </Link>{" "}
             </Row>
             <Row>
               <p
