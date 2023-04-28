@@ -12,6 +12,6 @@ const config = ({
 });
 
 const Pool = pg.Pool;
-let db = new Pool(config);
+let db = new Pool(config).connect();
 
 module.exports = db;

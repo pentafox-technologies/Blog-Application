@@ -6,7 +6,7 @@ const db = require('../db');
 
 
 exports.signup = async (req, res) => {
-    const client = await db.connect();
+    const client = await db;
     try{
         if(req.body.userType === 'admin' || req.body.userType === 'moderator'){
             return res.status(401).json({
@@ -44,7 +44,7 @@ exports.login = async (req, res) => {
             message: 'Please provide email & password!'
         });
     }
-    const client = await db.connect();
+    const client = await db;
     try{
         const user = await client.query(`select * from "User" where "userName" = $1`, [userName]);
         // user = user.rows;
@@ -84,7 +84,7 @@ exports.login = async (req, res) => {
 exports.protect = async (req, res, next) => {
     try{
         let token;
-        const client = await db.connect();
+        const client = await db;
         if (
             req.headers.authorization &&
             req.headers.authorization.startsWith('Bearer')

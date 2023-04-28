@@ -3,7 +3,7 @@ const cerbos=require("./../middleware/cerbos");
 
 exports.getAllSupport = async (req, res, next) => {
     try {
-        const client = await db.connect();
+        const client = await db;
         await client.query(`SELECT * FROM "Supports"`);
         res.status(200).json({
             status: 'success',
@@ -15,7 +15,7 @@ exports.getAllSupport = async (req, res, next) => {
 exports.createSupport = async (req, res, next) => {
     if(await cerbos.isAllowed(req.user, {resource: "supports"}, "create")) {
         try {
-            const client = await db.connect();
+            const client = await db;
             const username = req.user.userName;
             const supportedTime = new Date();
             const slug = req.params.slug
@@ -43,7 +43,7 @@ exports.createSupport = async (req, res, next) => {
 
 exports.getSupport = async (req, res, next) => {
     try {
-        const client = await db.connect();
+        const client = await db;
         
         const allSupport = await client.query(`SELECT * FROM "Supports" where article like $1;`, [req.params.slug]);
         res.status(200).json({
@@ -65,7 +65,7 @@ exports.getSupport = async (req, res, next) => {
 
 exports.deleteSupport = async (req, res, next) => {
     try{
-        const client = await db.connect();
+        const client = await db;
         const queryResult = await client.query(`SELECT * FROM "Supports" where "user" = $1 and "article" = $2;`, [req.user.userName,req.params.slug]);
         const support = queryResult.rows[0];
         if (!support) {

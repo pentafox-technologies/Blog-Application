@@ -3,7 +3,7 @@ const cerbos = require("./../middleware/cerbos");
 
 exports.getAllCategory = async (req, res, next) => {
     try{
-        const client = await db.connect();
+        const client = await db;
         const categories = await client.query(`select "categoryName" from "TopCategory"`);
         res.status(201).json({
             status: 'success',
@@ -20,7 +20,7 @@ exports.getAllCategory = async (req, res, next) => {
 
 exports.getAllSubCategory = async (req, res, next) => {
     try{
-        const client = await db.connect();
+        const client = await db;
         const cat = await client.query(`select "catName" from "CategorySet"`);
         let categories = new Array();
         for(var i=0;i<cat.rows.length;++i){
@@ -42,7 +42,7 @@ exports.getAllSubCategory = async (req, res, next) => {
 };
 
 exports.createTopCategory = async (req, res, next) => {
-    const client = await db.connect();
+    const client = await db;
     if(await cerbos.isAllowed(req.user,{resource:"category"},"create")) {
         try {
             const newTopCategory = await client.query(`insert into "TopCategory" ("categoryName", "initializedBy", "dateCreated") values($1,$2,$3) RETURNING *`, [req.body.categoryName,req.user.userName,new Date()]);
@@ -68,7 +68,7 @@ exports.createTopCategory = async (req, res, next) => {
 exports.getCategory=async (req, res, next) =>
 {
     try {
-        const client=await db.connect();
+        const client=await db;
         req.params.categoryName=req.params.categoryName+"%";
         var subCat=await client.query(`select * from "CategorySet" where "categorizedUnder" ilike $1`, [req.params.categoryName]);
         var articles=new Array();
@@ -116,7 +116,7 @@ exports.getCategory=async (req, res, next) =>
 exports.updateCategory = async (req, res) => {
     if(await cerbos.isAllowed(req.user,{resource:"category"},"update")) {
         try {
-            const client = await db.connect();
+            const client = await db;
 
             const topCategory = await client.query(`SELECT * FROM "TopCategory" where "categoryName" = $1;`, [req.params.categoryName]);
 

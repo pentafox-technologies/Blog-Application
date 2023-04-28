@@ -5,7 +5,7 @@ const cerbos=require("./../middleware/cerbos");
 exports.createArticle=async (req, res) =>
 {
     if(await cerbos.isAllowed(req.user, {resource: "article"}, "create")) {
-        const client=await db.connect();
+        const client=await db;
         try {
 
             req.body.category.map(async category => {
@@ -69,7 +69,7 @@ exports.createArticle=async (req, res) =>
 
 exports.getAllArticle=async (req, res, next) =>
 {
-    const client=await db.connect();
+    const client=await db;
     try {
         const Articles=await client.query(`select "slug","title","coverImage","description","category" from "Article" where "status"=$1 and "visibility"=$2;`,["published","public"]);
         result=[];
@@ -79,7 +79,6 @@ exports.getAllArticle=async (req, res, next) =>
             tem = { ...Articles.rows[i], publishedDate: publishedDate.rows[0].updateTime};
             result.push(tem);
         }
-        
         res.status(201).json({
             status: 'success',
             data: result,
@@ -98,7 +97,7 @@ exports.getArticle=async (req, res, next) =>
 {
     const slug=req.params.slug;
 
-    const client=await db.connect();
+    const client=await db;
     try {
         const Article=await client.query(`SELECT * FROM "Article" where slug = $1 and status!=$2 and visibility=$3;`, [slug,"deleted","public"]);
         
@@ -126,7 +125,7 @@ exports.getArticle=async (req, res, next) =>
 exports.updateArticle=async (req, res) =>
 {
 
-    const client=await db.connect();
+    const client=await db;
     let Article=await client.query(`SELECT * FROM "Article" where slug like $1 and status!=$2;`, [req.params.slug,"deleted"]);
     Article=Article.rows[0];
     Article.resource="article";
@@ -214,7 +213,7 @@ exports.deleteArticle=async (req, res, next) =>
 {
     try {
         const slug=req.params.slug;
-        const client=await db.connect();
+        const client=await db;
         let Article=await client.query(`SELECT * FROM "Article" where slug like $1 and status!=$2;`, [slug,"deleted"]);
         Article=Article.rows[0];
         Article.resource="article";
@@ -246,7 +245,7 @@ exports.searchArticle=async (req, res) =>
     try {
 
         const query = req.params.query+"%";
-        const client = await db.connect();
+        const client = await db;
         const result = await client.query(`SELECT * FROM "Article" where slug like $1 and status=$2;`, [query,"published"]);
         res.status(200).json({
             status: 'success',
@@ -267,7 +266,7 @@ exports.searchArticle=async (req, res) =>
 
 exports.sendForApproval = async (req, res) => {
     
-    const client=await db.connect();
+    const client=await db;
     let Article1=await client.query(`SELECT * FROM "Article" where slug like $1 and status!=$2;`, [req.params.slug,'deleted']);
     Article1=Article1.rows[0];
     Article1.resource="article";
@@ -299,7 +298,7 @@ exports.sendForApproval = async (req, res) => {
 exports.approveAndPublish = async (req, res) => {
     if(await cerbos.isAllowed(req.user, {resource: "article"}, "approve and publish")) {
         try {
-            const client = await db.connect();
+            const client = await db;
             await client.query('UPDATE "Article" SET status = $1, visibility = $2 WHERE "slug" = $3',['published','public',req.params.slug]);
             let Article=await client.query(`SELECT * FROM "Article" where slug like $1 and status!=$2;`, [req.params.slug,'deleted']);
             await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason","controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) RETURNING *`, [Article.rows[0].slug, Article.rows[0].status, new Date(), "Approved and Published", req.user.userName, Article.rows[0].author]);
@@ -325,7 +324,7 @@ exports.approveAndPublish = async (req, res) => {
 exports.rejectPost = async (req, res) => {
     if(await cerbos.isAllowed(req.user, {resource: "article"}, "reject")) {
         try {
-            const client = await db.connect();
+            const client = await db;
             await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['rejected',req.params.slug]);
             let Article=await client.query(`SELECT * FROM "Article" where slug like $1 and status!=$2;`, [req.params.slug,'deleted']);
             await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason","controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) RETURNING *`, [Article.rows[0].slug, Article.rows[0].status, new Date(), "Rejected", req.user.userName, Article.rows[0].author]);
@@ -351,7 +350,7 @@ exports.rejectPost = async (req, res) => {
 exports.getPendingVerication = async (req, res) => {
     if(await cerbos.isAllowed(req.user, {resource: "article"}, "getPendingVerication")) {
         try{
-            const client = await db.connect();
+            const client = await db;
             const articles = await client.query(`SELECT * FROM "Article" WHERE "status" = ($1)`, ['pending_verification']);
             res.status(200).json({
                 status: 'success',
@@ -377,7 +376,7 @@ exports.selectToValidate=async (req, res, next) =>
 {
     if(await cerbos.isAllowed(req.user, {resource: "article"}, "validate")) {
         try {
-            const client=await db.connect();
+            const client=await db;
             const article=await client.query(`SELECT * FROM "Article" where slug = $1;`, [req.params.slug]);
 
             // Check whether article exist or not
@@ -416,7 +415,7 @@ exports.selectToValidate=async (req, res, next) =>
 exports.pushbackArticle = async (req,res) => {
     if(await cerbos.isAllowed(req.user, {resource: "article"}, "pushback")) {
         try {
-            const client = await db.connect();
+            const client = await db;
 
             const article=await client.query(`SELECT * FROM "Article" where slug like $1;`, [req.params.slug]);
             // Check whether article exist or not

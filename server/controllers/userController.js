@@ -4,7 +4,7 @@ const cerbos=require("./../middleware/cerbos");
 
 exports.getAllUser=async (req, res, next) =>
 {
-    const client=await db.connect();
+    const client=await db;
     if(await cerbos.isAllowed(req.user,{resource:"user"},"getAll")) {
             try {
             const users=await client.query(`SELECT * FROM "User"`);
@@ -26,7 +26,7 @@ exports.getUser=async (req, res, next) =>
 {
     try {
         const name=req.params.slug;
-        const client=await db.connect();
+        const client=await db;
         const user=await client.query(`select * from "User" where "userName" = $1`, [name])
 
         if(user.rows.length==0) {
@@ -65,7 +65,7 @@ exports.getMe=async (req, res) =>
 {
     if(await cerbos.isAllowed(req.user,{resource:"user"},"getByUserName")) {
             try {
-            const client=await db.connect();
+            const client=await db;
             const user=await client.query(`select * from "User" where "userName" = $1`, [req.user.userName]);
             if(user.rows.length==0) {
                 return res.status(400).json({
@@ -100,7 +100,7 @@ exports.updateUser=async (req, res, next) =>
     if(await cerbos.isAllowed(req.user,{resource:"user", userName: req.params.slug},"update")) {
             try {
                 const user=req.body;
-                const client=await db.connect();
+                const client=await db;
                 const update=await client.query(`update "User" set "firstName"=$1 where "userName" = $2`, [user.firstName, req.params.slug]);
 
                 res.status(200).json({
@@ -126,7 +126,7 @@ exports.updatePassword=async (req, res, next) =>
 {
     if(await cerbos.isAllowed(req.user,{resource:"user", userName: req.params.slug},"update")) {
             try {
-                const client=await db.connect();
+                const client=await db;
                 const password=await bcrypt.hash(req.body.password, 12);
                 const update=await client.query(`update "User" set "password"=$1 where "userName" = $2`, [password, req.params.slug]);
 
@@ -153,7 +153,7 @@ exports.updateProfile=async (req, res, next) =>
 {
     if(await cerbos.isAllowed(req.user,{resource:"user", userName: req.params.slug},"update")){
             try {
-                const client=await db.connect();
+                const client=await db;
                 const update=await client.query(`update "User" set "profilePic"=$1 where "userName" = $2`, [req.body.profilePic, req.params.slug]);
 
                 res.status(200).json({
@@ -179,7 +179,7 @@ exports.updateMail=async (req, res, next) =>
     if(await cerbos.isAllowed(req.user,{resource:"user", userName: req.params.slug},"update"))
     {
             try {
-                const client=await db.connect();
+                const client=await db;
                 const update=await client.query(`update "User" set "emailAddress"=$1 where "userName" = $2`, [req.body.emailAddress, req.params.slug]);
 
                 res.status(200).json({
@@ -205,7 +205,7 @@ exports.deleteUser=async (req, res, next) =>
 {
     if(await cerbos.isAllowed(req.user,{resource:"user"},"delete")) {
         try {
-            const client=await db.connect();
+            const client=await db;
             
             await client.query(`update "User" set "userState"=$1 where "userName" = $2`, ["deleted", req.params.slug]);
 
@@ -231,7 +231,7 @@ exports.promoteUser=async (req, res, next) =>
 {
     if(await cerbos.isAllowed(req.user, {resource: "user"}, "promoteUser")) {
         try {
-            const client=await db.connect();
+            const client=await db;
             const id=req.params.slug;
 
             const user=await client.query(`update "User" set "userType"=$2 where "userName" = $1`, [id, req.body.role])
