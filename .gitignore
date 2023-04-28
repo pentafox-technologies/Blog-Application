@@ -1,5 +1,6 @@
 /server/node_modules
 /server/.env
+/server/public/assets
 
 /client/node_modules
 node_modules

@@ -9,6 +9,8 @@ import MultipleTags from "../components/MultipleTags";
 import AutoComplete from "../components/AutoComplete";
 import { useRouter } from 'next/router'
 import Alert from '@mui/material/Alert';
+import axios from "axios";
+
 
 export default function MyEditor() {
   let router= useRouter()
@@ -45,19 +47,19 @@ export default function MyEditor() {
       getCategories();
     },[])
 
-    const toBase64 = file => new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-  });
+  //   const toBase64 = file => new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onload = () => resolve(reader.result);
+  //     reader.onerror = reject;
+  // });
 
   const changeHandler = e => {
     setFormData({...formData, [e.target.name]: e.target.value});
   }
 
   const setCoverImage = async e => {
-    setFormData({...formData,coverImage: await toBase64(e.target.files[0])})
+    setFormData({...formData,coverImage: e.target.files[0]})
   }
 
   const setTopCategory = (value) => {
@@ -99,16 +101,18 @@ export default function MyEditor() {
         // alert("CoverImage is required")
       }
       else{
-        const requestOptions = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InJrIiwiaWF0IjoxNjc4MTI1ODkwLCJleHAiOjE2ODU5MDE4OTB9.7gLX4JSaEr4_dMatxcOOMRkZjGzcsfRio8w4vRojypY`,
-          },
-          body: JSON.stringify({...formData,status:e.target.name}),
-        };
-        await fetch("http://localhost:5000/api/v1/article", requestOptions)
-          .then((response) => response.json())
+        setWarning({status:false,msg:""})
+        console.log(formData)
+
+        await axios.post("http://localhost:5000/api/v1/article",
+              {...formData,status:e.target.name},
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                  Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InJrIiwiaWF0IjoxNjc4MTI1ODkwLCJleHAiOjE2ODU5MDE4OTB9.7gLX4JSaEr4_dMatxcOOMRkZjGzcsfRio8w4vRojypY`
+                }
+            }
+        ).then((response) => response.json())
           .then(async (data) => {
             if(data.status==="success"){
               setWarning({status:false,msg:"CoverImage is required"})
@@ -121,10 +125,6 @@ export default function MyEditor() {
             }
           });
       }
-
-
-
-      
   }
 
   const categories = [
