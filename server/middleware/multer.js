@@ -1,9 +1,19 @@
 const multer = require("multer");
+const fs = require('fs');
 
 const storage = multer.diskStorage({
     destination(req, file, cb) {
-        const url = `./public/assets/articleCoverImages`;
-        cb(null, url);
+        const folderName = `./public/assets/articleCoverImages`;
+        try {
+            if (!fs.existsSync(folderName)) {
+                fs.mkdirSync(`./public`);
+                fs.mkdirSync(`./public/assets`);
+                fs.mkdirSync(`./public/assets/articleCoverImages`);
+            }
+          } catch (err) {
+            console.error(err);
+          }
+        cb(null, folderName);
     },
     filename(req, file, cb) {
         file.originalname = "re_" + file.originalname;
