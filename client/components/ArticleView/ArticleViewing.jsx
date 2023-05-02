@@ -2,7 +2,7 @@ import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { useMediaQuery } from "@mui/material";
 import Image from "next/image";
 import ArticleCard from "./ArticleCard";
-import Image3 from "../../public/images/profilepic.jpg";
+import Image3 from "../../public/images/profilePic.jpg";
 import { Typography } from "@mui/material";
 
 export default function ArticleViewing({ slug }) {
