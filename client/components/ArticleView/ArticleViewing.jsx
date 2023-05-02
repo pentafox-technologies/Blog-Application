@@ -14,7 +14,10 @@ export default function ArticleViewing({ slug }) {
   const [title, setTitle] = useState(null);
   const [coverImage, setCoverImage] = useState(null);
 
-  // const slug = "10-open-source-projects-for-web-developers-in-2023ciw5lfs00hj";
+  const API = `http://localhost:5000`;
+  const myLoader = ({ src }) => {
+    return `${API}/coverImage/${coverImage}`;
+  };
   const isNonMobileScreens = useMediaQuery("(min-width:720px)");
   var Base64string;
 
@@ -55,7 +58,10 @@ export default function ArticleViewing({ slug }) {
   return (
     <>
       <div className="row justify-content-center">
-        <div className="col-lg-6 my-5 mx-5" style={{ marginRight: "6rem" }}>
+        <div
+          className="col-lg-6 col-sm-12 my-5 mx-5"
+          style={{ marginRight: "6rem" }}
+        >
           <div className="articleinfo flex my-3">
             <div className="profile">
               <Image
@@ -82,12 +88,13 @@ export default function ArticleViewing({ slug }) {
             <h2 style={{ fontWeight: 600 }}>{title}</h2>
           </div>
           <div className="description articleText">{description}</div>
-          <div className="coverImage">
+          <div className="coverImage my-3">
             <Image
-              src={`data: image/png; base64, ${Base64string}`}
+              loader={myLoader}
+              src={`${API}/coverImage/${coverImage}`}
               width={200}
               height={200}
-              style={{ display: "inline", height: "25vh" }}
+              style={{ display: "inline", width: "100%" }}
               alt="article image"
             />
           </div>

@@ -1,5 +1,4 @@
-import React, { useRef,useState,useEffect} from "react";
-import Navbar from "../components/navbar";
+import React, { useRef, useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import { faFloppyDisk, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
@@ -7,142 +6,148 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Editor } from "@tinymce/tinymce-react";
 import MultipleTags from "../components/MultipleTags";
 import AutoComplete from "../components/AutoComplete";
-import { useRouter } from 'next/router'
-import Alert from '@mui/material/Alert';
+import { useRouter } from "next/router";
 import axios from "axios";
+import { toast } from "react-toastify";
 
-
-export default function MyEditor() {
-  let router= useRouter()
+export default function EditorArea() {
+  let router = useRouter();
   const editorRef = useRef(null);
   const [formData, setFormData] = useState({
-        title: '',
-        content: '',
-        description: '',
-        coverImage: '',
-        category: "",
-        topCategory: "",
-    });
-    const [warning,setWarning] = useState({state:false,msg:''});
+    title: "",
+    content: "",
+    description: "",
+    coverImage: "",
+    category: "",
+    topCategory: "",
+  });
+  const [topCategories, setTopCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
 
-    const [topCategories,setTopCategories] = useState([]);
-    const [subCategories,setSubCategories] = useState([]);
+  const getCategories = async () => {
+    await fetch(`http://localhost:5000/api/v1/category`)
+      .then((response) => response.json())
+      .then((data) => {
+        const topCat = data.data.map((cat) => {
+          return cat.categoryName;
+        });
+        setTopCategories(topCat);
+      });
+    await fetch(`http://localhost:5000/api/v1/category/subCategory`)
+      .then((response) => response.json())
+      .then((data) => {
+        setSubCategories(data.data);
+      });
+  };
 
-    const getCategories = async () => {
-      await fetch(`http://localhost:5000/api/v1/category`)
-      .then(response => response.json())
-      .then(data => {
+  useEffect(() => {
+    getCategories();
+  }, []);
 
-        const topCat = data.data.map(cat => {return cat.categoryName})
-        setTopCategories(topCat)
-      })
-      await fetch(`http://localhost:5000/api/v1/category/subCategory`)
-      .then(response => response.json())
-      .then(data => {
-        setSubCategories(data.data)
-      })
-    }
+  const changeHandler = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    useEffect(() => {
-      getCategories();
-    },[])
-
-  //   const toBase64 = file => new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => resolve(reader.result);
-  //     reader.onerror = reject;
-  // });
-
-  const changeHandler = e => {
-    setFormData({...formData, [e.target.name]: e.target.value});
-  }
-
-  const setCoverImage = async e => {
-    setFormData({...formData,coverImage: e.target.files[0]})
-  }
+  const setCoverImage = async (e) => {
+    setFormData({ ...formData, coverImage: e.target.files[0] });
+  };
 
   const setTopCategory = (value) => {
-    setFormData({...formData,topCategory: value})
-  }
+    setFormData({ ...formData, topCategory: value });
+  };
 
   const setSubCategory = (value) => {
-    setFormData({...formData,category: value})
-  }
+    setFormData({ ...formData, category: value });
+  };
 
   const setContent = () => {
-    setFormData({...formData,content:editorRef.current.getContent()})
-  }
+    setFormData({ ...formData, content: editorRef.current.getContent() });
+  };
 
-  const sendArticle = async e => {
+  const sendArticle = async (e) => {
+    if (formData.title === "") {
+      toast("Article Title is Required", {
+        hideProgressBar: false,
+        autoClose: 1500,
+        type: "warning",
+        theme: "colored",
+      });
+    } else if (formData.content === "") {
+      toast("Article cannot be empty", {
+        hideProgressBar: false,
+        autoClose: 1500,
+        type: "warning",
+        theme: "colored",
+      });
+    } else if (formData.description === "") {
+      toast("Article Description is required", {
+        hideProgressBar: false,
+        autoClose: 1500,
+        type: "warning",
+        theme: "colored",
+      });
+    } else if (formData.topCategory === "") {
+      toast("Article TopCategory is Required", {
+        hideProgressBar: false,
+        autoClose: 1500,
+        type: "warning",
+        theme: "colored",
+      });
+    } else if (formData.category === "") {
+      toast("Article Category is Required", {
+        hideProgressBar: false,
+        autoClose: 1500,
+        type: "warning",
+        theme: "colored",
+      });
+    } else if (formData.coverImage === "") {
+      toast("CoverImage Required", {
+        hideProgressBar: false,
+        autoClose: 1500,
+        type: "warning",
+        theme: "colored",
+      });
+    } else {
+      await axios
+        .post(
+          "http://localhost:5000/api/v1/article",
+          { ...formData, status: e.target.name },
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InJrIiwiaWF0IjoxNjc4MTI1ODkwLCJleHAiOjE2ODU5MDE4OTB9.7gLX4JSaEr4_dMatxcOOMRkZjGzcsfRio8w4vRojypY`,
+            },
+          }
+        )
+        .then(async (response) => {
+          const data = response.data;
+          if (data.status === "success") {
+            toast("Article created successfully", {
+              hideProgressBar: false,
+              autoClose: 1500,
+              type: "success",
+              theme: "colored",
+            });
+            router.push("/");
+          } else {
+            setWarning({
+              status: true,
+              msg: "",
+            });
+            console.log("Article not created");
 
-      if(formData.title==='') {
-        setWarning({status:true,msg:"Article Title is Required"})
-        // alert("Article Title is required")
-      }
-      else if(formData.content==='') {
-        setWarning({status:true,msg:"Article cannot be Empty"})
-        // alert("Article cannot be Empty")
-      }
-      else if(formData.description==='') {
-        setWarning({status:true,msg:"Article Description is required"})
-        // alert("Article Description is required")
-      }
-      else if(formData.topCategory==='') {
-        setWarning({status:true,msg:"Article TopCategory is required"})
-        // alert("Article TopCategory is required")
-      }
-      else if(formData.category==='') {
-        setWarning({status:true,msg:"Article Category is required"})
-        // alert("Article Category is required")
-      }
-      else if(formData.coverImage==='') {
-        setWarning({status:true,msg:"CoverImage is required"})
-        // alert("CoverImage is required")
-      }
-      else{
-        setWarning({status:false,msg:""})
-        console.log(formData)
-
-        await axios.post("http://localhost:5000/api/v1/article",
-              {...formData,status:e.target.name},
-              {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                  Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InJrIiwiaWF0IjoxNjc4MTI1ODkwLCJleHAiOjE2ODU5MDE4OTB9.7gLX4JSaEr4_dMatxcOOMRkZjGzcsfRio8w4vRojypY`
-                }
-            }
-        ).then((response) => response.json())
-          .then(async (data) => {
-            if(data.status==="success"){
-              setWarning({status:false,msg:"CoverImage is required"})
-              alert("Article created successfully")
-              router.push('/');
-            }
-            else{
-              setWarning({status:true,msg:"Some error occured in the server"})
-              console.log("Article not created")
-            }
-          });
-      }
-  }
-
-  const categories = [
-    "Food blogs",
-    "Sports",
-    "Vehicle",
-    "Technology",
-    "Bussiness",
-    "Politics",
-    "Miriam Wagner",
-    "Bradley Wilkerson",
-    "Virginia Andrews",
-    "Kelly Snyder",
-  ];
-
+            toast("Some error occured in the server", {
+              hideProgressBar: false,
+              autoClose: 1500,
+              type: "error",
+              theme: "colored",
+            });
+          }
+        });
+    }
+  };
   return (
     <>
-      <Navbar />
       <div className="row">
         <div
           className="col-md-9 justify-content-center"
@@ -151,7 +156,6 @@ export default function MyEditor() {
             padding: "0 1rem",
           }}
         >
-          {warning.status && <Alert severity="error">{warning.msg}</Alert>}
           <div className="artilceTitle" style={{ padding: "0.8rem" }}>
             <Form.Control
               type="text"
