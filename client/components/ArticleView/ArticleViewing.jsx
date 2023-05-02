@@ -57,7 +57,10 @@ export default function ArticleViewing({ slug }) {
 
   return (
     <>
-      <div className="row justify-content-center">
+      <div
+        className="row justify-content-center"
+        style={{ backgroundColor: "white" }}
+      >
         <div
           className="col-lg-6 col-sm-12 my-5 mx-5"
           style={{ marginRight: "6rem" }}

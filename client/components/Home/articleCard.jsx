@@ -9,15 +9,11 @@ import Col from "react-bootstrap/Col";
 
 function articleCard({ Article }) {
   const isNonMobileScreens = useMediaQuery("(min-width:720px)");
-  // console.log(Article);
 
   const API = `http://localhost:5000`;
   const myLoader = ({ src }) => {
     return `${API}/coverImage/${Article.coverImage}`;
   };
-  const Base64string = Article.coverImage?.slice(
-    Article.coverImage.search(",") + 1
-  );
 
   return (
     <div>
@@ -37,8 +33,7 @@ function articleCard({ Article }) {
           <Col md={4}>
             <Image
               loader={myLoader}
-              // src={`${API}/coverImage/${Article}`}
-              src={`data: image/png; base64, ${Base64string}`}
+              src={`${API}/coverImage/${Article.coverImage}`}
               width={isNonMobileScreens ? "250" : window.innerWidth}
               height={isNonMobileScreens ? "250" : window.innerHeight / 5}
               style={{ display: "inline", height: "25vh" }}
