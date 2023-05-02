@@ -3,21 +3,16 @@ import { Box } from "@mui/material/";
 import { useMediaQuery } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
-import ArticleViewing from "../../pages/post/[slug]";
+import { GlobalStyles } from "../../public/ThemeConfig";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 function articleCard({ Article }) {
   const isNonMobileScreens = useMediaQuery("(min-width:720px)");
-  // console.log(Article);
-
-  const API = `http://localhost:5000`;
-  const myLoader = ({ src }) => {
-    return `${API}/coverImage/${Article.coverImage}`;
-  };
   const Base64string = Article.coverImage?.slice(
     Article.coverImage.search(",") + 1
   );
+  console.log(window.innerWidth);
 
   return (
     <div>
@@ -26,26 +21,24 @@ function articleCard({ Article }) {
           display: "flex",
           flexWrap: "wrap",
           alignItems: "center",
-          boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
-          margin: "1.5rem 2rem",
+          boxShadow:
+            "rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px",
+          margin: "1.5rem 0rem",
           padding: "1rem",
-          backgroundColor: "white",
+          backgroundColor: "inherit",
           borderRadius: "1rem",
+          justifyContent: "center",
         }}
       >
         <Row>
-          <Col md={4}>
+          <Col md={12} className="flex dir">
             <Image
-              loader={myLoader}
-              // src={`${API}/coverImage/${Article}`}
               src={`data: image/png; base64, ${Base64string}`}
               width={isNonMobileScreens ? "250" : window.innerWidth}
               height={isNonMobileScreens ? "250" : window.innerHeight / 5}
               style={{ display: "inline", height: "25vh" }}
               alt="article image"
             />
-          </Col>
-          <Col md={8}>
             <Row>
               <p style={{ display: "inline" }}>
                 {" "}
@@ -54,7 +47,6 @@ function articleCard({ Article }) {
                   style={{
                     textDecoration: "none",
                     color: "blue",
-                    fontWeight: "600",
                   }}
                 >
                   {Article.category}
@@ -63,9 +55,15 @@ function articleCard({ Article }) {
               </p>
             </Row>
             <Row>
-              <Link className="Links" href={`/post/${Article.slug}`}>
+              <Link
+                href={`/post/${Article.slug}`}
+                style={{
+                  display: "inline",
+                  textDecoration: "none",
+                  color: "black",
+                }}
+              >
                 <h3
-                  className="textLink"
                   style={{
                     display: "inline",
                     fontSize: "1.3rem",
@@ -75,25 +73,6 @@ function articleCard({ Article }) {
                   {Article.title}
                 </h3>
               </Link>{" "}
-            </Row>
-            <Row>
-              <p
-                style={{
-                  fontSize: "0.9rem",
-                  marginTop: "0.5rem",
-                  textAlign: "justify",
-                  // fontFamily: "Noto Serif Georgian",
-                }}
-              >
-                {Article.description.slice(0, 250)}{" "}
-                <Link
-                  href="/"
-                  style={{ textDecoration: "none", letterSpacing: "1px" }}
-                >
-                  {" "}
-                  ...Read more
-                </Link>
-              </p>
             </Row>
           </Col>
         </Row>
