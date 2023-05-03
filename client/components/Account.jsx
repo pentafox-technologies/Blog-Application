@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import {Typography,Box, Button, AppBar, Card, CardActions, CardContent, CardMedia, CssBaseline, Grid, Toolbar, Container} from '@mui/material' 
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
@@ -10,14 +10,30 @@ import TextField from '@mui/material/TextField';
 export default function Account(props) {
     const { children, value, index, ...other } = props;
     const [isReadOnly, setIsReadOnly] = useState(true);
-  const [textValue, setTextValue] = useState('Anish');
-  const [lnameValue, setLnameValue] = useState('R M');
-  const [emailValue, setEmailValue] = useState('anishmahi946@gmail.com');
-  const [mobileValue, setMobileValue] = useState('7639642812');
+  const [fnameValue, setFnameValue] = useState('First Name');
+  const [lnameValue, setLnameValue] = useState('Last Name');
+  const [emailValue, setEmailValue] = useState('Email');
+  const [mobileValue, setMobileValue] = useState('Mobile no');
+
+  const getValues = async() => {
+    await fetch(`http://localhost:5000/api/v1/user/rk`)
+      .then((response) => response.json())
+      .then((response) => {
+        if(response.status=='success')
+        setFnameValue(response.data.firstName)
+        setLnameValue(response.data.lastName)
+        setEmailValue(response.data.emailAddress)
+        setMobileValue(response.data.firstName)
+      });
+  }
+
+  useEffect(() => {
+    getValues()
+  },[])
 
   const toggleReadOnly = () => {
     if(!isReadOnly){
-      setTextValue("Anish");
+      setFnameValue("Anish");
       setLnameValue("R M");
       setEmailValue("anishmahi946@gmail.com");
       setMobileValue("7639642812");
@@ -73,7 +89,7 @@ export default function Account(props) {
                     InputProps={{
                       readOnly: isReadOnly,
                     }}
-                    value={textValue}
+                    value={fnameValue}
                     onChange={handleInputChange}
                   />
                 </Grid>

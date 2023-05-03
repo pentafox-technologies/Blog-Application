@@ -6,7 +6,7 @@ const multer = require('./../middleware/multer');
 
 const router=express.Router();
 
-router.route('/').get(articleController.getAllArticle).post(authController.protect, multer.upload.single("coverImage") ,articleController.createArticle);
+router.route('/').get(articleController.getAllArticle).post(authController.protect, multer.upload("articleCoverImages").single("coverImage") ,articleController.createArticle);
 
 router.get('/getPendingVerification', authController.protect, articleController.getPendingVerication);
 

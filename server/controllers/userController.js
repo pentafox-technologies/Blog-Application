@@ -27,7 +27,7 @@ exports.getUser=async (req, res, next) =>
     try {
         const name=req.params.slug;
         const client=await db;
-        const user=await client.query(`select * from "User" where "userName" = $1`, [name])
+        const user=await client.query(`select * from "User" where "userName" = $1 and "userState" != $2`, [name,"deleted"])
 
         if(user.rows.length==0) {
             return res.status(404).json({
@@ -35,20 +35,18 @@ exports.getUser=async (req, res, next) =>
                 message: "No user found with this name"
             })
         }
-        if(user.userState==="deleted") {
-            res.status(200).json({
-                status: 'success',
-                data: {
-                    user: user.rows
-                },
-            });
-        }
+        // if(user.userState==="deleted") {
+        //     res.status(200).json({
+        //         status: 'error',
+        //         data: {
+        //             user: user.rows
+        //         },
+        //     });
+        // }
         else{
             res.status(200).json({
                 status: 'success',
-                data: {
-                    user: user.rows
-                },
+                data: user.rows[0]
             });
         }
         
