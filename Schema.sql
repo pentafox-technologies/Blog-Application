@@ -6,7 +6,7 @@ CREATE TYPE userstate AS ENUM ('active', 'inactive', 'deleted');
 
 CREATE TABLE "User" (
     "userName" VARCHAR(50) NOT NULL PRIMARY KEY,
-    "profilePic" BYTEA,
+    "profilePic" TEXT NOT NULL,
     "firstName" VARCHAR(50) NOT NULL,
     "lastName" VARCHAR(50) NOT NULL,
     "emailAddress" TEXT NOT NULL,

@@ -180,7 +180,7 @@ export default function EditorArea() {
           >
             <Editor
               onChange={setContent}
-              apiKey="qzn9edvv53zrmyl73stphbo9mo6i8pqbdiyixeke877aj4xp"
+              apiKey={process.env.TinyMCE_ApiKey}
               onInit={(evt, editor) => (editorRef.current = editor)}
               init={{
                 menubar: false,

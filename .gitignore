@@ -2,4 +2,5 @@
 /server/.env
 
 /client/node_modules
+/client/next.config.js
 node_modules

@@ -61,3 +61,10 @@ resourcePolicy:
       derivedRoles:
         - admin
         - moderator
+
+    - actions: ['getmy']
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - admin
+        - moderator
+        - standard

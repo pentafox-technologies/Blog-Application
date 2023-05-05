@@ -24,6 +24,7 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/coverImage' ,express.static('public/assets/articleCoverImages'));
+app.use('/profilePic' ,express.static('public/assets/userProfilePic'));
 // app.use('/images', express.static(__dirname + 'public/assets/articleCoverImages'));
 // app.use(morgan('dev'));
 // app.use("/user", userRouter);
