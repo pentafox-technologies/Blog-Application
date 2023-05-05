@@ -17,7 +17,7 @@ export default function Posts(props) {
         }
       ).then((response) => response.json())
       .then((data) => {
-        console.log(data)
+        console.log(data.data)
         setArticles(data.data);
       });
     }

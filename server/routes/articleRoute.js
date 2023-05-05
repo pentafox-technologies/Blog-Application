@@ -10,6 +10,8 @@ router.route('/').get(articleController.getAllArticle).post(authController.prote
 
 router.get('/getUserArticle', authController.protect, articleController.getUserArticle);
 
+router.get('/getUserDraft', authController.protect, articleController.getUserDraft);
+
 router.get('/getPendingVerification', authController.protect, articleController.getPendingVerication);
 
 router.post('/sendForApproval/:slug',authController.protect ,articleController.sendForApproval);
