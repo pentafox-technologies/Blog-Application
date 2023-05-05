@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Georgian:wght@100;300;500;600;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+Georgian:wght@100;300;500;600;800;900&display=swap");
 
 * {
   box-sizing: border-box;
@@ -10,7 +10,6 @@ body {
   margin: 0;
   font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
     Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-    
 }
 
 a {
@@ -18,8 +17,8 @@ a {
   text-decoration: none;
 }
 
-.row{
-  margin:0px !important;
+.row {
+  margin: 0px !important;
 }
 
 .Links {
@@ -27,13 +26,12 @@ a {
   text-decoration: none;
 }
 
-
 img {
   max-width: 100%;
   height: auto;
 }
 
-.heading{
+.heading {
   font-weight: 600;
   font-size: 1.2rem;
   text-transform: uppercase;
@@ -56,11 +54,15 @@ button {
   font-weight: bold;
 }
 
-.Mui-selected, .MuiTab-textColorInherit, .MuiTab-textColorPrimary, .MuiTab-textColorSecondary, 	.MuiTabs-indicator{
+.Mui-selected,
+.MuiTab-textColorInherit,
+.MuiTab-textColorPrimary,
+.MuiTab-textColorSecondary,
+.MuiTabs-indicator {
   color: black;
 }
 
-body{
+body {
   /* background: #d1d1e9; */
 }
 
@@ -68,21 +70,21 @@ body{
   width: 0px;
 }
 
-.articleBody{
+.articleBody {
   max-width: 10rem;
   margin: auto;
 }
 
-.flex{
+.flex {
   display: flex;
   align-items: center;
 }
 
-.dir{
+.dir {
   flex-direction: column;
 }
 
-.profile{
+.profile {
   height: 8vh;
   width: 8vh;
   border-radius: 100%;
@@ -92,7 +94,7 @@ body{
   justify-content: center;
 }
 
-.articleText{
+.articleText {
   letter-spacing: -0.0003;
   line-height: 32px;
   color: rgba(41, 41, 41, 1) !important;
@@ -100,6 +102,43 @@ body{
   font-size: 1.2rem;
 }
 
-.textLink{
+.textLink {
   cursor: pointer;
 }
+
+
+/* ColorThemes */
+
+.paper {
+  color: "#fff";
+}
+.primary {
+  color: "#173A5E";
+}
+.secondary {
+  color: "#46505A";
+}
+.active {
+  color: "#001E3C";
+}
+.dark {
+  color: "#009688";
+}
+
+.bg-paper {
+  background-color: "#fff";
+}
+.bg-primary {
+  background-color: "#173A5E";
+}
+.bg-secondary {
+  background-color: "#46505A";
+}
+.bg-active {
+  background-color: "#001E3C";
+}
+.bg-dark {
+  background-color: "#009688";
+}
+
+

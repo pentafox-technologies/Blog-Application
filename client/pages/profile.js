@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Navbar from '../components/navbar'
 import { Container} from '@mui/material' 
-import Profile from '../components/Profile'
+import Profile from '../components/Profile/Profile'
 
 export default function profile() {
   return (
@@ -12,7 +12,7 @@ export default function profile() {
         </Head>
         <Navbar />
         <Container maxWidth="xl" sx={{ marginTop: 2 }}>
-            <Profile />
+        <Profile />
         </Container>
     </>
   )

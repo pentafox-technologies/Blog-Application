@@ -127,7 +127,7 @@ exports.getUserArticle = async (req,res) => {
     if(await cerbos.isAllowed(req.user, {resource: "article"}, "getmy")) {
         try{
             const client = await db;
-            const Article=await client.query(`SELECT * FROM "Article" where "author"=$1 and "status"!=$2;`, [req.user.userName,"deleted"]);
+            const Article=await client.query(`SELECT * FROM "Article" where "author"=$1 and "status"=$2;`, [req.user.userName, "published"]);
             res.status(201).json({
                 status: 'success',
                 data: Article.rows,
