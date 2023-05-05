@@ -8,6 +8,8 @@ const router=express.Router();
 
 router.route('/').get(articleController.getAllArticle).post(authController.protect, multer.upload("articleCoverImages").single("coverImage") ,articleController.createArticle);
 
+router.get('/getUserArticle', authController.protect, articleController.getUserArticle);
+
 router.get('/getPendingVerification', authController.protect, articleController.getPendingVerication);
 
 router.post('/sendForApproval/:slug',authController.protect ,articleController.sendForApproval);

@@ -122,6 +122,32 @@ exports.getArticle=async (req, res, next) =>
     }
 };
 
+exports.getUserArticle = async (req,res) => {
+
+    if(await cerbos.isAllowed(req.user, {resource: "article"}, "getmy")) {
+        try{
+            const client = await db;
+            const Article=await client.query(`SELECT * FROM "Article" where "author"=$1 and "status"!=$2 and "visibility"=$3;`, [req.user.userName,"deleted","public"]);
+            res.status(201).json({
+                status: 'success',
+                data: Article.rows,
+            });
+        }
+        catch(err){
+            console.log(err)
+            res.status(400).json({
+                status: 'error',
+                message: err,
+            });
+        }
+    }
+    else{
+        res.status(400).json({
+            message:'access denied',
+        });
+    }
+}
+
 exports.updateArticle=async (req, res) =>
 {
 
