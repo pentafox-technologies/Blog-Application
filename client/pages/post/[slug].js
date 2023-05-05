@@ -3,8 +3,7 @@ import Navbar from "../../components/navbar";
 import ArticleViewing from "../../components/ArticleView/ArticleViewing";
 import {useRouter} from 'next/router'
 
-
-function articleViewing()
+export default function articleViewing()
 {
   const router=useRouter();
   const {slug}=router.query;
@@ -15,8 +14,6 @@ function articleViewing()
     // <ArticleViewing slug={slug} />
   }, [slug])
 
-
-
   return (
     <>
       <Navbar />
@@ -25,4 +22,3 @@ function articleViewing()
   );
 }
 
-export default articleViewing;
