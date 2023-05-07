@@ -26,6 +26,6 @@ router.route('/search/:query').get(articleController.searchArticle)
 
 router.post('/pushbackArticle/:slug',authController.protect ,articleController.pushbackArticle);
 
-router.route('/:slug').get(articleController.getArticle).patch(authController.protect, articleController.updateArticle).delete(authController.protect, articleController.deleteArticle);
+router.route('/:slug').get(articleController.getArticle).patch(authController.protect,multer.upload("articleCoverImages").single("coverImage"),articleController.updateArticle).delete(authController.protect, articleController.deleteArticle);
 
 module.exports = router;

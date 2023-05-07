@@ -11,8 +11,10 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/router";
 
 export default function StyledTable({ columns, rows, action = false }) {
+  const router = useRouter();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -58,9 +60,14 @@ export default function StyledTable({ columns, rows, action = false }) {
                       <ImageLoader name={row.coverImage} H="100" W="100" />
                     </TableCell>
                     <TableCell align="left">
+                      {columns.length==3? 
                       <Link className="Links" href={`/post/${row.slug}`}>
                         {row.title}
-                      </Link>
+                      </Link> : 
+                      <p className="Links">
+                        {row.title}
+                      </p>
+                      }
                     </TableCell>
                     <TableCell align="left">{row.category}</TableCell>
                     {action ? (
@@ -73,6 +80,12 @@ export default function StyledTable({ columns, rows, action = false }) {
                               margin: "0.5rem 1rem",
                             }}
                             icon={faPenToSquare}
+                            onClick={() => {
+                              router.push({
+                                pathname: "/editor/",
+                                query: row,
+                              });
+                            }}
                           />
                           <FontAwesomeIcon
                             style={{

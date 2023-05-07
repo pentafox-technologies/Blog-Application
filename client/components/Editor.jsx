@@ -11,16 +11,19 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export default function EditorArea() {
-  let router = useRouter();
+  const router = useRouter();
+  const Article = router.query;
+
   const editorRef = useRef(null);
   const [formData, setFormData] = useState({
-    title: "",
-    content: "",
-    description: "",
-    coverImage: "",
-    category: "",
-    topCategory: "",
+    title: Article.title,
+    content: Article.content,
+    description: Article.description,
+    coverImage: Article.coverImage,
+    category: Article.subCategory,
+    topCategory: Article.category,
   });
+  console.log(formData)
   const [topCategories, setTopCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
 
@@ -108,42 +111,70 @@ export default function EditorArea() {
         theme: "colored",
       });
     } else {
-      await axios
-        .post(
-          "http://localhost:5000/api/v1/article",
-          { ...formData, status: e.target.name },
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InJrIiwiaWF0IjoxNjc4MTI1ODkwLCJleHAiOjE2ODU5MDE4OTB9.7gLX4JSaEr4_dMatxcOOMRkZjGzcsfRio8w4vRojypY`,
-            },
-          }
-        )
-        .then(async (response) => {
-          const data = response.data;
-          if (data.status === "success") {
+        let data;
+        if(Article.slug){
+          await axios
+          .patch(
+            `http://localhost:5000/api/v1/article/${Article.slug}`,
+            { ...formData, status: e.target.name },
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3RlciIsImlhdCI6MTY4MzM1NDI3MCwiZXhwIjoxNjkxMTMwMjcwfQ.hV8IxgycYdTpsPp42DSDCboSSg2_d3TKpTslcPON79E`,
+              },
+            }
+          )
+          .then(async (response) => {
+            console.log(response)
+            data = response.data; });
+      }
+      else{
+        await axios
+          .post(
+            "http://localhost:5000/api/v1/article",
+            { ...formData, status: e.target.name },
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3RlciIsImlhdCI6MTY4MzM1NDI3MCwiZXhwIjoxNjkxMTMwMjcwfQ.hV8IxgycYdTpsPp42DSDCboSSg2_d3TKpTslcPON79E`,
+              },
+            }
+          )
+          .then(async (response) => {
+            data = response.data; });
+      }
+      if (data.status === "success" && data.data==="Article upadted successfully") {
+        toast("Article Updated successfully", {
+          hideProgressBar: false,
+          autoClose: 1500,
+          type: "success",
+          theme: "colored",
+          });
+          router.push("/profile");
+        }
+        else if(data.status === "success"){
             toast("Article created successfully", {
-              hideProgressBar: false,
-              autoClose: 1500,
-              type: "success",
-              theme: "colored",
+            hideProgressBar: false,
+            autoClose: 1500,
+            type: "success",
+            theme: "colored",
             });
             router.push("/");
-          } else {
-            setWarning({
-              status: true,
-              msg: "",
-            });
-            console.log("Article not created");
+        }
+        else {
+          setWarning({
+            status: true,
+            msg: "",
+          });
+          console.log("Article not created");
 
-            toast("Some error occured in the server", {
-              hideProgressBar: false,
-              autoClose: 1500,
-              type: "error",
-              theme: "colored",
-            });
-          }
-        });
+          toast("Some error occured in the server", {
+            hideProgressBar: false,
+            autoClose: 1500,
+            type: "error",
+            theme: "colored",
+          });
+        }
     }
   };
   return (
@@ -161,6 +192,7 @@ export default function EditorArea() {
               type="text"
               id="title"
               name="title"
+              value={formData.title}
               placeholder="Title"
               style={{
                 fontWeight: "600",
@@ -179,6 +211,7 @@ export default function EditorArea() {
             }}
           >
             <Editor
+              initialValue={formData.content}
               onChange={setContent}
               apiKey={process.env.TinyMCE_ApiKey}
               onInit={(evt, editor) => (editorRef.current = editor)}
@@ -249,6 +282,7 @@ export default function EditorArea() {
 
               <Form.Control
                 as="textarea"
+                value={formData.description}
                 placeholder="Type the description..."
                 aria-label="With textarea"
                 name="description"
@@ -264,6 +298,7 @@ export default function EditorArea() {
                 name={"TopCategory"}
                 data={topCategories}
                 getTopCaregory={setTopCategory}
+                value={formData.topCategory}
               />
             </div>
             <hr />
@@ -275,6 +310,7 @@ export default function EditorArea() {
                 name={"SubCategory"}
                 data={subCategories}
                 getSubCaregory={setSubCategory}
+                value={formData.category}
               />
             </div>
             <hr />

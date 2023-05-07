@@ -1,6 +1,7 @@
 const db=require('../db');
 const slugify=require('slugify');
 const cerbos=require("./../middleware/cerbos");
+const fs = require('fs');
 
 exports.createArticle=async (req, res) =>
 {
@@ -153,10 +154,17 @@ exports.getUserDraft = async (req,res) => {
     if(await cerbos.isAllowed(req.user, {resource: "article"}, "getmy")) {
         try{
             const client = await db;
-            const Article=await client.query(`SELECT * FROM "Article" where "author"=$1 and "status"=$2;`, [req.user.userName,"draft"]);
+            let Articles=await client.query(`SELECT "slug","title","content","category","coverImage","description" FROM "Article" where "author"=$1 and "status"=$2;`, [req.user.userName,"draft"]);
+            let articles=[];
+            for(let i=0;i<Articles.rows.length;++i){
+                let article = Articles.rows[i]
+                let subCategory = await client.query(`SELECT "category" from "CategoryMap" where "article"=$1`,[article.slug])
+                let subCategories = subCategory.rows.map(category => {return category.category})
+                articles.push({...article,subCategory:subCategories})
+            }
             res.status(201).json({
                 status: 'success',
-                data: Article.rows,
+                data: articles,
             });
         }
         catch(err){
@@ -176,89 +184,58 @@ exports.getUserDraft = async (req,res) => {
 
 exports.updateArticle=async (req, res) =>
 {
+    console.log(req.body.status)
+    try {
+        const client=await db;
+        let Article=await client.query(`SELECT * FROM "Article" where slug = $1 and status!=$2;`, [req.params.slug,"deleted"]);
+        Article=Article.rows[0];
+        Article.resource="article";
 
-    const client=await db;
-    let Article=await client.query(`SELECT * FROM "Article" where slug like $1 and status!=$2;`, [req.params.slug,"deleted"]);
-    Article=Article.rows[0];
-    Article.resource="article";
-    if(await cerbos.isAllowed(req.user, Article, "update")) {
-        try {
+        if(await cerbos.isAllowed(req.user, Article, "update")) {
 
-            // splitting categories to array
-            let categories=[];
-            if(req.body.category) {
-                categories=req.body.category.split(" ");
-            }
-            // here we are inserting into categorySet Table
-            // And we will check whether that category does not exist, if true we will insert it by categorized under = "Other"
-            if(categories.length>0) {
-                for(let i=0;i<categories.length;i++) {
-                    const created=new Date();
-                    let checkcategory=await client.query(`select * from "CategorySet" where "catName" like '${categories[i]}'`);
-                    if(checkcategory.rows.length==0) {
-                        let categorizedUnder="Other"
-                        let newCategory=await client.query(`insert into "CategorySet" ("catName", "categorizedUnder", "initializedBy", "dateCreated") values($1,$2,$3,$4) RETURNING *`, [categories[i], categorizedUnder, req.user.userName, created]);
+            let oldCategory = await client.query(`SELECT * FROM "CategoryMap" where "article"=$1`,[req.params.slug])
+
+            oldCategory.rows.map(async (cat) => {
+                if(!req.body.category.includes(cat.category)){
+                    await client.query(`Delete FROM "CategoryMap" where "article"=$1 and "category"=$2`,[req.params.slug,cat.category]);
+                }
+            })
+
+            req.body.category.map(async (cat) => {
+                let tem = await client.query(`SELECT * FROM "CategoryMap" where "article"=$1 and "category"=$2`,[req.params.slug,cat]);
+                if(tem.rows.length==0){
+                    let tem1 = await client.query(`SELECT * FROM "CategorySet" where "catName"=$1`,[cat]);
+                    if(tem1.rows.length==0) {
+                        await client.query(`insert into "CategorySet" ("catName", "categorizedUnder","initializedBy","dateCreated") values($1,$2,$3,$4) RETURNING *`, [cat,req.body.topCategory,req.user.userName,new Date()])
                     }
+                    await client.query(`insert into "CategoryMap" ("article", "category") values($1,$2) RETURNING *`, [req.params.slug,cat])
                 }
+            })
+
+            if(Article.coverImage!=req.body.coverImage) {
+                await fs.unlinkSync(`public/assets/articleCoverImages/`+Article.coverImage);
+                await client.query(`UPDATE "Article" set "title"=$1, "content"=$2, "description"=$3, "coverImage"=$4, "category"=$5, "status"=$6 where "slug"=$7`,[req.body.title,req.body.content,req.body.description,req.file.filename,req.body.topCategory, req.body.status, Article.slug]);
             }
-
-            var query=['UPDATE "Article"'];
-            query.push('SET');
-
-            // Create another array storing each set command
-            // and assigning a number value for parameterized query
-            let set=[];
-            let values=[];
-            Object.keys(req.body).forEach(function(key, i)
-            {
-                if(key!='category') {
-                    set.push(key+' = ($'+(i+1)+')');
-                    values.push(req.body[key]);
-                }
-            });
-            query.push(set.join(', '));
-
-
-            // // Add the WHERE statement to look up by id
-            query.push('WHERE "slug" = '+`'${req.params.slug}' RETURNING *`);
-
-            // // Return a complete query string
-            query=query.join(' ')
-
-
-            //  Query for creating article
-            const Article=await client.query(query, values);
-
-            // // we have to insert the category and article into categoryMap.
-            // select * from "CategorySet" where "catName" like '${categories[i]}'
-            for(let i=0;i<categories.length;i++) {
-                const iscategory=await client.query(`SELECT * FROM "CategoryMap" WHERE "category" = ($1) and "article"= ($2)`, [categories[i], req.params.slug]);
-                if(iscategory.rows.length==0) {
-                    const categoryMap=await client.query(`insert into "CategoryMap" ("article", "category") values($1,$2) RETURNING *`, [req.params.slug, categories[i]]);
-                }
-            }
-
-            // sending response finally ☺️
-            await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason","controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) RETURNING *`, [Article.rows[0].slug, Article.rows[0].status, new Date(), "updated Article", req.user.userName, req.user.userName]);
+            else await client.query(`UPDATE "Article" set "title"=$1, "content"=$2, "description"=$3, "category"=$4, "status"=$5 where "slug"=$6`,[req.body.title, req.body.content, req.body.description, req.body.topCategory, req.body.status, Article.slug]);
 
             res.status(200).json({
                 status: 'success',
-                data: Article.rows[0]
+                data: "Article upadted successfully"
             });
-
-        } catch(err) {
+        }
+        else{
             res.status(400).json({
-                status: 'error',
-                message: err
+                message:'access denied',
             });
         }
     }
-    else{
+    catch(err) {
+        console.log(err)
         res.status(400).json({
-            message:'access denied',
+            status: 'error',
+            message: err
         });
     }
-
 };
 
 exports.deleteArticle=async (req, res, next) =>
@@ -270,7 +247,6 @@ exports.deleteArticle=async (req, res, next) =>
         Article=Article.rows[0];
         Article.resource="article";
         if(await cerbos.isAllowed(req.user, Article, "delete")) {
-        
             const Articles=await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['deleted',slug]);
             await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason","controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) RETURNING *`, [Article.slug, Article.status, new Date(), "deleted Article", req.user.userName, req.user.userName]);
 
@@ -295,7 +271,6 @@ exports.deleteArticle=async (req, res, next) =>
 exports.searchArticle=async (req, res) =>
 {
     try {
-
         const query = req.params.query+"%";
         const client = await db;
         const result = await client.query(`SELECT * FROM "Article" where slug like $1 and status=$2;`, [query,"published"]);

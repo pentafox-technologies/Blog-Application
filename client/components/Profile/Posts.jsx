@@ -19,17 +19,18 @@ import TextField from "@mui/material/TextField";
 
 export default function Posts(props) {
   const { children, value, index, ...other } = props;
-  const [Articles, setArticles] = useState("");
+  const [Articles, setArticles] = useState(null);
 
   const getArticles = async () => {
     await fetch(`http://localhost:5000/api/v1/article/getUserArticle`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InJrIiwiaWF0IjoxNjc4MTI1ODkwLCJleHAiOjE2ODU5MDE4OTB9.7gLX4JSaEr4_dMatxcOOMRkZjGzcsfRio8w4vRojypY`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3RlciIsImlhdCI6MTY4MzM1NDI3MCwiZXhwIjoxNjkxMTMwMjcwfQ.hV8IxgycYdTpsPp42DSDCboSSg2_d3TKpTslcPON79E`,
       },
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         setArticles(data.data);
       });
   };
@@ -70,7 +71,7 @@ export default function Posts(props) {
       {value === index && (
         <div className="listOfPosts m-3 py-3 ">
           <center>
-            <Table columns={columns} rows={Articles} />
+            {Articles? <Table columns={columns} rows={Articles} /> : <h4>No Articles Published yet</h4>}
           </center>
         </div>
       )}

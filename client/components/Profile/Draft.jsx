@@ -24,11 +24,12 @@ export default function Draft(props) {
     await fetch(`http://localhost:5000/api/v1/article/getUserDraft`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InJrIiwiaWF0IjoxNjc4MTI1ODkwLCJleHAiOjE2ODU5MDE4OTB9.7gLX4JSaEr4_dMatxcOOMRkZjGzcsfRio8w4vRojypY`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3RlciIsImlhdCI6MTY4MzM1NDI3MCwiZXhwIjoxNjkxMTMwMjcwfQ.hV8IxgycYdTpsPp42DSDCboSSg2_d3TKpTslcPON79E`,
       },
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data)
         setArticles(data.data);
       });
   };
@@ -75,7 +76,7 @@ export default function Draft(props) {
       {value === index && (
         <div className="m-3 py-3 ">
           <center>
-            <Table columns={columns} rows={Articles} action={true} />
+           {Articles? <Table columns={columns} rows={Articles} action={true} /> : <h4>There are no articles in draft</h4>}
           </center>
         </div>
       )}
