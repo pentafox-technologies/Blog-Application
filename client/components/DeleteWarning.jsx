@@ -22,13 +22,14 @@ export default function AlertDialog({Article,update}) {
   };
 
   return (
-    <div>
+    <div style={{display:"inline"}}>
       <Button onClick={handleClickOpen}>
       <FontAwesomeIcon
         style={{
             color: "red",
             fontSize: "1.2rem",
             margin: "0.5rem 1rem",
+            marginBottom: "1rem"
         }}
         icon={faTrash}
         />

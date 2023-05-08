@@ -80,6 +80,7 @@ export default function StyledTable({ columns, rows, action = false, update}) {
                               color: "blue",
                               fontSize: "1.2rem",
                               margin: "0.5rem 1rem",
+                              marginTop: "1rem"
                             }}
                             icon={faPenToSquare}
                             onClick={() => {
