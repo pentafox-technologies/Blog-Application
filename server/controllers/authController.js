@@ -24,7 +24,7 @@ exports.signup = async (req, res) => {
         const userCreated = new Date();
         const lastLogin = new Date();
         const password = await bcrypt.hash(req.body.password,12);
-        const newUser = await client.query(`insert into "User" ("userName", "profilePic","firstName","lastName","emailAddress","password","userType","userCreatedDate","lastLogin") values($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`, [req.body.userName,req.body.profilePic,req.body.firstName, req.body.lastName, req.body.emailAddress,password,"standard",userCreated,lastLogin]);
+        const newUser = await client.query(`insert into "User" ("userName", "profilePic","firstName","lastName","emailAddress","password","userType","userCreatedDate","lastLogin","userState") values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`, [req.body.userName,req.body.profilePic,req.body.firstName, req.body.lastName, req.body.emailAddress,password,"standard",userCreated,lastLogin,"active"]);
         const token = jwt.sign({userName: req.body.userName}, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN
         });

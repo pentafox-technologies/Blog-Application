@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export default function EditorArea() {
+export default function EditorArea({token}) {
   const router = useRouter();
   const Article = router.query;
 
@@ -120,7 +120,7 @@ export default function EditorArea() {
             {
               headers: {
                 "Content-Type": "multipart/form-data",
-                Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3RlciIsImlhdCI6MTY4MzM1NDI3MCwiZXhwIjoxNjkxMTMwMjcwfQ.hV8IxgycYdTpsPp42DSDCboSSg2_d3TKpTslcPON79E`,
+                Authorization: `Bearer ${token}`,
               },
             }
           )
@@ -136,7 +136,7 @@ export default function EditorArea() {
             {
               headers: {
                 "Content-Type": "multipart/form-data",
-                Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3RlciIsImlhdCI6MTY4MzM1NDI3MCwiZXhwIjoxNjkxMTMwMjcwfQ.hV8IxgycYdTpsPp42DSDCboSSg2_d3TKpTslcPON79E`,
+                Authorization: `Bearer ${token}`,
               },
             }
           )
@@ -159,7 +159,7 @@ export default function EditorArea() {
             type: "success",
             theme: "colored",
             });
-            router.push("/");
+            router.push("/home");
         }
         else {
           setWarning({

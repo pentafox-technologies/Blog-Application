@@ -126,7 +126,7 @@ exports.updatePassword=async (req, res, next) =>
 {
     if(await cerbos.isAllowed(req.user,{resource:"user", userName: req.params.slug},"update")) {
             try {
-                const client=await db.connect();
+                const client=await db;
                 const user = await client.query(`select * from "User" where "userName" = $1`, [req.params.slug]);
         // user = user.rows;
                 if(user.rows.length == 0){
@@ -219,7 +219,7 @@ exports.updateMail=async (req, res, next) =>
 
 exports.deleteUser=async (req, res, next) =>
 {
-    // if(await cerbos.isAllowed(req.user,{resource:"user"},"delete")) {
+    if(await cerbos.isAllowed(req.user,{resource:"user"},"delete")) {
         try {
             const client=await db;
             
@@ -236,12 +236,12 @@ exports.deleteUser=async (req, res, next) =>
                 message: error
             });
         }
-    // }
-    // else{
-    //     res.status(400).json({
-    //         message:'access denied',
-    //     });
-    // }
+    }
+    else{
+        res.status(400).json({
+            message:'access denied',
+        });
+    }
 };
 
 exports.promoteUser=async (req, res, next) =>

@@ -31,11 +31,11 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 const pages = [
-  { name: "Home", link: "/" },
+  { name: "Home", link: "/home" },
   { name: "Write", link: "/editor" },
-  { name: "Blogs", link: "/" },
+  { name: "Blogs", link: "/home" },
 ];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["profile", "Account", "Dashboard", "Logout"];
 
 function Navbar({token,userName}) {
   // const cookieStore = cookies();
@@ -148,7 +148,7 @@ function Navbar({token,userName}) {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href="/home"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -275,7 +275,7 @@ function Navbar({token,userName}) {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Typography textAlign="center"><Link style={{textDecoration:"none", color:"black"}} href={setting}>{setting}</Link></Typography>
                 </MenuItem>
               ))}
             </Menu>
