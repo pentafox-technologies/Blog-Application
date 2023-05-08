@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,12 +14,22 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import InputBase from "@mui/material/InputBase";
 import NavLogo from "@mui/icons-material/BookRounded";
-
+import LogoutIcon from '@mui/icons-material/Logout';
+// import { cookies } from 'next/headers';
 import Link from "next/link";
 
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
+import Cookies from "js-cookie";
+import { useRouter } from 'next/router';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
+import { deepOrange } from '@mui/material/colors';
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 const pages = [
   { name: "Home", link: "/" },
   { name: "Write", link: "/editor" },
@@ -26,10 +37,28 @@ const pages = [
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-function Navbar() {
+function Navbar({token,userName}) {
+  // const cookieStore = cookies();
+  const router = useRouter();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
+  const vertical = 'top'
+  const horizontal = 'center'
+  const [open, setOpen] = React.useState(false);
+  
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -44,6 +73,14 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  function logout(){
+    Cookies.remove('token');
+    Cookies.remove('userType');
+    Cookies.remove('userName');
+    handleClick();
+    router.push('/login');
+  }
 
   const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -86,6 +123,13 @@ function Navbar() {
       },
     },
   }));
+  // let userNameFirst;
+  // useEffect(() => {
+  //   const hello = cookies().get('userName')?.value;
+  //   setUserName(hello);
+  // },[])
+  console.log(token, userName);
+
 
   return (
     <AppBar
@@ -93,6 +137,11 @@ function Navbar() {
       style={{ backgroundColor: "#ffffff", color: "black", width: "100%" }}
     >
       <Container maxWidth="xl">
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical, horizontal }}>
+            <Alert onClose={handleClose} severity="success" sx={{ width: '100%',padding: '10px 20px' }}>
+                Logged Out Successfully
+            </Alert>
+        </Snackbar>
         <Toolbar disableGutters>
           <NavLogo sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
@@ -199,7 +248,13 @@ function Navbar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar
+                  sx={{ bgcolor: "#6246ea" }}
+                  alt="Remy Sharp"
+                  src="/broken-image.jpg"
+                >
+                  {userName.charAt(0).toUpperCase()}
+                </Avatar>
               </IconButton>
             </Tooltip>
             <Menu
@@ -224,10 +279,25 @@ function Navbar() {
                 </MenuItem>
               ))}
             </Menu>
+          
+          <LogoutIcon sx={{  ml: 2, color:'black' }} style={{cursor: 'pointer'}} onClick={logout}/>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
   );
 }
+
 export default Navbar;
+
+export const getStaticProps = async () => {
+  // const res = await fetch(`/api/articles`) it won't work we need to give entire url
+  // so let us create a config folder and we will put url there
+  const res = await fetch(`${server}/api/articles`)
+  const articles = await res.json()
+  return {
+    props: {
+      articles
+    }
+  }
+}

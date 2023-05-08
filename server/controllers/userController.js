@@ -7,6 +7,7 @@ exports.getAllUser=async (req, res, next) =>
     const client=await db;
     if(await cerbos.isAllowed(req.user,{resource:"user"},"getAll")) {
             try {
+            
             const users=await client.query(`SELECT * FROM "User"`);
             res.status(200).json({
                 status: 'success',
@@ -61,6 +62,7 @@ exports.getUser=async (req, res, next) =>
 
 exports.getMe=async (req, res) =>
 {
+    console.log(req.user);
     if(await cerbos.isAllowed(req.user,{resource:"user"},"getByUserName")) {
             try {
             const client=await db;
@@ -124,13 +126,30 @@ exports.updatePassword=async (req, res, next) =>
 {
     if(await cerbos.isAllowed(req.user,{resource:"user", userName: req.params.slug},"update")) {
             try {
-                const client=await db;
-                const password=await bcrypt.hash(req.body.password, 12);
+                const client=await db.connect();
+                const user = await client.query(`select * from "User" where "userName" = $1`, [req.params.slug]);
+        // user = user.rows;
+                if(user.rows.length == 0){
+                    return res.status(400).json({
+                        status:'error',
+                        message: 'Incorrect username'
+                    });
+                }
+
+
+                if( !await bcrypt.compare(req.body.oldPassword,user.rows[0].password)) {
+                    return res.status(400).json({
+                        status:'error',
+                        message: 'Incorrect password'
+                    });
+                }
+
+                const password=await bcrypt.hash(req.body.newPassword, 12);
                 const update=await client.query(`update "User" set "password"=$1 where "userName" = $2`, [password, req.params.slug]);
 
                 res.status(200).json({
                     status: 'success',
-                    data: update
+                    message: 'updated successfully'
                 });
             } catch(error) {
                 res.status(400).json({
@@ -143,8 +162,7 @@ exports.updatePassword=async (req, res, next) =>
         res.status(400).json({
             message:'access denied',
         });
-    }
-    
+    }    
 };
 
 exports.updateProfile=async (req, res, next) =>
@@ -201,7 +219,7 @@ exports.updateMail=async (req, res, next) =>
 
 exports.deleteUser=async (req, res, next) =>
 {
-    if(await cerbos.isAllowed(req.user,{resource:"user"},"delete")) {
+    // if(await cerbos.isAllowed(req.user,{resource:"user"},"delete")) {
         try {
             const client=await db;
             
@@ -212,17 +230,18 @@ exports.deleteUser=async (req, res, next) =>
                 message: 'user deleted successfully'
             });
         } catch(error) {
+            console.log(err);
             res.status(400).json({
                 status: 'error',
                 message: error
             });
         }
-    }
-    else{
-        res.status(400).json({
-            message:'access denied',
-        });
-    }
+    // }
+    // else{
+    //     res.status(400).json({
+    //         message:'access denied',
+    //     });
+    // }
 };
 
 exports.promoteUser=async (req, res, next) =>
