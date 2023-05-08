@@ -19,6 +19,7 @@ import Table from "../StylesTable";
 export default function Draft(props) {
   const { children, value, index, ...other } = props;
   const [Articles, setArticles] = useState("");
+  const [updateCount, setUpdateCoubnt] = useState(0);
 
   const getArticles = async () => {
     await fetch(`http://localhost:5000/api/v1/article/getUserDraft`, {
@@ -63,7 +64,7 @@ export default function Draft(props) {
 
   useEffect(() => {
     getArticles();
-  }, []);
+  }, [updateCount]);
 
   return (
     <div
@@ -76,7 +77,7 @@ export default function Draft(props) {
       {value === index && (
         <div className="m-3 py-3 ">
           <center>
-           {Articles? <Table columns={columns} rows={Articles} action={true} /> : <h4>There are no articles in draft</h4>}
+           {Articles? <Table columns={columns} rows={Articles} action={true} update={setUpdateCoubnt}/> : <h4>There are no articles in draft</h4>}
           </center>
         </div>
       )}
