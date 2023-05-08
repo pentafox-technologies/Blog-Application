@@ -7,10 +7,10 @@
 } */
 
 @media (max-width: 850px) {
-    .grid{
+    /* .grid{
         padding: 0 30px;
         margin-left: -5px;
-    }
+    } */
     .gridpasslabel{
         padding: 0 35px;
     }

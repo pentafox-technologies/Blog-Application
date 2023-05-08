@@ -13,9 +13,8 @@ import IconButton from '@mui/material/IconButton';
 import Passwordcss from '../styles/Password.module.css'
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-
-
-
+import axios from "axios";
+import Cookies from "js-cookie";
 
 // import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -35,8 +34,8 @@ export default function Password(props) {
   const [currentReenterValue, setCurrentReenterValue] = useState();
   const [showReenterPassword, setShowReenterPassword] = useState(false);
 
-    const [oldPassCheck, setOldPassCheck] = useState(true);
-    const vertical = 'top'
+  const [oldPassCheck, setOldPassCheck] = useState(true);
+  const vertical = 'top'
   const horizontal = 'right'
   const [open, setOpen] = React.useState(false);
 
@@ -82,15 +81,41 @@ export default function Password(props) {
   const handleCurrentChange = (event) => {
     setCurrentValue(event.target.value);
   };
-
-  function checkPassword(){
-        if(oldValue == 'anish'){
-            setOldPassCheck(true)
-            handleClick();
-        }
-        else{
+  
+  async function updatePassword(){
+    // const jwt = 
+    const token = Cookies.get("token"); 
+    const userName = Cookies.get("userName"); 
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    await axios
+    .patch(
+        `http://localhost:5000/api/v1/user/${userName}/password`,
+    {
+        oldPassword: oldValue,
+        newPassword: newValue,
+    },
+    config
+    )
+    .then(response => {
+    console.log(response);
+    setOldPassCheck(true)
+    handleClick();
+    })
+    .catch(error => {
+        console.log(error);
+        if(error.response.data.message === "Incorrect password"){
             setOldPassCheck(false)
         }
+    });
+        // if(oldValue == 'anish'){
+        //     setOldPassCheck(true)
+        //     handleClick();
+        // }
+        // else{
+        //     setOldPassCheck(false)
+        // }
         console.log(oldValue,newValue,currentValue);
   }
 
@@ -218,7 +243,7 @@ export default function Password(props) {
                         </FormControl>
                 </Grid>
                 <Grid container justifyContent="center" style={{marginTop: '20px'}}>
-                  <Button variant="contained" style={{background: '#6246ea', color:'#fffffe', fontWeight:'600'}} onClick={checkPassword}>
+                  <Button variant="contained" style={{background: '#6246ea', color:'#fffffe', fontWeight:'600'}} onClick={updatePassword}>
                       Update Password
                   </Button>
                 </Grid>

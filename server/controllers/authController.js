@@ -14,10 +14,17 @@ exports.signup = async (req, res) => {
                 message: 'You cant create admin and moderator.'
             });
         }
+        const checkUser=await client.query(`select * from "User" where "userName" = $1`, [req.body.userName]);
+        if(checkUser.rows.length==1) {
+            return res.status(400).json({
+                status: 'error',
+                message: "Username not available"
+            })
+        }
         const userCreated = new Date();
         const lastLogin = new Date();
         const password = await bcrypt.hash(req.body.password,12);
-        const newUser = await client.query(`insert into "User" ("userName", "profilePic","firstName","lastName","emailAddress","password","userType","userCreatedDate","lastLogin","userState") values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`, [req.body.userName,req.body.profilePic,req.body.firstName, req.body.lastName, req.body.emailAddress,password,"standard",userCreated,lastLogin,"active"]);
+        const newUser = await client.query(`insert into "User" ("userName", "profilePic","firstName","lastName","emailAddress","password","userType","userCreatedDate","lastLogin") values($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`, [req.body.userName,req.body.profilePic,req.body.firstName, req.body.lastName, req.body.emailAddress,password,"standard",userCreated,lastLogin]);
         const token = jwt.sign({userName: req.body.userName}, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN
         });
@@ -28,6 +35,7 @@ exports.signup = async (req, res) => {
             data: newUser.rows,
         });
     } catch(err){
+        console.log(err);
         res.status(400).json({
             status:'error',
             message: err
@@ -37,7 +45,8 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
     const {userName, password}=req.body;
-
+    console.log("jhshb");
+    
     if(!userName || !password){
         return res.status(400).json({
             status:'error',
@@ -51,12 +60,13 @@ exports.login = async (req, res) => {
         if(user.rows.length == 0){
             return res.status(400).json({
                 status:'error',
-                message: 'No User found with that name'
+                message: 'Incorrect password or username'
             });
         }
 
+
         if( !await bcrypt.compare(password,user.rows[0].password)) {
-            return res.status(401).json({
+            return res.status(400).json({
                 status:'error',
                 message: 'Incorrect password or username'
             });
@@ -65,7 +75,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign({userName}, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN
         });
-
+        console.log("shjbjsdd");
         res.status(201).json({
             status: 'success',
             token,
@@ -84,6 +94,7 @@ exports.login = async (req, res) => {
 exports.protect = async (req, res, next) => {
     try{
         let token;
+        console.log("hii");
         const client = await db.connect();
         if (
             req.headers.authorization &&
