@@ -243,25 +243,28 @@ exports.deleteArticle=async (req, res, next) =>
     try {
         const slug=req.params.slug;
         const client=await db;
-        let Article=await client.query(`SELECT * FROM "Article" where slug like $1 and status!=$2;`, [slug,"deleted"]);
+        let Article=await client.query(`SELECT * FROM "Article" where "slug" = $1 and "status"!=$2;`, [slug,"deleted"]);
         Article=Article.rows[0];
         Article.resource="article";
         if(await cerbos.isAllowed(req.user, Article, "delete")) {
-            const Articles=await client.query('UPDATE "Article" SET status = ($1) WHERE "slug" = ($2)',['deleted',slug]);
-            await client.query(`insert into "ArticleLogs" ("article", "status","updateTime","actionReason","controlFrom","controlTo") values($1,$2,$3,$4,$5,$6) RETURNING *`, [Article.slug, Article.status, new Date(), "deleted Article", req.user.userName, req.user.userName]);
+            await client.query(`Delete FROM "ArticleLogs" where "article"=$1;`,[slug]);
+            await client.query(`Delete FROM "Supports" where "article"=$1;`,[slug]);
+            await client.query(`Delete FROM "CategoryMap" where "article"=$1;`,[slug]);
+            await client.query(`Delete FROM "Article" where "slug"=$1;`,[slug]);
+            fs.unlinkSync(`./public/assets/articleCoverImages/${Article.coverImage}`);
 
             res.status(200).json({
                 status: 'success',
                 message: "article deleted successfully",
             });
         }
-    else{
-        res.status(400).json({
-            message:'access denied',
-        });
+        else{
+            res.status(400).json({
+                message:'access denied',
+            });
     } 
     }catch(error) {
-        res.status(400).json({
+        res.status(401).json({
             status: 'error',
             message: "Article not found"
         });

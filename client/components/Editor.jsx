@@ -16,12 +16,12 @@ export default function EditorArea() {
 
   const editorRef = useRef(null);
   const [formData, setFormData] = useState({
-    title: Article.title,
-    content: Article.content,
-    description: Article.description,
-    coverImage: Article.coverImage,
-    category: Article.subCategory,
-    topCategory: Article.category,
+    title: Article.title? Article.title : "",
+    content: Article.content? Article.content : "",
+    description: Article.description? Article.description : "",
+    coverImage: Article.coverImage? Article.coverImage : "",
+    category: Article.subCategory? Article.subCategory : "",
+    topCategory: Article.category? Article.category : "",
   });
   console.log(formData)
   const [topCategories, setTopCategories] = useState([]);
@@ -310,7 +310,7 @@ export default function EditorArea() {
                 name={"SubCategory"}
                 data={subCategories}
                 getSubCaregory={setSubCategory}
-                value={formData.category}
+                value={formData.category=="" ? [] : formData.category}
               />
             </div>
             <hr />

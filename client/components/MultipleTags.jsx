@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 
 export default function MultipleTags({ name, data, getSubCaregory, value }) {
+  console.log(value)
   return (
     <Stack spacing={3} sx={{ width: "auto" }}>
       <Autocomplete

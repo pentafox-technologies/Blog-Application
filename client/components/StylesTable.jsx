@@ -12,11 +12,14 @@ import TableRow from "@mui/material/TableRow";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-export default function StyledTable({ columns, rows, action = false }) {
+export default function StyledTable({ columns, rows, action = false}) {
   const router = useRouter();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -94,6 +97,38 @@ export default function StyledTable({ columns, rows, action = false }) {
                               margin: "0.5rem 1rem",
                             }}
                             icon={faTrash}
+                            onClick={async () => {
+                              await axios
+                                .delete(
+                                  `http://localhost:5000/api/v1/article/${row.slug}`,
+                                  {
+                                    headers: {
+                                      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3RlciIsImlhdCI6MTY4MzM1NDI3MCwiZXhwIjoxNjkxMTMwMjcwfQ.hV8IxgycYdTpsPp42DSDCboSSg2_d3TKpTslcPON79E`,
+                                    },
+                                  }
+                                )
+                                .then(async (response) => {
+                                  const data = response.data
+                                  console.log(response)
+                                  if(data.status=="success"){
+                                    toast("Article Deleted Successfully", {
+                                      hideProgressBar: false,
+                                      autoClose: 1500,
+                                      type: "success",
+                                      theme: "colored",
+                                    });
+                                  }
+                                  else{
+                                    toast("An Unexpected error occured. Try again later", {
+                                      hideProgressBar: false,
+                                      autoClose: 1500,
+                                      type: "error",
+                                      theme: "colored",
+                                    });
+                                  }
+                                });
+                            }
+                          }
                           />
                         </div>
                       </TableCell>
