@@ -52,6 +52,7 @@ export default function EditorArea({token}) {
   };
 
   const setCoverImage = async (e) => {
+    console.log(e.target.files[0]);
     setFormData({ ...formData, coverImage: e.target.files[0] });
   };
 

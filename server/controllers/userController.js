@@ -1,6 +1,62 @@
 const db=require('../db');
 const bcrypt=require("bcryptjs");
 const cerbos=require("./../middleware/cerbos");
+const multer = require('multer');
+const sharp = require('sharp');
+const fs = require('fs');
+
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+    // to check if uploaded file is image
+    // we can also write code for csv file
+    if (file.mimetype.startsWith('image')) {
+      cb(null, true);
+    } else {
+      cb('Not an image! Please upload only images.', false);
+    }
+  };
+
+  const upload = multer({
+    storage: multerStorage,
+    fileFilter: multerFilter,
+  });
+  
+exports.uploadUserPhoto = upload.single('userProfile');
+
+exports.resizeUserPhoto = async (req, res, next) => {
+    try{
+        if (!req.file) {
+            return next();
+          }
+          req.file.filename = `user-${Date.now()}.jpeg`;
+          // why like this becoz first it is set by multer upload now we have deleted that so we need to set it like this then only our middleware can use it
+          // eg we are accessing req.file.name in update user middleware but as we deleted that multer we need to set it like this
+          // above we will set the extension based on user uplaoding now as we format all to jpg  we can that as extension
+        
+          // it is asynchronous function
+          // it returns a promise they take some timme
+          // they should not block event loop
+          await sharp(req.file.buffer) //we can use like this becoz we are saving image bufferas memory in multer storage
+            .resize(500, 500) // to crop it as square
+            .toFormat('jpeg') // to convert it to jpeg
+            .jpeg({ quality: 90 })
+            .toFile(`public/img/users/${req.file.filename}`); //to save it into our file storage
+          next();
+    }
+    catch(err){
+        res.status(400).json({
+            message:'access is denied',
+        });
+    }
+    
+  };
+
+  exports.getTest = (req,res) => {
+    res.status(200).json({
+        status: 'success',
+    });
+  }
 
 exports.getAllUser=async (req, res, next) =>
 {
@@ -97,28 +153,44 @@ exports.getMe=async (req, res) =>
 
 exports.updateUser=async (req, res, next) =>
 {
-    if(await cerbos.isAllowed(req.user,{resource:"user", userName: req.params.slug},"update")) {
+    console.log("came");
+    // if(await cerbos.isAllowed(req.user,{resource:"user", userName: req.params.slug},"update")) {
             try {
-                const user=req.body;
+                // const userName=req.user.userName;
+                let update;
                 const client=await db;
-                const update=await client.query(`update "User" set "firstName"=$1 where "userName" = $2`, [user.firstName, req.params.slug]);
+                const user = await client.query(`select * from "User" where "userName"=$1`,[req.params.slug]);
+                console.log(user.rows[0]);
+                let filename = null;
+                if(req.file){
+                    filename = req.file.filename;
+                    if(user.rows[0].profilePic!="3135715.png") {
+                        await fs.unlinkSync(`public/assets/userProfilePic/`+user.rows[0].profilePic);
+                    }
+                    update=await client.query(`update "User" set "firstName"=$1, "lastName"=$2, "emailAddress"=$3, "profilePic"=$4 where "userName" = $5`, [req.body.firstName,req.body.lastName,req.body.emailAddress, req.file.filename, req.params.slug]);
+                }
+                else{
+                    update=await client.query(`update "User" set "firstName"=$1, "lastName"=$2, "emailAddress"=$3 where "userName" = $4`, [req.body.firstName,req.body.lastName,req.body.emailAddress, req.params.slug]);
+                }
 
                 res.status(200).json({
                     status: 'success',
-                    data: update
+                    data: filename
                 });
             } catch(error) {
+                console.log(error);
                 res.status(400).json({
                     status: 'error',
                     message: error
                 });
             }
-    }
-    else{
-        res.status(400).json({
-            message:'access denied',
-        });
-    }
+    // }
+    // else{
+    //     console.log()
+    //     res.status(400).json({
+    //         message:'access denied',
+    //     });
+    // }
 };
 
 

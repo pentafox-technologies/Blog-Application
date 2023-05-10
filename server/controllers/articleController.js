@@ -100,7 +100,7 @@ exports.getArticle=async (req, res, next) =>
 
     const client=await db;
     try {
-        const Article=await client.query(`SELECT * FROM "Article" where slug = $1 and status!=$2 and visibility=$3;`, [slug,"deleted","public"]);
+        const Article=await client.query(`SELECT * FROM "Article" where slug = $1 and visibility=$2;`, [slug,"public"]);
         
         if(Article.rowCount==0){
             res.status(201).json({
@@ -116,6 +116,7 @@ exports.getArticle=async (req, res, next) =>
         }
         
     } catch(error) {
+        console.log(error)
         res.status(400).json({
             status: 'error',
             message: error

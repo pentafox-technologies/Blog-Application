@@ -67,7 +67,7 @@ const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
   })
 );
 
-export default function Profile() {
+export default function Profile({userName}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -79,7 +79,7 @@ export default function Profile() {
         <CardMedia
           component="img"
           height="104"
-          image="/profile.jpg"
+          image="/lighthouse-sunset.jpg"
           alt="Paella dish"
           style={{ height: "150px" }}
         />
@@ -101,7 +101,7 @@ export default function Profile() {
           <StyledTab label="Pushback" {...a11yProps(5)} />
           <StyledTab label="Rejected" {...a11yProps(6)} />
         </StyledTabs>
-        <Account value={value} index={0} />
+        <Account value={value} userName={userName} index={0} />
         <Password value={value} index={1} />
         <Posts value={value} index={2} />
         <Draft value={value} index={3} />
