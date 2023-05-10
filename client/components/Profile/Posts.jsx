@@ -19,7 +19,7 @@ import TextField from "@mui/material/TextField";
 
 export default function Posts(props) {
   const { children, value, index,token, ...other } = props;
-  const [Articles, setArticles] = useState(null);
+  const [Articles, setArticles] = useState("");
 
   const getArticles = async () => {
     await fetch(`http://localhost:5000/api/v1/article/getUserArticle`, {
@@ -30,7 +30,7 @@ export default function Posts(props) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        console.log(data)
         setArticles(data.data);
       });
   };

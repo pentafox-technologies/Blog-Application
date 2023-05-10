@@ -14,6 +14,10 @@ router.get('/getUserDraft', authController.protect, articleController.getUserDra
 
 router.get('/getPendingVerification', authController.protect, articleController.getPendingVerication);
 
+router.get('/getPendingArticles', authController.protect, articleController.getPendingArticles);
+
+router.get('/getRejectedArticles', authController.protect, articleController.getRejectedArticles);
+
 router.post('/sendForApproval/:slug',authController.protect ,articleController.sendForApproval);
 
 router.post('/approveandPublish/:slug',authController.protect ,articleController.approveAndPublish);
