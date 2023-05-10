@@ -11,9 +11,6 @@ router.get('/getUserArticle', authController.protect, articleController.getUserA
 
 router.get('/getUserDraft', authController.protect, articleController.getUserDraft);
 
-router.get('/getUserPending', authController.protect, articleController.getUserPending);
-
-
 router.get('/getPendingVerification', authController.protect, articleController.getPendingVerication);
 
 router.get('/getPendingArticles', authController.protect, articleController.getPendingArticles);
@@ -21,6 +18,8 @@ router.get('/getPendingArticles', authController.protect, articleController.getP
 router.get('/getRejectedArticles', authController.protect, articleController.getRejectedArticles);
 
 router.post('/sendForApproval/:slug',authController.protect ,articleController.sendForApproval);
+
+router.get('/getBack/:slug',authController.protect ,articleController.getBack);
 
 router.post('/approveandPublish/:slug',authController.protect ,articleController.approveAndPublish);
 
