@@ -118,14 +118,15 @@ exports.protect = async (req, res, next) => {
                 message: 'The token belonging to this user no longer exists'
             });
         }
-        console.log("nothing sent");
+        
         req.user = user.rows[0];
         next();
+        
     } catch(err) {
         console.log(err);
         res.status(400).json({
             status:'error',
             message: err
         });
-    }       
+    }   
 }

@@ -67,7 +67,7 @@ const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
   })
 );
 
-export default function Profile({userName}) {
+export default function Profile({data}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -101,13 +101,13 @@ export default function Profile({userName}) {
           <StyledTab label="Pushback" {...a11yProps(5)} />
           <StyledTab label="Rejected" {...a11yProps(6)} />
         </StyledTabs>
-        <Account value={value} userName={userName} index={0} />
+        <Account value={value} userName={data.userName} index={0} />
         <Password value={value} index={1} />
-        <Posts value={value} index={2} />
-        <Draft value={value} index={3} />
-        <Pending value={value} index={4} />
-        <Pushback value={value} index={5} />
-        <Rejected value={value} index={6} />
+        <Posts value={value} index={2} token={data.token}  />
+        <Draft value={value} index={3} token={data.token}  />
+        <Pending value={value} index={4} token={data.token}  />
+        <Pushback value={value} index={5} token={data.token}  />
+        <Rejected value={value} index={6} token={data.token}  />
       </Box>
     </>
   );

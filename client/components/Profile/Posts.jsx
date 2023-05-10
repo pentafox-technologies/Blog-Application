@@ -18,19 +18,19 @@ import Table from "../StylesTable";
 import TextField from "@mui/material/TextField";
 
 export default function Posts(props) {
-  const { children, value, index, ...other } = props;
-  const [Articles, setArticles] = useState(null);
+  const { children, value, index,token, ...other } = props;
+  const [Articles, setArticles] = useState("");
 
   const getArticles = async () => {
     await fetch(`http://localhost:5000/api/v1/article/getUserArticle`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3RlciIsImlhdCI6MTY4MzM1NDI3MCwiZXhwIjoxNjkxMTMwMjcwfQ.hV8IxgycYdTpsPp42DSDCboSSg2_d3TKpTslcPON79E`,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        console.log(data)
         setArticles(data.data);
       });
   };

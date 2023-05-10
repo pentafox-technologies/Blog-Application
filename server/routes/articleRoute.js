@@ -16,8 +16,9 @@ router.get('/getUserPending', authController.protect, articleController.getUserP
 
 router.get('/getPendingVerification', authController.protect, articleController.getPendingVerication);
 
-router.route('/').get(articleController.getAllArticle).post(authController.protect, multer.upload("articleCoverImages").single("coverImage") ,articleController.createArticle);
+router.get('/getPendingArticles', authController.protect, articleController.getPendingArticles);
 
+router.get('/getRejectedArticles', authController.protect, articleController.getRejectedArticles);
 
 router.post('/sendForApproval/:slug',authController.protect ,articleController.sendForApproval);
 
