@@ -35,7 +35,6 @@ exports.signup = async (req, res) => {
             data: newUser.rows,
         });
     } catch(err){
-        console.log(err);
         res.status(400).json({
             status:'error',
             message: err
@@ -44,9 +43,7 @@ exports.signup = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-    const {userName, password}=req.body;
-    console.log("jhshb");
-    
+    const {userName, password}=req.body;    
     if(!userName || !password){
         return res.status(400).json({
             status:'error',
@@ -75,7 +72,6 @@ exports.login = async (req, res) => {
         const token = jwt.sign({userName}, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN
         });
-        console.log("shjbjsdd");
         res.status(201).json({
             status: 'success',
             token,
@@ -93,7 +89,6 @@ exports.login = async (req, res) => {
 
 exports.protect = async (req, res, next) => {
     try{
-        // console.log(req.url);
         let token;
         const client = await db;
         if (
@@ -123,7 +118,6 @@ exports.protect = async (req, res, next) => {
         next();
         
     } catch(err) {
-        console.log(err);
         res.status(400).json({
             status:'error',
             message: err

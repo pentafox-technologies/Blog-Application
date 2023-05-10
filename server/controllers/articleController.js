@@ -132,7 +132,6 @@ exports.getUserArticle = async (req, res) => {
             });
         }
         catch (err) {
-            console.log(err)
             res.status(400).json({
                 status: 'error',
                 message: err,
@@ -165,7 +164,6 @@ exports.getUserDraft = async (req, res) => {
             });
         }
         catch (err) {
-            console.log(err)
             res.status(400).json({
                 status: 'error',
                 message: err,
@@ -180,7 +178,6 @@ exports.getUserDraft = async (req, res) => {
 }
 
 exports.updateArticle = async (req, res) => {
-    console.log(req.body.status)
     try {
         const client = await db;
         let Article = await client.query(`SELECT * FROM "Article" where slug = $1 and status!=$2;`, [req.params.slug, "deleted"]);
@@ -226,7 +223,6 @@ exports.updateArticle = async (req, res) => {
         }
     }
     catch (err) {
-        console.log(err)
         res.status(400).json({
             status: 'error',
             message: err

@@ -6,6 +6,7 @@ const multer = require('./../middleware/multer');
 
 const router=express.Router();
 
+router.route('/').get(articleController.getAllArticle).post(authController.protect, multer.upload("articleCoverImages").single("coverImage") ,articleController.createArticle);
 
 router.get('/getUserArticle', authController.protect, articleController.getUserArticle);
 
@@ -31,6 +32,6 @@ router.route('/search/:query').get(articleController.searchArticle)
 
 router.post('/pushbackArticle/:slug',authController.protect ,articleController.pushbackArticle);
 
-// router.route('/:slug').get(articleController.getArticle).patch(authController.protect,multer.upload("articleCoverImages").single("coverImage"),articleController.updateArticle).delete(authController.protect, articleController.deleteArticle);
+router.route('/:slug').get(articleController.getArticle).patch(authController.protect,multer.upload("articleCoverImages").single("coverImage"),articleController.updateArticle).delete(authController.protect, articleController.deleteArticle);
 
 module.exports = router;

@@ -18,7 +18,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export default function Account(props) {
   const API = `http://localhost:5000`;
-  const { children, userName,token, value, index, ...other } = props;
+  const { children, userName,token, value, index,updateNav, ...other } = props;
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [username, setUserName] = useState(userName);
   const [fnameValue, setFnameValue] = useState('First Name');
@@ -31,6 +31,7 @@ export default function Account(props) {
   const [formData, setFormData] = useState({
       userProfile: userProfile ? userProfile : ""
   });
+  const [count,setCount] = useState(0);
   // const [mobileValue, setMobileValue] = useState('Mobile no');
   const vertical = 'top'
   const horizontal = 'right'
@@ -128,9 +129,12 @@ export default function Account(props) {
             )
             .then(async (response) => {
                 // console.log(response.data.data);
+                updateNav(count+1);
+                setCount(count+1)
                 setProfileName(response.data.data);
                 setuserProfile(null);
                 setButtonText('Save');
+
                 handleClick();
              });
       } catch(err){

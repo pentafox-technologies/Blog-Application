@@ -38,7 +38,7 @@ const pages = [
 ];
 const settings = ["profile", "Account", "Dashboard", "Logout"];
 
-function Navbar({token,userName}) {
+function Navbar({token,userName,pic}) {
   // const cookieStore = cookies();
   const router = useRouter();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -79,7 +79,7 @@ function Navbar({token,userName}) {
 
   useEffect(() => {
     getValues()
-  },[])
+  },[pic])
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
