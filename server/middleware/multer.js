@@ -2,7 +2,6 @@ const multer = require("multer");
 const fs = require('fs');
 
 exports.upload = (path) => {
-    console.log("hiiii");
     const storage = multer.diskStorage({
         destination(req, file, cb) {
             try {
