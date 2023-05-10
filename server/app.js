@@ -38,14 +38,14 @@ app.use("/api/v1/user", userRouter);
 // localhost:5000/api/v1/user/getAllUsers
 
 //cerbos sample 
-app.get("/cerbos",authController.protect, async (req,res) => {
+// app.get("/cerbos",authController.protect, async (req,res) => {
     
-    if(await cerbos.isAllowed(req.user,{resource:"article"},"delete")){
-        res.send("can access");
-    }
-    else {
-        res.send("cannot access");
-    }
-})
+//     if(await cerbos.isAllowed(req.user,{resource:"article"},"delete")){
+//         res.send("can access");
+//     }
+//     else {
+//         res.send("cannot access");
+//     }
+// })
 
 module.exports = app;

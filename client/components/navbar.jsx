@@ -68,9 +68,8 @@ function Navbar({token,userName}) {
       await axios
       .get(`http://localhost:5000/api/v1/user/${userName}`)
       .then((response) => {
-        console.log(response.data.data.profilePic);
-        setProfileName(response.data.data.profilePic)
-        console.log(profileName);
+        const pp = response.data.data.profilePic;
+        setProfileName(pp);
       });
     } catch(err){
       console.log(err);

@@ -87,10 +87,12 @@ exports.getUser=async (req, res, next) =>
         const user=await client.query(`select * from "User" where "userName" = $1 and "userState" != $2`, [name,"deleted"])
 
         if(user.rows.length==0) {
-            return res.status(404).json({
+            res.status(404).json({
                 status: 'error',
                 message: "No user found with this name"
             })
+            
+
         }
         // if(user.userState==="deleted") {
         //     res.status(200).json({
@@ -101,6 +103,7 @@ exports.getUser=async (req, res, next) =>
         //     });
         // }
         else{
+        console.log(user.rows[0]);
             res.status(200).json({
                 status: 'success',
                 data: user.rows[0]

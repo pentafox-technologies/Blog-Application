@@ -155,7 +155,39 @@ exports.getUserDraft = async (req,res) => {
     if(await cerbos.isAllowed(req.user, {resource: "article"}, "getmy")) {
         try{
             const client = await db;
-            let Articles=await client.query(`SELECT "slug","title","content","category","coverImage","description" FROM "Article" where "author"=$1 and "status"=$2;`, [req.user.userName,"draft"]);
+            let Articles=await client.query(`SELECT "slug","title","status","content","category","coverImage","description" FROM "Article" where "author"=$1 and "status"=$2;`, [req.user.userName,"draft"]);
+            let articles=[];
+            for(let i=0;i<Articles.rows.length;++i){
+                let article = Articles.rows[i]
+                let subCategory = await client.query(`SELECT "category" from "CategoryMap" where "article"=$1`,[article.slug])
+                let subCategories = subCategory.rows.map(category => {return category.category})
+                articles.push({...article,subCategory:subCategories})
+            }
+            res.status(201).json({
+                status: 'success',
+                data: articles,
+            });
+        }
+        catch(err){
+            console.log(err)
+            res.status(400).json({
+                status: 'error',
+                message: err,
+            });
+        }
+    }
+    else{
+        res.status(400).json({
+            message:'access denied',
+        });
+    }
+}
+
+exports.getUserPending = async (req,res) => {
+    if(await cerbos.isAllowed(req.user, {resource: "article"}, "getmy")) {
+        try{
+            const client = await db;
+            let Articles=await client.query(`SELECT "slug","title","content","category","coverImage","description" FROM "Article" where "author"=$1 and "status"=$2;`, [req.user.userName,"pending_verification"]);
             let articles=[];
             for(let i=0;i<Articles.rows.length;++i){
                 let article = Articles.rows[i]

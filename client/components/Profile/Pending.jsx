@@ -1,14 +1,72 @@
-import React,{useState} from 'react'
-import {Typography,Box, Button, AppBar, Card, CardActions, CardContent, CardMedia, CssBaseline, Grid, Toolbar, Container} from '@mui/material' 
-import PropTypes from 'prop-types';
-import TextField from '@mui/material/TextField';
+import React, { useState, useEffect } from "react";
+import {
+  Typography,
+  Box,
+  Button,
+  AppBar,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  CssBaseline,
+  Grid,
+  Toolbar,
+  Container,
+} from "@mui/material";
+import PropTypes from "prop-types";
+import Table from "../PendingTable";
 
 
 export default function Pending(props) {
     const { children, value, index, ...other } = props;
+    const [Articles, setArticles] = useState("");
+    const [updateCount, setUpdateCount] = useState(0);
 
-
-
+    const getArticles = async () => {
+      await fetch(`http://localhost:5000/api/v1/article/getUserPending`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3RlciIsImlhdCI6MTY4MzM1NDI3MCwiZXhwIjoxNjkxMTMwMjcwfQ.hV8IxgycYdTpsPp42DSDCboSSg2_d3TKpTslcPON79E`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data)
+          setArticles(data.data);
+        });
+    };
+  
+    const columns = [
+      {
+        id: "coverImage",
+        label: "Cover Image",
+        minWidth: 100,
+        align: "center",
+      },
+      {
+        id: "title",
+        label: "Title",
+        minWidth: 170,
+        align: "left",
+      },
+      {
+        id: "category",
+        label: "Category",
+        minWidth: 170,
+        align: "left",
+      },
+      {
+        id: "action",
+        label: "Action",
+        minWidth: 170,
+        align: "center",
+      },
+    ];
+  
+    useEffect(() => {
+      getArticles();
+    }, [updateCount]);
+  
     return (
       <div
         role="tabpanel"
@@ -18,12 +76,15 @@ export default function Pending(props) {
         {...other}
       >
         {value === index && (
-          <Box style={{marginTop:'45px'}}>
-              <h1>Pending content goessss here</h1>
-          </Box>
+          <div className="m-3 py-3 ">
+            <center>
+             {Articles? <Table columns={columns} rows={Articles} action={true} update={setUpdateCount}/> : <h4>There are no articles in draft</h4>}
+            </center>
+          </div>
         )}
       </div>
     );
+  
 }
 
 Pending.propTypes = {
