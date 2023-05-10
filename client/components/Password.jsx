@@ -86,7 +86,7 @@ export default function Password(props) {
     // const jwt = 
     const token = Cookies.get("token"); 
     const userName = Cookies.get("userName"); 
-      const config = {
+    const config = {
         headers: { Authorization: `Bearer ${token}` }
     };
     await axios

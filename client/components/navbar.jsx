@@ -24,8 +24,9 @@ import Cookies from "js-cookie";
 import { useRouter } from 'next/router';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
-import { deepOrange } from '@mui/material/colors';
+import axios from "axios";
+import { Image } from 'react-bootstrap';
+
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -42,10 +43,12 @@ function Navbar({token,userName}) {
   const router = useRouter();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [profileName, setProfileName] = React.useState('pname');
 
   const vertical = 'top'
   const horizontal = 'center'
   const [open, setOpen] = React.useState(false);
+  const API = `http://localhost:5000`;
   
 
   const handleClick = () => {
@@ -59,6 +62,25 @@ function Navbar({token,userName}) {
 
     setOpen(false);
   };
+
+  const getValues = async() => {
+    try{
+      await axios
+      .get(`http://localhost:5000/api/v1/user/${userName}`)
+      .then((response) => {
+        console.log(response.data.data.profilePic);
+        setProfileName(response.data.data.profilePic)
+        console.log(profileName);
+      });
+    } catch(err){
+      console.log(err);
+    }
+    
+  }
+
+  useEffect(() => {
+    getValues()
+  },[])
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -72,6 +94,10 @@ function Navbar({token,userName}) {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+  const myLoader = ({ src }) => {
+    console.log(`${API}/profilePic/${profileName}`);
+    return `${API}/profilePic/${profileName}`;
   };
 
   function logout(){
@@ -248,13 +274,19 @@ function Navbar({token,userName}) {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar
+                {/* <Avatar
                   sx={{ bgcolor: "#6246ea" }}
                   alt="Remy Sharp"
                   src="/broken-image.jpg"
                 >
                   {userName.charAt(0).toUpperCase()}
-                </Avatar>
+                </Avatar> */}
+                <Image
+                  loader={myLoader} 
+                  src={`${API}/profilePic/${profileName}`} 
+                  alt="userProfile" 
+                  style={{ borderRadius: "50%", height: "40px", width: "40px" }}
+               />                
               </IconButton>
             </Tooltip>
             <Menu

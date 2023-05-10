@@ -14,7 +14,7 @@ export default function profile({data}) {
         </Head>
         <Navbar token={data.token} userName={data.userName}/>
         <Container maxWidth="xl" sx={{ marginTop: 2 }}>
-        <Profile  token={data.token} />
+        <Profile data={data}/>
         </Container>
     </>
   )

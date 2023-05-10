@@ -30,6 +30,7 @@ export default function ArticleViewing({ slug }) {
     await fetch(`http://localhost:5000/api/v1/article/${slug}`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
+        console.log(data)
         setArticle(data.data.content);
         console.log(data.data);
         setAuthor(data.data.author);

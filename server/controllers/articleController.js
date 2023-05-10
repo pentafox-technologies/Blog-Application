@@ -97,9 +97,9 @@ exports.getArticle = async (req, res, next) => {
 
     const client = await db;
     try {
-        const Article = await client.query(`SELECT * FROM "Article" where slug = $1 and status!=$2 and visibility=$3;`, [slug, "deleted", "public"]);
-
-        if (Article.rowCount == 0) {
+        const Article=await client.query(`SELECT * FROM "Article" where slug = $1 and status=$2 and visibility=$3;`, [slug,"published","public"]);
+        
+        if(Article.rowCount==0){
             res.status(201).json({
                 status: 'error',
                 message: 'no article found',
