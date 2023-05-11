@@ -526,6 +526,7 @@ exports.getBack = async(req,res) => {
         // const articles = await client.query(`SELECT * FROM "Article" WHERE "status" = ($1) AND "author"=($2)`, [REJECTED, String(req.user.userName)]);
         await client.query(`UPDATE "Article" set "status"=$1 where "slug"=$2`, ["draft",req.params.slug]);
         res.status(200).json({
+            
             status: 'success',
             message: 'Article rollBacked to Draft'
         });

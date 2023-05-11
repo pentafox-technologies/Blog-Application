@@ -163,7 +163,7 @@ exports.updateUser=async (req, res, next) =>
                 let filename = null;
                 if(req.file){
                     filename = req.file.filename;
-                    if(user.rows[0].profilePic!="3135715.png") {
+                    if(user.rows[0].profilePic!='null' && user.rows[0].profilePic!="3135715.png") {
                         await fs.unlinkSync(`public/assets/userProfilePic/`+user.rows[0].profilePic);
                     }
                     update=await client.query(`update "User" set "firstName"=$1, "lastName"=$2, "emailAddress"=$3, "profilePic"=$4 where "userName" = $5`, [req.body.firstName,req.body.lastName,req.body.emailAddress, req.file.filename, req.params.slug]);
@@ -177,6 +177,7 @@ exports.updateUser=async (req, res, next) =>
                     data: filename
                 });
             } catch(error) {
+                console.log(error);
                 res.status(400).json({
                     status: 'error',
                     message: error

@@ -17,7 +17,7 @@ import PropTypes from "prop-types";
 import Table from "../StylesTable";
 
 export default function Draft(props) {
-  const { children, value, index,token, ...other } = props;
+  const { children, value,rollback, index,token, ...other } = props;
   const [Articles, setArticles] = useState("");
   const [updateCount, setUpdateCoubnt] = useState(0);
 
@@ -63,8 +63,9 @@ export default function Draft(props) {
   ];
 
   useEffect(() => {
+    console.log(rollback);
     getArticles();
-  }, [updateCount]);
+  }, [updateCount,rollback]);
 
   return (
     <div

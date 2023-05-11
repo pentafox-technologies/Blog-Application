@@ -12,12 +12,13 @@ import TableRow from "@mui/material/TableRow";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
-import AlertDialog from './RollBackWarning'
+import AlertDialog from './DeleteWarning'
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 
-export default function StyledTable({ columns, rows, action = false, update,setRollback}) {
+
+export default function RejectedTable({ columns, rows, action = false, update,setRollback}) {
   const router = useRouter();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -78,23 +79,7 @@ export default function StyledTable({ columns, rows, action = false, update,setR
                     {action ? (
                       <TableCell align="center">
                         <div className="actions">
-                          {row.status==="pending_verification" && <AlertDialog Article={row.slug} update={update} setRollBack={setRollback}/>}
-                          {row.status==="on_verification" &&  <Tooltip title="Cannot rollback, it is under verification"><IconButton><UnarchiveIcon style={{cursor: 'pointer', color:'rgb(255, 103, 103)'}}/></IconButton></Tooltip>}
-                          {/* <FontAwesomeIcon
-                            style={{
-                              color: "blue",
-                              fontSize: "1.2rem",
-                              margin: "0.5rem 1rem",
-                              marginTop: "1rem"
-                            }}
-                            icon={faPenToSquare}
-                            onClick={() => {
-                              router.push({
-                                pathname: "/editor/",
-                                query: row,
-                              });
-                            }}
-                          /> */}
+                          <AlertDialog Article={row.slug} update={update} />
                           
                         </div>
                       </TableCell>

@@ -17,7 +17,7 @@ import PropTypes from "prop-types";
 import Table from "../PendingTable";
 
 export default function Pending(props) {
-  const { children, value, index,token, ...other } = props;
+  const { children, value, index,setRollback,token, ...other } = props;
   const [Articles, setArticles] = useState("");
   const [updateCount, setUpdateCount] = useState(0);
 
@@ -77,7 +77,7 @@ export default function Pending(props) {
       {value === index && (
         <div className="m-3 py-3 ">
           <center>
-           {Articles? <Table columns={columns} rows={Articles} action={true} update={setUpdateCount}/> : <h4>There are no articles in draft</h4>}
+           {Articles? <Table columns={columns} rows={Articles} action={true} update={setUpdateCount} setRollback={setRollback}/> : <h4>There are no articles in draft</h4>}
           </center>
         </div>
       )}

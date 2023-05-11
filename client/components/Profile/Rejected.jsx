@@ -2,14 +2,15 @@ import React,{useState, useEffect} from 'react'
 import {Typography,Box, Button, AppBar, Card, CardActions, CardContent, CardMedia, CssBaseline, Grid, Toolbar, Container} from '@mui/material' 
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
+import Table from "../RejectedTable";
 
 
 export default function Rejected(props) {
     const { children, value, index, token, ...other } = props;
     const [Articles, setArticles] = useState("");
+    const [updateCount, setUpdateCount] = useState(0);
 
     const getArticles = async () => {
-      console.log('calling');
       await fetch(`http://localhost:5000/api/v1/article/getRejectedArticles`, {
         method: "GET",
         headers: {
@@ -18,15 +19,41 @@ export default function Rejected(props) {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data)
-          setArticles(data.data);
+          // console.log(data)
+          setArticles(data.articles);
         });
     };
 
+    const columns = [
+      {
+        id: "coverImage",
+        label: "Cover Image",
+        minWidth: 100,
+        align: "center",
+      },
+      {
+        id: "title",
+        label: "Title",
+        minWidth: 170,
+        align: "left",
+      },
+      {
+        id: "category",
+        label: "Category",
+        minWidth: 170,
+        align: "left",
+      },
+      {
+        id: "action",
+        label: "Action",
+        minWidth: 170,
+        align: "center",
+      },
+    ];
 
     useEffect(() => {
       getArticles();
-    });
+    },[]);
 
     return (
       <div
@@ -37,10 +64,12 @@ export default function Rejected(props) {
         {...other}
       >
         {value === index && (
-          <Box style={{marginTop:'45px'}}>
-              <h1>Rejected content goes here</h1>
-          </Box>
-        )}
+        <div className="m-3 py-3 ">
+          <center>
+           {Articles? <Table columns={columns} rows={Articles} action={true} update={setUpdateCount}/> : <h4>There are no articles Rejected</h4>}
+          </center>
+        </div>
+      )}
       </div>
     );
 }

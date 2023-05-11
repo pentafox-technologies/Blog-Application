@@ -9,6 +9,11 @@ import Cookies from "js-cookie";
 export default async function middleware(req) {
 
   const url = req.url;
+  if(req.nextUrl.pathname === '/'){
+    req.nextUrl.pathname = '/home';
+      // return NextResponse.rewrite(new URL('/login', req.url));
+    return NextResponse.redirect(req.nextUrl);
+  }
   if(req.nextUrl.pathname.startsWith('/home') || req.nextUrl.pathname.startsWith('/profile')) {
     // console.log("hiiiihello");
       let cookieFromRequest = req.cookies['token']

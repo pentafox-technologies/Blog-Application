@@ -69,6 +69,7 @@ const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
 
 export default function Profile({data,updateNav}) {
   const [value, setValue] = React.useState(0);
+  const [rollback,setRollback] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -104,8 +105,8 @@ export default function Profile({data,updateNav}) {
         <Account value={value} userName={data.userName} index={0} updateNav={updateNav} />
         <Password value={value} index={1} />
         <Posts value={value} index={2} token={data.token}  />
-        <Draft value={value} index={3} token={data.token}  />
-        <Pending value={value} index={4} token={data.token}  />
+        <Draft value={value} index={3} token={data.token}  rollback={rollback}/>
+        <Pending value={value} index={4} token={data.token}  setRollback={setRollback}/>
         <Pushback value={value} index={5} token={data.token}  />
         <Rejected value={value} index={6} token={data.token}  />
       </Box>

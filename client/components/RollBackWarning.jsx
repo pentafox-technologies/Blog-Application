@@ -10,9 +10,10 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import axios from "axios";
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
+import Cookies from "js-cookie";
 
 
-export default function AlertDialog({Article,update}) {
+export default function AlertDialog({Article,update,setRollBack}) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -25,16 +26,38 @@ export default function AlertDialog({Article,update}) {
 
 
   const handleGetBack = async (slug) => {
-    await fetch(`http://localhost:5000/api/v1/article/${slug}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3RlciIsImlhdCI6MTY4MzM1NDI3MCwiZXhwIjoxNjkxMTMwMjcwfQ.hV8IxgycYdTpsPp42DSDCboSSg2_d3TKpTslcPON79E`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-      });
+    const token = Cookies.get("token"); 
+    await axios
+    .get(
+      `http://localhost:5000/api/v1/article/getBack/${Article}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .then(async (response) => {
+      const data = response.data
+      console.log(response)
+      if(data.status=="success"){
+        toast("Article Rollbacked Successfully", {
+          hideProgressBar: false,
+          autoClose: 1500,
+          type: "success",
+          theme: "colored",
+        });
+        await update(1);
+        await setRollBack(1);
+      }
+      else{
+        toast("An Unexpected error occured. Try again later", {
+          hideProgressBar: false,
+          autoClose: 1500,
+          type: "error",
+          theme: "colored",
+        });
+      }
+    });
   }
 
   return (
@@ -59,39 +82,8 @@ export default function AlertDialog({Article,update}) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>cancel</Button>
-          <Button onClick={async () => {
-            await axios
-              .delete(
-                `http://localhost:5000/api/v1/article/${Article}`,
-                {
-                  headers: {
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3RlciIsImlhdCI6MTY4MzM1NDI3MCwiZXhwIjoxNjkxMTMwMjcwfQ.hV8IxgycYdTpsPp42DSDCboSSg2_d3TKpTslcPON79E`,
-                  },
-                }
-              )
-              .then(async (response) => {
-                const data = response.data
-                console.log(response)
-                if(data.status=="success"){
-                  toast("Article Deleted Successfully", {
-                    hideProgressBar: false,
-                    autoClose: 1500,
-                    type: "success",
-                    theme: "colored",
-                  });
-                  await update(1);
-                }
-                else{
-                  toast("An Unexpected error occured. Try again later", {
-                    hideProgressBar: false,
-                    autoClose: 1500,
-                    type: "error",
-                    theme: "colored",
-                  });
-                }
-              });
-          }} autoFocus>
-            delete
+          <Button onClick={handleGetBack} autoFocus>
+            Rollback
           </Button>
         </DialogActions>
       </Dialog>
