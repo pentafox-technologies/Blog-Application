@@ -34,19 +34,6 @@ export default function Pending(props) {
           setArticles(data.articles);
         });
     };
-
-    const handleGetBack = async (slug) => {
-      await fetch(`http://localhost:5000/api/v1/article/${slug}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3RlciIsImlhdCI6MTY4MzM1NDI3MCwiZXhwIjoxNjkxMTMwMjcwfQ.hV8IxgycYdTpsPp42DSDCboSSg2_d3TKpTslcPON79E`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data)
-        });
-    }
   
     const columns = [
       {
