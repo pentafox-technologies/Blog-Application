@@ -16,80 +16,77 @@ import {
 import PropTypes from "prop-types";
 import Table from "../PendingTable";
 
-
 export default function Pending(props) {
-    const { children, value, index, ...other } = props;
-    const [Articles, setArticles] = useState("");
-    const [updateCount, setUpdateCount] = useState(0);
+  const { children, value, index,token, ...other } = props;
+  const [Articles, setArticles] = useState("");
+  const [updateCount, setUpdateCount] = useState(0);
 
-    const getArticles = async () => {
-      await fetch(`http://localhost:5000/api/v1/article/getUserPending`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3RlciIsImlhdCI6MTY4MzM1NDI3MCwiZXhwIjoxNjkxMTMwMjcwfQ.hV8IxgycYdTpsPp42DSDCboSSg2_d3TKpTslcPON79E`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data)
-          setArticles(data.data);
-        });
-    };
-  
-    const columns = [
-      {
-        id: "coverImage",
-        label: "Cover Image",
-        minWidth: 100,
-        align: "center",
+  const getArticles = async () => {
+    await fetch(`http://localhost:5000/api/v1/article/getPendingArticles`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-      {
-        id: "title",
-        label: "Title",
-        minWidth: 170,
-        align: "left",
-      },
-      {
-        id: "category",
-        label: "Category",
-        minWidth: 170,
-        align: "left",
-      },
-      {
-        id: "action",
-        label: "Action",
-        minWidth: 170,
-        align: "center",
-      },
-    ];
-  
-    useEffect(() => {
-      getArticles();
-    }, [updateCount]);
-  
-    return (
-      <div
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+        setArticles(data.articles);
+      });
+  };
+
+  const columns = [
+    {
+      id: "coverImage",
+      label: "Cover Image",
+      minWidth: 100,
+      align: "center",
+    },
+    {
+      id: "title",
+      label: "Title",
+      minWidth: 170,
+      align: "left",
+    },
+    {
+      id: "category",
+      label: "Category",
+      minWidth: 170,
+      align: "left",
+    },
+    {
+      id: "action",
+      label: "Action",
+      minWidth: 170,
+      align: "center",
+    },
+  ];
+
+  useEffect(() => {
+    getArticles();
+  }, [updateCount]);
+
+  return (
+    <div
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}
-      >
-        {getArticles}
-        {value === index && (
-          <div className="m-3 py-3 ">
-            <center>
-             {Articles? <Table columns={columns} rows={Articles} action={true} update={setUpdateCount}/> : <h4>There are no articles in draft</h4>}
-            </center>
-          </div>
-        )}
-      </div>
-    );
-  
+    >
+      {value === index && (
+        <div className="m-3 py-3 ">
+          <center>
+           {Articles? <Table columns={columns} rows={Articles} action={true} update={setUpdateCount}/> : <h4>There are no articles in draft</h4>}
+          </center>
+        </div>
+      )}
+    </div>
+  );
 }
 
 Pending.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-  };
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};

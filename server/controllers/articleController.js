@@ -478,7 +478,7 @@ exports.getPendingArticles = async (req, res) => {
         try {
         const client = await db;
         const PENDING_VERIFICATION = "pending_verification"
-        const articles = await client.query(`SELECT * FROM "Article" WHERE "status" = ($1) AND "author"=($2)`, [PENDING_VERIFICATION, String(req.user.userName)]);
+        const articles = await client.query(`SELECT * FROM "Article" WHERE "status" = ($1) OR "status" = ($2) AND "author"=($3)`, [PENDING_VERIFICATION, 'on_verification',String(req.user.userName)]);
         res.status(200).json({
             status: 'Success',
             message: 'Pending Article fetched',
@@ -498,7 +498,9 @@ exports.getPendingArticles = async (req, res) => {
     }
 }
 
-
+exports.rollbackArticle = async (req,res) => {
+    
+}
 
 exports.getRejectedArticles = async (req, res) => {
     // cerbos pootuko @sab

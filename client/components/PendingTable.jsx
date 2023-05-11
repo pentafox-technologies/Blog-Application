@@ -12,10 +12,12 @@ import TableRow from "@mui/material/TableRow";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
-import AlertDialog from './DeleteWarning'
+import AlertDialog from './RollBackWarning'
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
-export default function PendingTable({ columns, rows, action = false, update}) {
+export default function StyledTable({ columns, rows, action = false, update}) {
   const router = useRouter();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -73,10 +75,11 @@ export default function PendingTable({ columns, rows, action = false, update}) {
                       }
                     </TableCell>
                     <TableCell align="left">{row.category}</TableCell>
-                    {action && row.status=='pending_verification' ? (
+                    {action ? (
                       <TableCell align="center">
                         <div className="actions">
-                          <UnarchiveIcon style={{cursor:'pointer'}}/>
+                          {row.status==="pending_verification" && <AlertDialog Article={row.slug} update={update} />}
+                          {row.status==="on_verification" &&  <Tooltip title="Cannot rollback, it is under verification"><IconButton><UnarchiveIcon style={{cursor: 'pointer', color:'rgb(255, 103, 103)'}}/></IconButton></Tooltip>}
                           {/* <FontAwesomeIcon
                             style={{
                               color: "blue",
@@ -92,7 +95,7 @@ export default function PendingTable({ columns, rows, action = false, update}) {
                               });
                             }}
                           /> */}
-                          {/* <AlertDialog Article={row.slug} update={update} /> */}
+                          
                         </div>
                       </TableCell>
                     ) : (

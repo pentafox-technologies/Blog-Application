@@ -11,7 +11,6 @@ router.get('/getUserArticle', authController.protect, articleController.getUserA
 
 router.get('/getUserDraft', authController.protect, articleController.getUserDraft);
 
-router.get('/getUserPending', authController.protect, articleController.getUserPending);
 
 
 router.get('/getPendingVerification', authController.protect, articleController.getPendingVerication);
