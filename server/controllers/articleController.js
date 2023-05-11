@@ -371,7 +371,7 @@ exports.getPendingVerication = async (req, res) => {
     if (await cerbos.isAllowed(req.user, { resource: "article" }, "getPendingVerication")) {
         try {
             const client = await db;
-            const articles = await client.query(`SELECT * FROM "Article" WHERE "status" = ($1)`, ['pending_verification']);
+            const articles = await client.query(`SELECT "slug","title","author","coverImage","category" FROM "Article" WHERE "status" = ($1) and author!=$2`, ['pending_verification',req.user.userName]);
             res.status(200).json({
                 status: 'success',
                 data: articles.rows
