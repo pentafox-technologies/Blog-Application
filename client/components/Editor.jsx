@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 export default function EditorArea({token}) {
   const router = useRouter();
   const Article = router.query;
+  console.log(typeof [Article.subCategory])
 
   const editorRef = useRef(null);
   const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ export default function EditorArea({token}) {
     content: Article.content? Article.content : "",
     description: Article.description? Article.description : "",
     coverImage: Article.coverImage? Article.coverImage : "",
-    category: Article.subCategory? Article.subCategory : "",
+    category: Article.subCategory? typeof Article.subCategory=="string" ? [Article.subCategory] : Article.subCategory : [],
     topCategory: Article.category? Article.category : "",
   });
   console.log(formData)
@@ -311,7 +312,7 @@ export default function EditorArea({token}) {
                 name={"SubCategory"}
                 data={subCategories}
                 getSubCaregory={setSubCategory}
-                value={formData.category=="" ? [] : formData.category}
+                value={formData.category}
               />
             </div>
             <hr />

@@ -473,10 +473,9 @@ exports.getPendingArticles = async (req, res) => {
         try {
         const client = await db;
         const PENDING_VERIFICATION = "pending_verification"
-        const articles = await client.query(`SELECT * FROM "Article" WHERE "status" = ($1) OR "status" = ($2) AND "author"=($3)`, [PENDING_VERIFICATION, 'on_verification',String(req.user.userName)]);
+        const articles = await client.query(`SELECT "slug","title","coverImage","category","status" FROM "Article" WHERE "author"=($3) AND "status" = ($1) OR "status" = ($2)`, [PENDING_VERIFICATION, 'on_verification',String(req.user.userName)]);
         res.status(200).json({
-            status: 'Success',
-            message: 'Pending Article fetched',
+            status: 'Success', 
             articles: articles.rows
         });
         } catch (err) {
@@ -499,10 +498,9 @@ exports.getRejectedArticles = async (req, res) => {
         try {
         const client = await db;
         const REJECTED = "rejected"
-        const articles = await client.query(`SELECT * FROM "Article" WHERE "status" = ($1) AND "author"=($2)`, [REJECTED, String(req.user.userName)]);
+        const articles = await client.query(`SELECT "slug","title","coverImage","category" FROM "Article" WHERE "status" = ($1) AND "author"=($2)`, [REJECTED, String(req.user.userName)]);
         res.status(200).json({
             status: 'Success',
-            message: 'Rejected Article fetched',
             articles: articles.rows
         });
         } catch (err) {
@@ -523,12 +521,35 @@ exports.getBack = async(req,res) => {
     if (await cerbos.isAllowed(req.user, { resource: "article" }, "getmy")) {
         try {
         const client = await db;
-        // const articles = await client.query(`SELECT * FROM "Article" WHERE "status" = ($1) AND "author"=($2)`, [REJECTED, String(req.user.userName)]);
         await client.query(`UPDATE "Article" set "status"=$1 where "slug"=$2`, ["draft",req.params.slug]);
         res.status(200).json({
             
             status: 'success',
             message: 'Article rollBacked to Draft'
+        });
+        } catch (err) {
+        res.status(400).json({
+            status:'error',
+            message: err
+        });
+        }
+    }
+    else {
+        res.status(400).json({
+            message: 'access denied',
+        });
+    }
+}
+
+
+exports.getPushbackArticles = async (req, res) => {
+    if (await cerbos.isAllowed(req.user, { resource: "article" }, "getmy")) {
+        try {
+        const client = await db;
+        const articles = await client.query(`SELECT "slug","title","coverImage","category","pushbackNotes" FROM "Article" WHERE "status" = ($1) AND "author"=($2)`, ["pushback", String(req.user.userName)]);
+        res.status(200).json({
+            status: 'Success',
+            articles: articles.rows
         });
         } catch (err) {
         res.status(400).json({
