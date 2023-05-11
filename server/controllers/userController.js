@@ -103,7 +103,6 @@ exports.getUser=async (req, res, next) =>
         //     });
         // }
         else{
-        console.log(user.rows[0]);
             res.status(200).json({
                 status: 'success',
                 data: user.rows[0]
@@ -121,7 +120,6 @@ exports.getUser=async (req, res, next) =>
 
 exports.getMe=async (req, res) =>
 {
-    console.log(req.user);
     if(await cerbos.isAllowed(req.user,{resource:"user"},"getByUserName")) {
             try {
             const client=await db;
@@ -156,14 +154,12 @@ exports.getMe=async (req, res) =>
 
 exports.updateUser=async (req, res, next) =>
 {
-    console.log("came");
     // if(await cerbos.isAllowed(req.user,{resource:"user", userName: req.params.slug},"update")) {
             try {
                 // const userName=req.user.userName;
                 let update;
                 const client=await db;
                 const user = await client.query(`select * from "User" where "userName"=$1`,[req.params.slug]);
-                console.log(user.rows[0]);
                 let filename = null;
                 if(req.file){
                     filename = req.file.filename;
@@ -181,7 +177,6 @@ exports.updateUser=async (req, res, next) =>
                     data: filename
                 });
             } catch(error) {
-                console.log(error);
                 res.status(400).json({
                     status: 'error',
                     message: error
@@ -189,7 +184,6 @@ exports.updateUser=async (req, res, next) =>
             }
     // }
     // else{
-    //     console.log()
     //     res.status(400).json({
     //         message:'access denied',
     //     });
@@ -305,7 +299,6 @@ exports.deleteUser=async (req, res, next) =>
                 message: 'user deleted successfully'
             });
         } catch(error) {
-            console.log(err);
             res.status(400).json({
                 status: 'error',
                 message: error

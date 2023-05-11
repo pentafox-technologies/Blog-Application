@@ -3,8 +3,10 @@ import Navbar from '../components/navbar'
 import { Container} from '@mui/material' 
 import Profile from '../components/Profile/Profile'
 import { parseCookies } from "../helper/"
+import { useState } from 'react';
 
 export default function profile({data}) {
+  const [profilePicChange,setProfilePicChange] = useState(0);
   console.log(data)
   return (
     <>
@@ -12,9 +14,9 @@ export default function profile({data}) {
               <title>Profile</title>
               <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Navbar token={data.token} userName={data.userName}/>
+        <Navbar token={data.token} userName={data.userName} pic={profilePicChange}/>
         <Container maxWidth="xl" sx={{ marginTop: 2 }}>
-        <Profile data={data}/>
+        <Profile updateNav={setProfilePicChange} data={data}/>
         </Container>
     </>
   )

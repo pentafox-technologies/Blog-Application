@@ -132,7 +132,6 @@ exports.getUserArticle = async (req, res) => {
             });
         }
         catch (err) {
-            console.log(err)
             res.status(400).json({
                 status: 'error',
                 message: err,
@@ -165,7 +164,6 @@ exports.getUserDraft = async (req, res) => {
             });
         }
         catch (err) {
-            console.log(err)
             res.status(400).json({
                 status: 'error',
                 message: err,
@@ -180,7 +178,6 @@ exports.getUserDraft = async (req, res) => {
 }
 
 exports.updateArticle = async (req, res) => {
-    console.log(req.body.status)
     try {
         const client = await db;
         let Article = await client.query(`SELECT * FROM "Article" where slug = $1 and status!=$2;`, [req.params.slug, "deleted"]);
@@ -226,7 +223,6 @@ exports.updateArticle = async (req, res) => {
         }
     }
     catch (err) {
-        console.log(err)
         res.status(400).json({
             status: 'error',
             message: err
@@ -375,7 +371,7 @@ exports.getPendingVerication = async (req, res) => {
     if (await cerbos.isAllowed(req.user, { resource: "article" }, "getPendingVerication")) {
         try {
             const client = await db;
-            const articles = await client.query(`SELECT * FROM "Article" WHERE "status" = ($1)`, ['pending_verification']);
+            const articles = await client.query(`SELECT "slug","title","author","coverImage","category" FROM "Article" WHERE "status" = ($1) and author!=$2`, ['pending_verification',req.user.userName]);
             res.status(200).json({
                 status: 'success',
                 data: articles.rows
@@ -473,8 +469,7 @@ exports.pushbackArticle = async (req, res) => {
 
 
 exports.getPendingArticles = async (req, res) => {
-    // cerbos pootuko @sab
-    if (true) {
+    if (await cerbos.isAllowed(req.user, { resource: "article" }, "getmy")) {
         try {
         const client = await db;
         const PENDING_VERIFICATION = "pending_verification"
@@ -498,13 +493,9 @@ exports.getPendingArticles = async (req, res) => {
     }
 }
 
-exports.rollbackArticle = async (req,res) => {
-    
-}
 
 exports.getRejectedArticles = async (req, res) => {
-    // cerbos pootuko @sab
-    if (true) {
+    if (await cerbos.isAllowed(req.user, { resource: "article" }, "getmy")) {
         try {
         const client = await db;
         const REJECTED = "rejected"
@@ -513,6 +504,30 @@ exports.getRejectedArticles = async (req, res) => {
             status: 'Success',
             message: 'Rejected Article fetched',
             articles: articles.rows
+        });
+        } catch (err) {
+        res.status(400).json({
+            status:'error',
+            message: err
+        });
+        }
+    }
+    else {
+        res.status(400).json({
+            message: 'access denied',
+        });
+    }
+}
+
+exports.getBack = async(req,res) => {
+    if (await cerbos.isAllowed(req.user, { resource: "article" }, "getmy")) {
+        try {
+        const client = await db;
+        // const articles = await client.query(`SELECT * FROM "Article" WHERE "status" = ($1) AND "author"=($2)`, [REJECTED, String(req.user.userName)]);
+        await client.query(`UPDATE "Article" set "status"=$1 where "slug"=$2`, ["draft",req.params.slug]);
+        res.status(200).json({
+            status: 'success',
+            message: 'Article rollBacked to Draft'
         });
         } catch (err) {
         res.status(400).json({

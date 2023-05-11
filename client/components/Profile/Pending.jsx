@@ -21,53 +21,66 @@ export default function Pending(props) {
   const [Articles, setArticles] = useState("");
   const [updateCount, setUpdateCount] = useState(0);
 
-  const getArticles = async () => {
-    await fetch(`http://localhost:5000/api/v1/article/getPendingArticles`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const getArticles = async () => {
+      await fetch(`http://localhost:5000/api/v1/article/getPendingArticles`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data)
+          setArticles(data.articles);
+        });
+    };
+
+    const handleGetBack = async (slug) => {
+      await fetch(`http://localhost:5000/api/v1/article/${slug}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3RlciIsImlhdCI6MTY4MzM1NDI3MCwiZXhwIjoxNjkxMTMwMjcwfQ.hV8IxgycYdTpsPp42DSDCboSSg2_d3TKpTslcPON79E`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data)
+        });
+    }
+  
+    const columns = [
+      {
+        id: "coverImage",
+        label: "Cover Image",
+        minWidth: 100,
+        align: "center",
       },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        setArticles(data.articles);
-      });
-  };
-
-  const columns = [
-    {
-      id: "coverImage",
-      label: "Cover Image",
-      minWidth: 100,
-      align: "center",
-    },
-    {
-      id: "title",
-      label: "Title",
-      minWidth: 170,
-      align: "left",
-    },
-    {
-      id: "category",
-      label: "Category",
-      minWidth: 170,
-      align: "left",
-    },
-    {
-      id: "action",
-      label: "Action",
-      minWidth: 170,
-      align: "center",
-    },
-  ];
-
-  useEffect(() => {
-    getArticles();
-  }, [updateCount]);
-
-  return (
-    <div
+      {
+        id: "title",
+        label: "Title",
+        minWidth: 170,
+        align: "left",
+      },
+      {
+        id: "category",
+        label: "Category",
+        minWidth: 170,
+        align: "left",
+      },
+      {
+        id: "action",
+        label: "Action",
+        minWidth: 170,
+        align: "center",
+      },
+    ];
+  
+    useEffect(() => {
+      getArticles();
+    }, [updateCount]);
+  
+    return (
+      <div
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}

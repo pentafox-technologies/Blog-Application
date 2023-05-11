@@ -20,6 +20,7 @@ function HomePage() {
     await fetch(`http://localhost:5000/api/v1/article`)
       .then((response) => response.json())
       .then((data) => {
+        console.log(data)
         setArticles(data.data);
       });
     await fetch(`http://localhost:5000/api/v1/category`)
