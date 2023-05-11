@@ -473,7 +473,7 @@ exports.getPendingArticles = async (req, res) => {
         try {
         const client = await db;
         const PENDING_VERIFICATION = "pending_verification"
-        const articles = await client.query(`SELECT "slug","title","coverImage","category" FROM "Article" WHERE "author"=($3) AND "status" = ($1) OR "status" = ($2)`, [PENDING_VERIFICATION, 'on_verification',String(req.user.userName)]);
+        const articles = await client.query(`SELECT "slug","title","coverImage","category","status" FROM "Article" WHERE "author"=($3) AND "status" = ($1) OR "status" = ($2)`, [PENDING_VERIFICATION, 'on_verification',String(req.user.userName)]);
         res.status(200).json({
             status: 'Success', 
             articles: articles.rows
