@@ -12,11 +12,13 @@ router.get('/getUserArticle', authController.protect, articleController.getUserA
 
 router.get('/getUserDraft', authController.protect, articleController.getUserDraft);
 
-router.get('/getPendingVerification', authController.protect, articleController.getPendingVerication);
-
 router.get('/getPendingArticles', authController.protect, articleController.getPendingArticles);
 
+router.get('/getPushbackArticles', authController.protect, articleController.getPushbackArticles);
+
 router.get('/getRejectedArticles', authController.protect, articleController.getRejectedArticles);
+
+router.get('/getPendingVerification', authController.protect, articleController.getPendingVerication);
 
 router.post('/sendForApproval/:slug',authController.protect ,articleController.sendForApproval);
 
