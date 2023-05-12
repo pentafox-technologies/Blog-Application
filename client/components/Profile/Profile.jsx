@@ -102,7 +102,7 @@ export default function Profile({data,updateNav}) {
           <StyledTab label="Pending" {...a11yProps(4)} />
           <StyledTab label="Pushback" {...a11yProps(5)} />
           <StyledTab label="Rejected" {...a11yProps(6)} />
-          <StyledTab label="Validate" {...a11yProps(7)} />
+          {data.userType === 'moderator' && <StyledTab label="Validate" {...a11yProps(7)} />}
         </StyledTabs>
         <Account value={value} userName={data.userName} index={0} updateNav={updateNav} />
         <Password value={value} index={1} />
@@ -111,7 +111,8 @@ export default function Profile({data,updateNav}) {
         <Pending value={value} index={4} token={data.token}  setRollback={setRollback}/>
         <Pushback value={value} index={5} token={data.token}  />
         <Rejected value={value} index={6} token={data.token}  />
-        <Validate value={value} index={7} token={data.token}  />
+        {data.userType === 'moderator' && <Validate value={value} index={7} token={data.token}  />}
+        
       </Box>
     </>
   );
