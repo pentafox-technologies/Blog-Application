@@ -30,7 +30,7 @@ export default function Draft(props) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
+        console.log(data.data);
         setArticles(data.data);
       });
   };
