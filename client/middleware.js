@@ -8,13 +8,19 @@ import Cookies from "js-cookie";
 
 export default async function middleware(req) {
 
-  const url = req.url;
-  if(req.nextUrl.pathname === '/'){
-    req.nextUrl.pathname = '/home';
-      // return NextResponse.rewrite(new URL('/login', req.url));
-    return NextResponse.redirect(req.nextUrl);
-  }
-  if(req.nextUrl.pathname.startsWith('/home') || req.nextUrl.pathname.startsWith('/profile')) {
+  // const url = req.url;
+  // if(req.nextUrl.pathname === '/'){
+  //   console.log(req);
+  //   req.nextUrl.pathname = '/home';
+  //     // return NextResponse.rewrite(new URL('/login', req.url));
+  //   return NextResponse.redirect(req.nextUrl);
+  // }
+  // if(req.nextUrl.pathname.startsWith('/home')){
+  //   const response = NextResponse.next();
+  //   response.headers.set('X-HEADER', 'some-value-to-pass');
+  //   return response;
+  // }
+  if(req.nextUrl.pathname.startsWith('/profile')) {
     // console.log("hiiiihello");
       let cookieFromRequest = req.cookies['token']
       const temp = Cookies.get("token"); 
