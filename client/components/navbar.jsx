@@ -36,10 +36,10 @@ const pages = [
   { name: "Write", link: "/editor",toLogIn:true },
   { name: "Blogs", link: "/home" , toLogIn:false},
 ];
-const settings = ["profile", "Account", "Dashboard", "Logout"];
+const settings = ["profile", "dashboard", "Logout"];
 
 function Navbar({token=null,userName=null,pic=null}) {
-  // const cookieStore = cookies();
+  // const cookieStore = cookies(); 
   const router = useRouter();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
