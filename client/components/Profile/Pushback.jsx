@@ -7,6 +7,7 @@ import TextField from "@mui/material/TextField";
 export default function Pushback(props) {
   const { children, value, index, token, ...other } = props;
   const [Articles, setArticles] = useState("");
+  const [updateCount, setUpdateCoubnt] = useState(0);
 
   const getArticles = async () => {
     await fetch(`http://localhost:5000/api/v1/article/getPushbackArticles`, {
@@ -24,7 +25,7 @@ export default function Pushback(props) {
 
   useEffect(() => {
     getArticles();
-  }, []);
+  }, [updateCount]);
 
   const columns = [
     {
@@ -70,7 +71,7 @@ export default function Pushback(props) {
                 columns={columns}
                 rows={Articles}
                 action={true}
-                // update={setUpdateCoubnt}
+                update={setUpdateCoubnt}
               />
             ) : (
               <h4>There are no articles in pushback</h4>

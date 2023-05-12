@@ -14,7 +14,7 @@ import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import AlertDialog from "./DeleteWarning";
 
-export default function StyledTable({ columns, rows, action = false, update }) {
+export default function StyledTable({ columns, rows, action = false, update}) {
   const router = useRouter();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);

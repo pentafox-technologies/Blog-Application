@@ -546,10 +546,18 @@ exports.getPushbackArticles = async (req, res) => {
     if (await cerbos.isAllowed(req.user, { resource: "article" }, "getmy")) {
         try {
         const client = await db;
-        const articles = await client.query(`SELECT "slug","title","coverImage","category","pushbackNotes" FROM "Article" WHERE "status" = ($1) AND "author"=($2)`, ["pushback", String(req.user.userName)]);
+        // const articles = await client.query(`SELECT "slug","title","coverImage","category","pushbackNotes" FROM "Article" WHERE "status" = ($1) AND "author"=($2)`, ["pushback", String(req.user.userName)]);
+        let Articles = await client.query(`SELECT "slug","title","content","category","coverImage","description","pushbackNotes" FROM "Article" where "status" = ($1) AND "author"=($2)`, ["pushback", String(req.user.userName)]);
+            let articles = [];
+            for (let i = 0; i < Articles.rows.length; ++i) {
+                let article = Articles.rows[i]
+                let subCategory = await client.query(`SELECT "category" from "CategoryMap" where "article"=$1`, [article.slug])
+                let subCategories = subCategory.rows.map(category => { return category.category })
+                articles.push({ ...article, subCategory: subCategories })
+        }
         res.status(200).json({
             status: 'Success',
-            articles: articles.rows
+            articles: articles
         });
         } catch (err) {
         res.status(400).json({
