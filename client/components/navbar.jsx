@@ -32,13 +32,13 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 const pages = [
-  { name: "Home", link: "/home" },
-  { name: "Write", link: "/editor" },
-  { name: "Blogs", link: "/home" },
+  { name: "Home", link: "/home", toLogIn:false },
+  { name: "Write", link: "/editor",toLogIn:true },
+  { name: "Blogs", link: "/home" , toLogIn:false},
 ];
 const settings = ["profile", "Account", "Dashboard", "Logout"];
 
-function Navbar({token,userName,pic}) {
+function Navbar({token=null,userName=null,pic=null}) {
   // const cookieStore = cookies();
   const router = useRouter();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -78,6 +78,10 @@ function Navbar({token,userName,pic}) {
   }
 
   useEffect(() => {
+    
+  },[token])
+
+  useEffect(() => {
     getValues()
   },[pic])
   const handleOpenNavMenu = (event) => {
@@ -105,6 +109,10 @@ function Navbar({token,userName,pic}) {
     Cookies.remove('userName');
     handleClick();
     router.push('/login');
+  }
+
+  function isLoggedIn(){
+    return false;
   }
 
   const Search = styled("div")(({ theme }) => ({
@@ -216,6 +224,7 @@ function Navbar({token,userName,pic}) {
                 display: { xs: "block", md: "none" },
               }}
             >
+              
               {pages.map((page) => (
                 <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                   <Link href={page.link}>
@@ -245,7 +254,19 @@ function Navbar({token,userName,pic}) {
             Blog App
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {!token && pages.filter((page) => !page.toLogIn).map((page) => (
+              <Link href={page.link} className="Links">
+                <Button
+                  style={{ color: "grey", fontWeight: "600" }}
+                  key={page.name}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page.name}
+                </Button>
+              </Link>
+            ))}
+            {token && pages.map((page) => (
               <Link href={page.link} className="Links">
                 <Button
                   style={{ color: "grey", fontWeight: "600" }}
@@ -269,26 +290,17 @@ function Navbar({token,userName,pic}) {
               />
             </Search>
           </Box>
-
+          
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+          {token && <><Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {/* <Avatar
-                  sx={{ bgcolor: "#6246ea" }}
-                  alt="Remy Sharp"
-                  src="/broken-image.jpg"
-                >
-                  {userName.charAt(0).toUpperCase()}
-                </Avatar> */}
                 <Image
-                  loader={myLoader} 
-                  src={`${API}/profilePic/${profileName}`} 
-                  alt="userProfile" 
-                  style={{ borderRadius: "50%", height: "40px", width: "40px" }}
-               />                
+                  loader={myLoader}
+                  src={`${API}/profilePic/${profileName}`}
+                  alt="userProfile"
+                  style={{ borderRadius: "50%", height: "40px", width: "40px" }} />
               </IconButton>
-            </Tooltip>
-            <Menu
+            </Tooltip><Menu
               sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
@@ -304,14 +316,14 @@ function Navbar({token,userName,pic}) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center"><Link style={{textDecoration:"none", color:"black"}} href={setting}>{setting}</Link></Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          
-          <LogoutIcon sx={{  ml: 2, color:'black' }} style={{cursor: 'pointer'}} onClick={logout}/>
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center"><Link style={{ textDecoration: "none", color: "black" }} href={setting}>{setting}</Link></Typography>
+                  </MenuItem>
+                ))}
+              </Menu></>}
+            {!token && <Button variant="contained" style={{background: '#6246ea', color:'#fffffe'}}> <Link href='/login' style={{color:'white', textDecoration:'none'}}>Login/SignUp</Link> </Button>}
+          {token && <LogoutIcon sx={{  ml: 2, color:'black' }} style={{cursor: 'pointer'}} onClick={logout}/>}
           </Box>
         </Toolbar>
       </Container>

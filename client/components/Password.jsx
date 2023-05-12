@@ -15,6 +15,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import axios from "axios";
 import Cookies from "js-cookie";
+import validator from 'validator'
 
 // import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -24,7 +25,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   });
 
 export default function Password(props) {
-    const { children, value, index, ...other } = props;
+  const { children, value, index, ...other } = props;
   const [oldValue, setOldValue] = useState();
   const [newValue, setNewValue] = useState();
   const [currentValue, setCurrentValue] = useState();
@@ -33,7 +34,8 @@ export default function Password(props) {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [currentReenterValue, setCurrentReenterValue] = useState();
   const [showReenterPassword, setShowReenterPassword] = useState(false);
-
+  const [passCheck, setPassCheck] = useState(true);
+  const [passSameCheck, setPassSameCheck] = useState(true);
   const [oldPassCheck, setOldPassCheck] = useState(true);
   const vertical = 'top'
   const horizontal = 'right'
@@ -84,11 +86,29 @@ export default function Password(props) {
   
   async function updatePassword(){
     // const jwt = 
+    setPassCheck(true);
+    setPassSameCheck(true);
+    setOldPassCheck(true);
     const token = Cookies.get("token"); 
     const userName = Cookies.get("userName"); 
     const config = {
         headers: { Authorization: `Bearer ${token}` }
     };
+    if (!validator.isStrongPassword(newValue, {
+      minLength: 8, minLowercase: 0,
+      minUppercase: 0, minNumbers: 1, minSymbols: 0
+    })) {
+      setPassCheck(false);
+      console.log(passCheck);
+      return;
+    } 
+    setPassCheck(true);
+    if(newValue != currentValue){
+      console.log(newValue,currentValue);
+      setPassSameCheck(false);
+      return;
+    }
+    setPassSameCheck(true);
     await axios
     .patch(
         `http://localhost:5000/api/v1/user/${userName}/password`,
@@ -109,13 +129,6 @@ export default function Password(props) {
             setOldPassCheck(false)
         }
     });
-        // if(oldValue == 'anish'){
-        //     setOldPassCheck(true)
-        //     handleClick();
-        // }
-        // else{
-        //     setOldPassCheck(false)
-        // }
         console.log(oldValue,newValue,currentValue);
   }
 
@@ -209,6 +222,7 @@ export default function Password(props) {
                             />
                         </FormControl>
                 </Grid>
+                {!passCheck && <Typography gutterBottom style={{color:'red'}}>Password is not strong</Typography>} 
                 <Grid item xs={12}>
                 <Typography variant='h6' gutterBottom style={{fontWeight:'600'}}>Current Password</Typography>
                 <FormControl variant="outlined">
@@ -242,6 +256,7 @@ export default function Password(props) {
                             />
                         </FormControl>
                 </Grid>
+                {!passSameCheck && <Typography gutterBottom style={{color:'red'}}>Password and Confirm Password are not same</Typography>} 
                 <Grid container justifyContent="center" style={{marginTop: '20px'}}>
                   <Button variant="contained" style={{background: '#6246ea', color:'#fffffe', fontWeight:'600'}} onClick={updatePassword}>
                       Update Password

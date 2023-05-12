@@ -124,3 +124,44 @@ exports.protect = async (req, res, next) => {
         });
     }   
 }
+
+
+exports.isLoggedIn = async (req, res, next) => {
+    try{
+        console.log("came");
+        let token;
+        const client = await db;
+        if (
+            req.headers.authorization &&
+            req.headers.authorization.startsWith('Bearer')
+        ) {
+            token = req.headers.authorization.split(' ')[1];
+        }
+        if (!token) {
+            return res.status(401).json({
+                status:'error',
+                message: 'You are not logged in! Please log in to get access'
+            });
+        }
+
+        const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+        const user = await client.query(`select * from "User" where "userName" = $1`, [decoded.userName]);
+
+        if(!user){
+            return res.status(401).json({
+                status:'error',
+                message: 'The token belonging to this user no longer exists'
+            });
+        }
+        
+        res.status(200).json({
+            status:'success'
+        });
+        
+    } catch(err) {
+        res.status(400).json({
+            status:'error',
+            message: err
+        });
+    }   
+}

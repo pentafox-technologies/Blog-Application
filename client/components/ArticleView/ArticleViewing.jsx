@@ -31,8 +31,9 @@ export default function ArticleViewing({ slug }) {
       .then((response) => response.json())
       .then((data) => {
         console.log(data)
-        setArticle(data.data.content);
         console.log(data.data);
+        setArticle(data.data.content);
+
         setAuthor(data.data.author);
         setCategory(data.data.category);
         setDescription(data.data.description);
