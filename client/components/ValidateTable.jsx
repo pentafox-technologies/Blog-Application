@@ -12,13 +12,17 @@ import TableRow from "@mui/material/TableRow";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
-import AlertDialog from "./DeleteWarning";
-import PushbackPopup from "./pushBackPopup";
+import AlertDialog from './RollBackWarning'
+import UnarchiveIcon from '@mui/icons-material/Unarchive';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import Button from 'react-bootstrap/Button';
 
-export default function StyledTable({ columns, rows, action = false, update}) {
+export default function StyledTable({ columns, rows, action = false, update,setRollback}) {
   const router = useRouter();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -62,24 +66,30 @@ export default function StyledTable({ columns, rows, action = false, update}) {
                       <ImageLoader name={row.coverImage} H="100" W="100" />
                     </TableCell>
                     <TableCell align="left">
-                      {columns.length == 3 ? (
-                        <Link className="Links" href={`/post/${row.slug}`}>
-                          {row.title}
-                        </Link>
-                      ) : (
-                        <p className="Links">{row.title}</p>
-                      )}
+                      {columns.length==3? 
+                      <Link className="Links" href={`/post/${row.slug}`}>
+                        {row.title}
+                      </Link> : 
+                      <p className="Links">
+                        {row.title}
+                      </p>
+                      }
                     </TableCell>
-                    <TableCell align="left"><PushbackPopup value={row.pushbackNotes} /></TableCell>
+                    <TableCell align="left">{row.category}</TableCell>
                     {action ? (
                       <TableCell align="center">
                         <div className="actions">
-                          <FontAwesomeIcon
+                          {/* {row.status==="pending_verification" && <AlertDialog Article={row.slug} update={update} setRollBack={setRollback}/>}
+                          {row.status==="on_verification" &&  <Tooltip title="Cannot rollback, it is under verification"><IconButton><UnarchiveIcon style={{cursor: 'pointer', color:'rgb(255, 103, 103)'}}/></IconButton></Tooltip>} */}
+                          <Button variant="primary">
+                            Validate
+                          </Button>
+                          {/* <FontAwesomeIcon
                             style={{
                               color: "blue",
                               fontSize: "1.2rem",
                               margin: "0.5rem 1rem",
-                              marginTop: "1rem",
+                              marginTop: "1rem"
                             }}
                             icon={faPenToSquare}
                             onClick={() => {
@@ -88,8 +98,8 @@ export default function StyledTable({ columns, rows, action = false, update}) {
                                 query: row,
                               });
                             }}
-                          />
-                          <AlertDialog Article={row.slug} update={update} />
+                          /> */}
+                          
                         </div>
                       </TableCell>
                     ) : (

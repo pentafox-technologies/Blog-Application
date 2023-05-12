@@ -371,10 +371,17 @@ exports.getPendingVerication = async (req, res) => {
     if (await cerbos.isAllowed(req.user, { resource: "article" }, "getPendingVerication")) {
         try {
             const client = await db;
-            const articles = await client.query(`SELECT "slug","title","author","coverImage","category" FROM "Article" WHERE "status" = ($1) and author!=$2`, ['pending_verification',req.user.userName]);
+            const Articles = await client.query(`SELECT * FROM "Article" WHERE "status" = ($1) and author!=$2`, ['pending_verification',req.user.userName]);
+            let articles = [];
+            for (let i = 0; i < Articles.rows.length; ++i) {
+                let article = Articles.rows[i]
+                let subCategory = await client.query(`SELECT "category" from "CategoryMap" where "article"=$1`, [article.slug])
+                let subCategories = subCategory.rows.map(category => { return category.category })
+                articles.push({ ...article, subCategory: subCategories })
+            }
             res.status(200).json({
                 status: 'success',
-                data: articles.rows
+                data: articles
             });
 
         } catch (err) {
