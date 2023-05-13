@@ -20,7 +20,7 @@ router.get('/getRejectedArticles', authController.protect, articleController.get
 
 router.get('/getPendingVerification', authController.protect, articleController.getPendingVerication);
 
-router.post('/sendForApproval/:slug',authController.protect ,articleController.sendForApproval);
+// router.post('/sendForApproval/:slug',authController.protect ,articleController.sendForApproval);
 
 router.get('/getBack/:slug', authController.protect, articleController.getBack);
 
@@ -30,7 +30,7 @@ router.get('/approveandPublish/:slug',authController.protect ,articleController.
 
 router.get('/rejectPost/:slug',authController.protect ,articleController.rejectPost);
 
-router.route('/validation/:slug').get(authController.protect, articleController.selectToValidate);
+// router.route('/validation/:slug').get(authController.protect, articleController.selectToValidate);
 
 router.route('/search/:query').get(articleController.searchArticle)
 
