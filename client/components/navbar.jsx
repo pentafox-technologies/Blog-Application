@@ -36,7 +36,7 @@ const pages = [
   { name: "Write", link: "/editor",toLogIn:true },
   { name: "Blogs", link: "/home" , toLogIn:false},
 ];
-const settings = ["profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Navbar({token=null,userName=null,pic=null}) {
   // const cookieStore = cookies();

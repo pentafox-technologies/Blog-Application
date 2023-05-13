@@ -80,12 +80,10 @@ export default function ArticleViewing({ slug }) {
             </div>
             <div className="metaInfo mx-3">
               <Typography className="py-1" style={{ fontSize: "1.1rem" }}>
-                <b>Author Name</b>
+                <b>{author}</b>
               </Typography>
               <div className="d-flex text-secondary py-1">
-                <h6 style={{ marginRight: "0.8rem" }}>20/04/2023</h6>
-                <span style={{ fontWeight: "600" }}>.</span>
-                <h6 style={{ marginLeft: "0.8rem" }}>{category}</h6>
+                <h6>{category}</h6>
               </div>
             </div>
           </div>
