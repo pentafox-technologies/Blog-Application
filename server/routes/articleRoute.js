@@ -22,7 +22,9 @@ router.get('/getPendingVerification', authController.protect, articleController.
 
 router.post('/sendForApproval/:slug',authController.protect ,articleController.sendForApproval);
 
-router.get('/getBack/:slug',authController.protect ,articleController.getBack);
+router.get('/getBack/:slug', authController.protect, articleController.getBack);
+
+router.get('/getValidationArticle/:slug', authController.protect, articleController.getValidationArticle);
 
 router.post('/approveandPublish/:slug',authController.protect ,articleController.approveAndPublish);
 

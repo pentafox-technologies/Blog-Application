@@ -579,3 +579,40 @@ exports.getPushbackArticles = async (req, res) => {
         });
     }
 }
+
+
+exports.getValidationArticle=async (req, res, next) =>
+{
+    // if(await cerbos.isAllowed(req.user, {resource: "article"}, "getPendingVerication")) {
+    const slug=req.params.slug;
+
+    const client=await db;
+    try {
+        const Article=await client.query(`SELECT * FROM "Article" where slug = $1 and status=$2`, [slug, "pending_verification"]);
+
+        if(Article.rowCount==0) {
+            res.status(201).json({
+                status: 'error',
+                message: 'no article found',
+            });
+        }
+        else {
+            res.status(201).json({
+                status: 'success',
+                data: Article.rows[0],
+            });
+        }
+
+    } catch(error) {
+        res.status(400).json({
+            status: 'error',
+            message: error
+        });
+    }
+    // }
+    // else {
+    //     res.status(400).json({
+    //         message: 'access denied',
+    //     });
+    // }
+};

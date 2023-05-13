@@ -28,6 +28,7 @@ export default function StyledTable({ columns, rows, action = false, update,setR
     setPage(newPage);
   };
 
+
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
@@ -66,14 +67,13 @@ export default function StyledTable({ columns, rows, action = false, update,setR
                       <ImageLoader name={row.coverImage} H="100" W="100" />
                     </TableCell>
                     <TableCell align="left">
-                      {columns.length==3? 
-                      <Link className="Links" href={`/post/${row.slug}`}>
-                        {row.title}
-                      </Link> : 
-                      <p className="Links">
-                        {row.title}
-                      </p>
-                      }
+                      {columns.length == 3 ? (
+                        <Link className="Links" href={`/post/${row.slug}`}>
+                          {row.title}
+                        </Link>
+                      ) : (
+                        <p className="Links">{row.title}</p>
+                      )}
                     </TableCell>
                     <TableCell align="left">{row.category}</TableCell>
                     {action ? (
@@ -81,7 +81,10 @@ export default function StyledTable({ columns, rows, action = false, update,setR
                         <div className="actions">
                           {/* {row.status==="pending_verification" && <AlertDialog Article={row.slug} update={update} setRollBack={setRollback}/>}
                           {row.status==="on_verification" &&  <Tooltip title="Cannot rollback, it is under verification"><IconButton><UnarchiveIcon style={{cursor: 'pointer', color:'rgb(255, 103, 103)'}}/></IconButton></Tooltip>} */}
-                          <Button variant="primary">
+                          <Button
+                            variant="primary"
+                            href={`/validate/${row.slug}`}
+                          >
                             Validate
                           </Button>
                           {/* <FontAwesomeIcon
@@ -99,7 +102,6 @@ export default function StyledTable({ columns, rows, action = false, update,setR
                               });
                             }}
                           /> */}
-                          
                         </div>
                       </TableCell>
                     ) : (
