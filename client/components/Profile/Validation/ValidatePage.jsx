@@ -11,8 +11,11 @@ import {
   faDiamondTurnRight,
   faBan,
 } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
-export default function ArticleViewing({ slug }) {
+export default function ArticleViewing({ slug, token }) {
+  const router = useRouter();
   const [article, setArticle] = useState(null);
   const [author, setAuthor] = useState(null);
   const [category, setCategory] = useState(null);
@@ -24,13 +27,11 @@ export default function ArticleViewing({ slug }) {
   const myLoader = ({ src }) => {
     return `${API}/coverImage/${coverImage}`;
   };
-  const isNonMobileScreens = useMediaQuery("(min-width:720px)");
-  var Base64string;
 
   async function getArticle() {
     const requestOptions = {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InJrIiwiaWF0IjoxNjc4MTI1ODkwLCJleHAiOjE2ODU5MDE4OTB9.7gLX4JSaEr4_dMatxcOOMRkZjGzcsfRio8w4vRojypY`,
+        Authorization: `Bearer ${token}`,
       },
     };
     await fetch(
@@ -52,10 +53,6 @@ export default function ArticleViewing({ slug }) {
   useEffect(() => {
     getArticle();
   }, [slug]);
-
-  useEffect(() => {
-    Base64string = coverImage?.slice(coverImage.search(",") + 1);
-  }, [coverImage]);
 
   return (
     <>
@@ -122,17 +119,57 @@ export default function ArticleViewing({ slug }) {
             <Button
               name="draft"
               className="rounded-0 my-2"
-              // onClick={}
+              onClick={async () => {
+                console.log(slug)
+                await fetch(`http://localhost:5000/api/v1/article/approveandPublish/${slug}`,{
+                  method: "GET",
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                  if(data.status=="success"){
+                    toast("Article published successfully", {
+                      hideProgressBar: false,
+                      autoClose: 1500,
+                      type: "success",
+                      theme: "colored",
+                      });
+                  }
+                  router.push("/profile");
+                });
+              }}
             >
               <FontAwesomeIcon className="mx-2" icon={faThumbsUp} />
               Approve and Publish
             </Button>
-            <NotesPopup />
+            <NotesPopup slug={slug}  token={token}/>
             <Button
               name="pending_verification"
               className="rounded-0 my-2"
               style={{ background: "#ba000d", border: "inherit" }}
-              // onClick={}
+              onClick={async () => {
+                await fetch(`http://localhost:5000/api/v1/article/rejectPost/${slug}`,{
+                  method: "GET",
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                  console.log(data)
+                  if(data.status=="success"){
+                    toast("Article rejected successfully", {
+                      hideProgressBar: false,
+                      autoClose: 1500,
+                      type: "success",
+                      theme: "colored",
+                      });
+                      router.push("/profile");
+                  }
+                });
+              }}
             >
               <FontAwesomeIcon icon={faBan} className="mx-2" />
               Reject this article

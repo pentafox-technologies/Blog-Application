@@ -12,13 +12,12 @@ function articleViewing({data})
     useEffect(() =>
     {
         console.log(slug);
-        // <ArticleViewing slug={slug} />
     }, [slug])
 
     return (
         <>
             <Navbar token={data.token} userName={data.userName} />
-            <ArticleViewing slug={slug} />
+            <ArticleViewing slug={slug} token={data.token} />
         </>
     );
 }

@@ -26,9 +26,9 @@ router.get('/getBack/:slug', authController.protect, articleController.getBack);
 
 router.get('/getValidationArticle/:slug', authController.protect, articleController.getValidationArticle);
 
-router.post('/approveandPublish/:slug',authController.protect ,articleController.approveAndPublish);
+router.get('/approveandPublish/:slug',authController.protect ,articleController.approveAndPublish);
 
-router.post('/rejectPost/:slug',authController.protect ,articleController.rejectPost);
+router.get('/rejectPost/:slug',authController.protect ,articleController.rejectPost);
 
 router.route('/validation/:slug').get(authController.protect, articleController.selectToValidate);
 
