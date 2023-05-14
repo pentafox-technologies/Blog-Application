@@ -8,32 +8,45 @@ export default function BlogsWrapper() {
   const [topCategory, setTopCategory] = useState([]);
   const [Articles, setArticles] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const [category, setCategory] = useState("");
+
 
   const getData = async () => {
-    await fetch(`http://localhost:5000/api/v1/article`)
+
+    if(category==""){
+      await fetch(`http://localhost:5000/api/v1/article`)
+        .then((response) => response.json())
+        .then((data) => {
+          setArticles(data.data);
+          console.log(Articles);
+        });
+      await fetch(`http://localhost:5000/api/v1/category`)
+        .then((response) => response.json())
+        .then((data) => {
+          const topCat = data.data.map((cat) => {
+            return cat.categoryName;
+          });
+          setTopCategories(topCat);
+        });
+      await fetch(`http://localhost:5000/api/v1/category/subCategory`)
+        .then((response) => response.json())
+        .then((data) => {
+          setSubCategories(data.data);
+        });
+    }
+    else{
+      await fetch(`http://localhost:5000/api/v1/article/searchTopCategory/${category}`)
       .then((response) => response.json())
       .then((data) => {
         setArticles(data.data);
+        console.log(data);
         console.log(Articles);
       });
-    await fetch(`http://localhost:5000/api/v1/category`)
-      .then((response) => response.json())
-      .then((data) => {
-        const topCat = data.data.map((cat) => {
-          return cat.categoryName;
-        });
-        setTopCategories(topCat);
-      });
-    await fetch(`http://localhost:5000/api/v1/category/subCategory`)
-      .then((response) => response.json())
-      .then((data) => {
-        setSubCategories(data.data);
-      });
+    }
   };
-
   useEffect(() => {
     getData();
-  }, []);
+  }, [category]);
 
   return (
     <div
@@ -44,11 +57,12 @@ export default function BlogsWrapper() {
 
       <div className="blogs col-md-6 col-sm-12">
         <div className="categorySearch" style={{ width: "15vw" }}>
-          <CategorySearch data={topCategories} />
+          <CategorySearch data={topCategories} setCategory={setCategory} />
         </div>
         <hr />
         <div className="articles">
-          {Articles.map((article) => {
+          {console.log(typeof Articles)}
+          {Articles && Articles.map((article) => {
             return <BlogCard key={article.slug} article={article} />;
           })}
         </div>

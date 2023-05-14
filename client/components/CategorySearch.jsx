@@ -4,11 +4,11 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-export default function CategorySearch({ data }) {
-  const [category, setcategory] = React.useState("");
+export default function CategorySearch({ data,setCategory }) {
 
   const handleChange = (event) => {
-    setcategory(event.target.value);
+    console.log(event.target.value)
+    setCategory(event.target.value);
   };
 
   return (
@@ -18,7 +18,6 @@ export default function CategorySearch({ data }) {
         <Select
           labelId="demo-simple-select-standard-label"
           id="demo-simple-select-standard"
-          value={category}
           onChange={handleChange}
           label="category"
         >

@@ -128,7 +128,6 @@ exports.protect = async (req, res, next) => {
 
 exports.isLoggedIn = async (req, res, next) => {
     try{
-        console.log("came");
         let token;
         const client = await db;
         if (

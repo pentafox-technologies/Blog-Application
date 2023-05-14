@@ -22,6 +22,8 @@ router.get('/getPendingVerification', authController.protect, articleController.
 
 // router.post('/sendForApproval/:slug',authController.protect ,articleController.sendForApproval);
 
+router.route('/searchTopCategory/:query').get(articleController.searchTopCategory)
+
 router.get('/getBack/:slug', authController.protect, articleController.getBack);
 
 router.get('/getValidationArticle/:slug', authController.protect, articleController.getValidationArticle);
@@ -32,7 +34,6 @@ router.get('/rejectPost/:slug',authController.protect ,articleController.rejectP
 
 // router.route('/validation/:slug').get(authController.protect, articleController.selectToValidate);
 
-router.route('/search/:query').get(articleController.searchArticle)
 
 router.post('/pushbackArticle/:slug',authController.protect ,articleController.pushbackArticle);
 

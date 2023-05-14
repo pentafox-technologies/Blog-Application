@@ -10,8 +10,9 @@ exports.getAllArticle = async (req, res, next) => {
         result = [];
         for (var i = 0; i < Articles.rows.length; ++i) {
             let article = Articles.rows[i];
+            const AuthorName = await client.query(`select "firstName","lastName" from "User" where "userName"=$1;`, [article.author])
             let publishedDate = await client.query(`select "updateTime" from "ArticleLogs" where "article"=$1 and "actionReason"=$2 ORDER BY "updateTime" DESC LIMIT 1`, [article.slug, "Approved and Published"]);
-            tem = { ...Articles.rows[i], publishedDate: publishedDate.rows[0].updateTime };
+            tem = { ...Articles.rows[i], publishedDate: publishedDate.rows[0].updateTime, author: String(AuthorName.rows[0].firstName)+" "+String(AuthorName.rows[0].lastName)};
             result.push(tem);
         }
         res.status(201).json({
@@ -34,7 +35,9 @@ exports.getArticle = async (req, res, next) => {
     const client = await db;
     try {
         const Article=await client.query(`SELECT * FROM "Article" where slug = $1 and status=$2 and visibility=$3;`, [slug,"published","public"]);
-        
+        const Author = await client.query(`select "firstName","lastName","profilePic" from "User" where "userName"=$1;`, [Article.rows[0].author])
+        let publishedDate = await client.query(`select "updateTime" from "ArticleLogs" where "article"=$1 and "actionReason"=$2 ORDER BY "updateTime" DESC LIMIT 1`, [Article.rows[0].slug, "Approved and Published"]);
+
         if(Article.rowCount==0){
             res.status(201).json({
                 status: 'error',
@@ -44,7 +47,7 @@ exports.getArticle = async (req, res, next) => {
         else {
             res.status(201).json({
                 status: 'success',
-                data: Article.rows[0],
+                data: {...Article.rows[0], publishedDate: publishedDate.rows[0].updateTime, author: String(Author.rows[0].firstName)+" "+String(Author.rows[0].lastName), "authorProfilePic": Author.rows[0].profilePic},
             });
         }
 
@@ -55,6 +58,35 @@ exports.getArticle = async (req, res, next) => {
         });
     }
 };
+
+exports.searchTopCategory = async (req, res) => {
+    try {
+        const query = req.params.query;
+        const client = await db;
+        const Articles = await client.query(`SELECT * FROM "Article" where category=$1 and status=$2 and visibility=$3;`, [query, "published","public"]);
+        // const Articles=await client.query(`select "slug","title","coverImage","description","category","author" from "Article" where "status"=$1 and "visibility"=$2;`, ["published", "public"]);
+        result = [];
+        for (var i = 0; i < Articles.rows.length; ++i) {
+            let article = Articles.rows[i];
+            const AuthorName = await client.query(`select "firstName","lastName" from "User" where "userName"=$1;`, [article.author])
+            let publishedDate = await client.query(`select "updateTime" from "ArticleLogs" where "article"=$1 and "actionReason"=$2 ORDER BY "updateTime" DESC LIMIT 1`, [article.slug, "Approved and Published"]);
+            tem = { ...Articles.rows[i], publishedDate: publishedDate.rows[0].updateTime, author: String(AuthorName.rows[0].firstName)+" "+String(AuthorName.rows[0].lastName)};
+            result.push(tem);
+        }
+        res.status(200).json({
+            status: 'success',
+            data: result
+        });
+
+    } catch (err) {
+        res.status(404).json({
+            status: "error",
+            data: {
+                err: err.message
+            }
+        })
+    }
+}
 
 exports.createArticle = async (req, res) => {
     if (await cerbos.isAllowed(req.user, { resource: "article" }, "create")) {
@@ -208,28 +240,6 @@ exports.deleteArticle = async (req, res, next) => {
         });
     }
 };
-
-exports.searchArticle = async (req, res) => {
-    try {
-        const query = req.params.query + "%";
-        const client = await db;
-        const result = await client.query(`SELECT * FROM "Article" where slug like $1 and status=$2;`, [query, "published"]);
-        res.status(200).json({
-            status: 'success',
-            data: {
-                data: result.rows
-            }
-        });
-
-    } catch (err) {
-        res.status(404).json({
-            status: "error",
-            data: {
-                err: err.message
-            }
-        })
-    }
-}
 
 // exports.sendForApproval = async (req, res) => {
 

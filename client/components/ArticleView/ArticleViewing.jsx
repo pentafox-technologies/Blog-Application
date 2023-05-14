@@ -13,10 +13,16 @@ export default function ArticleViewing({ slug }) {
   const [description, setDescription] = useState(null);
   const [title, setTitle] = useState(null);
   const [coverImage, setCoverImage] = useState(null);
+  const [publishedDate, setPublishedDate] = useState(null);
+  const [authorProfileImage, setAuthorProfileImage] = useState(null);
 
   const API = `http://localhost:5000`;
   const myLoader = ({ src }) => {
     return `${API}/coverImage/${coverImage}`;
+  };
+  const myLoader1 = ({ src }) => {
+    console.log(`${API}/profilePic/${authorProfileImage}`)
+    return `${API}/profilePic/${authorProfileImage}`;
   };
   const isNonMobileScreens = useMediaQuery("(min-width:720px)");
   var Base64string;
@@ -31,14 +37,14 @@ export default function ArticleViewing({ slug }) {
       .then((response) => response.json())
       .then((data) => {
         console.log(data)
-        console.log(data.data);
         setArticle(data.data.content);
-
+        setPublishedDate(data.data.publishedDate.slice(0, 10));
         setAuthor(data.data.author);
         setCategory(data.data.category);
         setDescription(data.data.description);
         setTitle(data.data.title);
         setCoverImage(data.data.coverImage);
+        setAuthorProfileImage(data.data.authorProfilePic);
       });
     await fetch(`http://localhost:5000/api/v1/article`)
       .then((response) => response.json())
@@ -69,14 +75,18 @@ export default function ArticleViewing({ slug }) {
         >
           <div className="articleinfo flex my-3">
             <div className="profile">
-              <Image
-                className=""
-                width={"100%"}
-                height={"auto"}
-                src={Image3}
-                alt="profile"
-                style={{ objectFit: "fit" }}
-              />
+            <Image
+              loader={myLoader1}
+              src={`${API}/profilePic/${authorProfileImage}`}
+              width={200}
+              height={200}
+              style={{
+                borderRadius: "50%",
+                height: "50px",
+                width: "50px",
+              }}
+              alt="article image"
+            />
             </div>
             <div className="metaInfo mx-3">
               <Typography className="py-1" style={{ fontSize: "1.1rem" }}>
@@ -85,7 +95,7 @@ export default function ArticleViewing({ slug }) {
               <div className="d-flex text-secondary py-1">
                 <h6>{category}</h6>
                 <span className="mx-2">.</span>
-                <h6>12/10/2022</h6>
+                <h6>{publishedDate}</h6>
               </div>
             </div>
           </div>

@@ -24,8 +24,7 @@ export default function BlogCard({ article }) {
         <div className="col-md-8">
           <div className="articleInfo">
             <p style={{ display: "inline-flex", fontSize: "1rem" }}>
-              {/* {article.author} */}
-              Author Name
+              {article.author}
             </p>
             <span className="mx-2">.</span>
             <p
