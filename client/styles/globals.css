@@ -94,6 +94,24 @@ body {
   justify-content: center;
 }
 
+.categories{
+  display: flex;
+  flex-wrap: wrap;
+  width: 70%;
+}
+
+.category{
+  width: fit-content;
+  font-size: 0.9rem;
+  background-color: rgba(242, 242, 242, 2);
+  border-radius: 0.5rem;
+  padding: 0.4rem;
+  margin: 0.5rem;
+  text-decoration: none;
+  color: black;
+}
+
+
 .articleText {
   letter-spacing: -0.0003;
   line-height: 32px;
@@ -103,6 +121,8 @@ body {
 }
 
 .textLink {
+  text-decoration: none;
+  color: black;
   cursor: pointer;
 }
 
@@ -116,7 +136,7 @@ body {
   color: "#173A5E";
 }
 .secondary {
-  color: "#46505A";
+  color:rgba(117, 117, 117, 1);
 }
 .active {
   color: "#001E3C";

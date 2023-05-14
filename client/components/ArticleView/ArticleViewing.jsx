@@ -84,6 +84,8 @@ export default function ArticleViewing({ slug }) {
               </Typography>
               <div className="d-flex text-secondary py-1">
                 <h6>{category}</h6>
+                <span className="mx-2">.</span>
+                <h6>12/10/2022</h6>
               </div>
             </div>
           </div>

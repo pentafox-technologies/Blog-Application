@@ -6,7 +6,7 @@ const fs = require('fs');
 exports.getAllArticle = async (req, res, next) => {
     const client = await db;
     try {
-        const Articles = await client.query(`select "slug","title","coverImage","description","category" from "Article" where "status"=$1 and "visibility"=$2;`, ["published", "public"]);
+        const Articles=await client.query(`select "slug","title","coverImage","description","category","author" from "Article" where "status"=$1 and "visibility"=$2;`, ["published", "public"]);
         result = [];
         for (var i = 0; i < Articles.rows.length; ++i) {
             let article = Articles.rows[i];

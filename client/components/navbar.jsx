@@ -32,58 +32,54 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 const pages = [
-  { name: "Home", link: "/home", toLogIn:false },
-  { name: "Write", link: "/editor",toLogIn:true },
-  { name: "Blogs", link: "/home" , toLogIn:false},
+  { name: "Home", link: "/home", toLogIn: false },
+  { name: "Write", link: "/editor", toLogIn: true },
+  { name: "Blogs", link: "/blogs", toLogIn: false },
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-function Navbar({token=null,userName=null,pic=null}) {
+function Navbar({ token = null, userName = null, pic = null }) {
   // const cookieStore = cookies();
   const router = useRouter();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [profileName, setProfileName] = React.useState('pname');
+  const [profileName, setProfileName] = React.useState("pname");
 
-  const vertical = 'top'
-  const horizontal = 'center'
+  const vertical = "top";
+  const horizontal = "center";
   const [open, setOpen] = React.useState(false);
   const API = `http://localhost:5000`;
-  
 
   const handleClick = () => {
     setOpen(true);
   };
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
     setOpen(false);
   };
 
-  const getValues = async() => {
-    try{
+  const getValues = async () => {
+    try {
       await axios
-      .get(`http://localhost:5000/api/v1/user/${userName}`)
-      .then((response) => {
-        const pp = response.data.data.profilePic;
-        setProfileName(pp);
-      });
-    } catch(err){
+        .get(`http://localhost:5000/api/v1/user/${userName}`)
+        .then((response) => {
+          const pp = response.data.data.profilePic;
+          setProfileName(pp);
+        });
+    } catch (err) {
       console.log(err);
     }
-    
-  }
+  };
+
+  useEffect(() => {}, [token]);
 
   useEffect(() => {
-    
-  },[token])
-
-  useEffect(() => {
-    getValues()
-  },[pic])
+    getValues();
+  }, [pic]);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -103,15 +99,15 @@ function Navbar({token=null,userName=null,pic=null}) {
     return `${API}/profilePic/${profileName}`;
   };
 
-  function logout(){
-    Cookies.remove('token');
-    Cookies.remove('userType');
-    Cookies.remove('userName');
+  function logout() {
+    Cookies.remove("token");
+    Cookies.remove("userType");
+    Cookies.remove("userName");
     handleClick();
-    router.push('/login');
+    router.push("/login");
   }
 
-  function isLoggedIn(){
+  function isLoggedIn() {
     return false;
   }
 
@@ -163,17 +159,25 @@ function Navbar({token=null,userName=null,pic=null}) {
   // },[])
   console.log(token, userName);
 
-
   return (
     <AppBar
       position="static"
       style={{ backgroundColor: "#ffffff", color: "black", width: "100%" }}
     >
       <Container maxWidth="xl">
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical, horizontal }}>
-            <Alert onClose={handleClose} severity="success" sx={{ width: '100%',padding: '10px 20px' }}>
-                Logged Out Successfully
-            </Alert>
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical, horizontal }}
+        >
+          <Alert
+            onClose={handleClose}
+            severity="success"
+            sx={{ width: "100%", padding: "10px 20px" }}
+          >
+            Logged Out Successfully
+          </Alert>
         </Snackbar>
         <Toolbar disableGutters>
           <NavLogo sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -224,7 +228,6 @@ function Navbar({token=null,userName=null,pic=null}) {
                 display: { xs: "block", md: "none" },
               }}
             >
-              
               {pages.map((page) => (
                 <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                   <Link href={page.link}>
@@ -254,30 +257,34 @@ function Navbar({token=null,userName=null,pic=null}) {
             Blog App
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {!token && pages.filter((page) => !page.toLogIn).map((page) => (
-              <Link href={page.link} className="Links">
-                <Button
-                  style={{ color: "grey", fontWeight: "600" }}
-                  key={page.name}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {page.name}
-                </Button>
-              </Link>
-            ))}
-            {token && pages.map((page) => (
-              <Link href={page.link} className="Links">
-                <Button
-                  style={{ color: "grey", fontWeight: "600" }}
-                  key={page.name}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {page.name}
-                </Button>
-              </Link>
-            ))}
+            {!token &&
+              pages
+                .filter((page) => !page.toLogIn)
+                .map((page) => (
+                  <Link href={page.link} className="Links">
+                    <Button
+                      style={{ color: "grey", fontWeight: "600" }}
+                      key={page.name}
+                      onClick={handleCloseNavMenu}
+                      sx={{ my: 2, color: "white", display: "block" }}
+                    >
+                      {page.name}
+                    </Button>
+                  </Link>
+                ))}
+            {token &&
+              pages.map((page) => (
+                <Link href={page.link} className="Links">
+                  <Button
+                    style={{ color: "grey", fontWeight: "600" }}
+                    key={page.name}
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                  >
+                    {page.name}
+                  </Button>
+                </Link>
+              ))}
           </Box>
           <Box sx={{ flexGrow: 0, mr: 1.2 }}>
             <Search>
@@ -290,40 +297,76 @@ function Navbar({token=null,userName=null,pic=null}) {
               />
             </Search>
           </Box>
-          
+
           <Box sx={{ flexGrow: 0 }}>
-          {token && <><Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Image
-                  loader={myLoader}
-                  src={`${API}/profilePic/${profileName}`}
-                  alt="userProfile"
-                  style={{ borderRadius: "50%", height: "40px", width: "40px" }} />
-              </IconButton>
-            </Tooltip><Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center"><Link style={{ textDecoration: "none", color: "black" }} href={setting}>{setting}</Link></Typography>
-                  </MenuItem>
-                ))}
-              </Menu></>}
-            {!token && <Button variant="contained" style={{background: '#6246ea', color:'#fffffe'}}> <Link href='/login' style={{color:'white', textDecoration:'none'}}>Login/SignUp</Link> </Button>}
-          {token && <LogoutIcon sx={{  ml: 2, color:'black' }} style={{cursor: 'pointer'}} onClick={logout}/>}
+            {token && (
+              <>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Image
+                      loader={myLoader}
+                      src={`${API}/profilePic/${profileName}`}
+                      alt="userProfile"
+                      style={{
+                        borderRadius: "50%",
+                        height: "40px",
+                        width: "40px",
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">
+                        <Link
+                          style={{ textDecoration: "none", color: "black" }}
+                          href="profile"
+                        >
+                          {setting}
+                        </Link>
+                      </Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            )}
+            {!token && (
+              <Button
+                variant="contained"
+                style={{ background: "#6246ea", color: "#fffffe" }}
+              >
+                {" "}
+                <Link
+                  href="/login"
+                  style={{ color: "white", textDecoration: "none" }}
+                >
+                  Login/SignUp
+                </Link>{" "}
+              </Button>
+            )}
+            {token && (
+              <LogoutIcon
+                sx={{ ml: 2, color: "black" }}
+                style={{ cursor: "pointer" }}
+                onClick={logout}
+              />
+            )}
           </Box>
         </Toolbar>
       </Container>
@@ -334,13 +377,11 @@ function Navbar({token=null,userName=null,pic=null}) {
 export default Navbar;
 
 export const getStaticProps = async () => {
-  // const res = await fetch(`/api/articles`) it won't work we need to give entire url
-  // so let us create a config folder and we will put url there
-  const res = await fetch(`${server}/api/articles`)
-  const articles = await res.json()
+  const res = await fetch(`${server}/api/articles`);
+  const articles = await res.json();
   return {
     props: {
-      articles
-    }
-  }
-}
+      articles,
+    },
+  };
+};
