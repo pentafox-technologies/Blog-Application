@@ -20,6 +20,7 @@ export default async function middleware(req) {
   //   response.headers.set('X-HEADER', 'some-value-to-pass');
   //   return response;
   // }
+  
   if(req.nextUrl.pathname.startsWith('/profile')) {
     // console.log("hiiiihello");
       let cookieFromRequest = req.cookies['token']

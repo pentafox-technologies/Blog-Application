@@ -29,6 +29,6 @@ router.patch('/:slug/password',authController.protect,  userController.updatePas
 router.patch('/:slug/email',authController.protect,  userController.updateMail)
 router.patch('/:slug/profile',authController.protect,  userController.updateProfile)
 
-router.post('/promote/:slug',authController.protect,  userController.promoteUser);
+router.patch('/promote/:slug',authController.protect,  userController.promoteUser);
 
 module.exports=router;
