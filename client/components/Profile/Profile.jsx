@@ -24,6 +24,7 @@ import Pending from "./Pending";
 import Pushback from "./Pushback";
 import Rejected from "./Rejected";
 import Validate from "./Validate";
+import Users from "./Users";
 
 function a11yProps(index) {
   return {
@@ -69,6 +70,8 @@ const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
 );
 
 export default function Profile({data,updateNav}) {
+  let i = 0;
+  let j = 0;
   const [value, setValue] = React.useState(0);
   const [rollback,setRollback] = React.useState(0);
 
@@ -95,24 +98,27 @@ export default function Profile({data,updateNav}) {
           scrollButtons="auto"
           aria-label="scrollable auto tabs example"
         >
-          <StyledTab label="Account" {...a11yProps(0)} />
-          <StyledTab label="Password" {...a11yProps(1)} />
-          <StyledTab label="Posts" {...a11yProps(2)} />
-          <StyledTab label="Draft" {...a11yProps(3)} />
-          <StyledTab label="Pending" {...a11yProps(4)} />
-          <StyledTab label="Pushback" {...a11yProps(5)} />
-          <StyledTab label="Rejected" {...a11yProps(6)} />
-          {data.userType === 'moderator' && <StyledTab label="Validate" {...a11yProps(7)} />}
+          <StyledTab label="Account" {...a11yProps(j++)} />
+          <StyledTab label="Password" {...a11yProps(j++)} />
+          <StyledTab label="Posts" {...a11yProps(j++)} />
+          <StyledTab label="Draft" {...a11yProps(j++)} />
+          <StyledTab label="Pending" {...a11yProps(j++)} />
+          <StyledTab label="Pushback" {...a11yProps(j++)} />
+          <StyledTab label="Rejected" {...a11yProps(j++)} />
+          {data.userType === 'moderator' && <StyledTab label="Validate" {...a11yProps(j++)} />}
+          <StyledTab label="Users" {...a11yProps(j++)} />
+
         </StyledTabs>
-        <Account value={value} userName={data.userName} index={0} updateNav={updateNav} />
-        <Password value={value} index={1} />
-        <Posts value={value} index={2} token={data.token}  />
-        <Draft value={value} index={3} token={data.token}  rollback={rollback}/>
-        <Pending value={value} index={4} token={data.token}  setRollback={setRollback}/>
-        <Pushback value={value} index={5} token={data.token}  />
-        <Rejected value={value} index={6} token={data.token}  />
-        {data.userType === 'moderator' && <Validate value={value} index={7} token={data.token}  />}
         
+        <Account value={value} userName={data.userName} index={i++} updateNav={updateNav} />
+        <Password value={value} index={i++} />
+        <Posts value={value} index={i++} token={data.token}  />
+        <Draft value={value} index={i++} token={data.token}  rollback={rollback}/>
+        <Pending value={value} index={i++} token={data.token}  setRollback={setRollback}/>
+        <Pushback value={value} index={i++} token={data.token}  />
+        <Rejected value={value} index={i++} token={data.token}  />
+        {data.userType === 'moderator' && <Validate value={value} index={i++} token={data.token}  />}
+        <Users value={value} index={i++} token={data.token} />
       </Box>
     </>
   );

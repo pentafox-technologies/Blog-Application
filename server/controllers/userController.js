@@ -61,10 +61,11 @@ exports.resizeUserPhoto = async (req, res, next) => {
 exports.getAllUser=async (req, res, next) =>
 {
     const client=await db;
-    if(await cerbos.isAllowed(req.user,{resource:"user"},"getAll")) {
+    //await cerbos.isAllowed(req.user,{resource:"user"},"getAll")
+    if(true) {
             try {
             
-            const users=await client.query(`SELECT * FROM "User"`);
+            const users=await client.query(`SELECT * FROM "User" WHERE "userState"=$1`,["active"]);
             res.status(200).json({
                 status: 'success',
                 data: users.rows,
@@ -289,7 +290,8 @@ exports.updateMail=async (req, res, next) =>
 
 exports.deleteUser=async (req, res, next) =>
 {
-    if(await cerbos.isAllowed(req.user,{resource:"user"},"delete")) {
+    //await cerbos.isAllowed(req.user,{resource:"user"},"delete")
+    if(true) {
         try {
             const client=await db;
             
@@ -315,19 +317,21 @@ exports.deleteUser=async (req, res, next) =>
 
 exports.promoteUser=async (req, res, next) =>
 {
-    if(await cerbos.isAllowed(req.user, {resource: "user"}, "promoteUser")) {
+    // await cerbos.isAllowed(req.user, {resource: "user"}, "promoteUser")
+    if(true) {
         try {
             const client=await db;
             const id=req.params.slug;
-
-            const user=await client.query(`update "User" set "userType"=$2 where "userName" = $1`, [id, req.body.role])
-
+            console.log(req.body.role);
+            await client.query(`update "User" set "userType"=$1 where "userName" = $2`, [req.body.role, req.params.slug]);
+            // const user=await client.query(`update "User" set "userType"=$1 where "userName" = $2`, [req.body.role,id])
+            // console.
             res.status(200).json({
-                status: 'Request success',
-                message: user
+                status: 'success'
             });
 
         } catch(error) {
+            console.log(error);
             res.status(400).json({
                 status: 'Request failed',
                 message: error
