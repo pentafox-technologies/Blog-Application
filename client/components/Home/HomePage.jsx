@@ -11,8 +11,10 @@ import {
   faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
 import styles from "../../styles/Home.module.css";
+import { useRouter } from "next/router";
 
 function HomePage() {
+  const router = useRouter();
   const [Articles, setArticles] = useState([]);
   const [categories, setCategories] = useState([]);
 
@@ -70,11 +72,16 @@ function HomePage() {
           <div className={styles.categories}>
             {categories
               .sort()
-              .slice(0, 8)
+              .slice(5, 14)
               .map((category) => (
-                <Link href="/" className={styles.category}>
+                <p onClick={() => {
+                  router.push({
+                    pathname: "/blogs/",
+                    query: {"category" : category},
+                  });
+                }} className={styles.category}>
                   {category}
-                </Link>
+                </p>
               ))}
           </div>
         </div>

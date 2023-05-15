@@ -2,14 +2,19 @@ import React, { useState, useEffect } from "react";
 import BlogCard from "./BlogCard";
 import Form from "react-bootstrap/Form";
 import CategorySearch from "../CategorySearch";
+import { useRouter } from "next/router";
 
 export default function BlogsWrapper() {
+  const router = useRouter();
   const [topCategories, setTopCategories] = useState([]);
   const [topCategory, setTopCategory] = useState([]);
   const [Articles, setArticles] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  const [category, setCategory] = useState("");
 
+  const tem = router.query.category;
+  const cat = tem? tem:"";
+  console.log(tem)
+  const [category, setCategory] = useState(cat);
 
   const getData = async () => {
 
@@ -73,9 +78,9 @@ export default function BlogsWrapper() {
           <div className="categories my-4">
             {topCategories
               .sort()
-              .slice(0, 9)
+              .slice(5, 14)
               .map((category) => (
-                <p className="category">{category}</p>
+                <p onClick={() => {setCategory(category)}} className="category">{category} </p>
               ))}
           </div>
         </div>
