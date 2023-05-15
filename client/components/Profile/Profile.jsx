@@ -23,6 +23,7 @@ import Draft from "./Draft";
 import Pending from "./Pending";
 import Pushback from "./Pushback";
 import Rejected from "./Rejected";
+import AllPost from "./AllPost"
 import Validate from "./Validate";
 
 function a11yProps(index) {
@@ -102,6 +103,7 @@ export default function Profile({data,updateNav}) {
           <StyledTab label="Pending" {...a11yProps(4)} />
           <StyledTab label="Pushback" {...a11yProps(5)} />
           <StyledTab label="Rejected" {...a11yProps(6)} />
+          <StyledTab label="All Posts" {...a11yProps(7)} />
           <StyledTab label="Validate" {...a11yProps(7)} />
         </StyledTabs>
         <Account value={value} userName={data.userName} index={0} updateNav={updateNav} />
@@ -112,6 +114,7 @@ export default function Profile({data,updateNav}) {
         <Pushback value={value} index={5} token={data.token}  />
         <Rejected value={value} index={6} token={data.token}  />
         <Validate value={value} index={7} token={data.token}  />
+        <AllPost value={value} index={7} token={token}  />
       </Box>
     </>
   );
