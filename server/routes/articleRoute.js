@@ -8,7 +8,7 @@ const router=express.Router();
 
 router.route('/').get(articleController.getAllArticle).post(authController.protect, multer.upload("articleCoverImages").single("coverImage") ,articleController.createArticle);
 
-router.get('/getUserArticle', articleController.getUserArticle);
+router.get('/getUserArticle', authController.protect, articleController.getUserArticle);
 
 router.get('/getAllArticleAdmin', authController.protect, articleController.getAllArticleAdmin);
 
@@ -21,8 +21,6 @@ router.get('/getPushbackArticles', authController.protect, articleController.get
 router.get('/getRejectedArticles', authController.protect, articleController.getRejectedArticles);
 
 router.get('/getPendingVerification', authController.protect, articleController.getPendingVerication);
-
-// router.post('/sendForApproval/:slug',authController.protect ,articleController.sendForApproval);
 
 router.route('/searchTopCategory/:query').get(articleController.searchTopCategory)
 

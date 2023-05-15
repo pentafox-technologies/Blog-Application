@@ -76,7 +76,7 @@ export default function StyledTable({ columns, rows, action = false, update}) {
                     {action ? (
                       <TableCell align="center">
                         <div className="actions">
-                          <FontAwesomeIcon
+                          {/* <FontAwesomeIcon
                             style={{
                               color: "blue",
                               fontSize: "1.2rem",
@@ -90,7 +90,7 @@ export default function StyledTable({ columns, rows, action = false, update}) {
                                 query: row,
                               });
                             }}
-                          />
+                          /> */}
                           <AlertDialog Article={row.slug} update={update} />
                         </div>
                       </TableCell>

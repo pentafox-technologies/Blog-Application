@@ -49,6 +49,7 @@ resourcePolicy:
       effect: EFFECT_ALLOW
       derivedRoles:
         - deleteableArticle
+        - admin
 
     - actions: ['validate']
       effect: EFFECT_ALLOW

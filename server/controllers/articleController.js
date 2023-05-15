@@ -216,7 +216,7 @@ exports.deleteArticle = async (req, res, next) => {
         let Article = await client.query(`SELECT * FROM "Article" where "slug" = $1 and "status"!=$2;`, [slug, "deleted"]);
         Article = Article.rows[0];
         Article.resource = "article";
-        // await cerbos.isAllowed(req.user, Article, "delete")
+        //await cerbos.isAllowed(req.user, Article, "delete")
         if (true) {
             await client.query(`Delete FROM "ArticleLogs" where "article"=$1;`, [slug]);
             await client.query(`Delete FROM "Supports" where "article"=$1;`, [slug]);
@@ -354,6 +354,7 @@ exports.rejectPost = async (req, res) => {
 
 exports.getUserArticle = async (req, res) => {
 
+    console.log(req.user)
     if (await cerbos.isAllowed(req.user, { resource: "article" }, "getmy")) {
         try {
             const client = await db;

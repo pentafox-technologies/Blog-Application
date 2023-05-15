@@ -21,6 +21,7 @@ export default function Posts(props) {
   const { children, value, index,token, ...other } = props;
   const [Articles, setArticles] = useState("");
 
+  console.log(token)
   const getArticles = async () => {
     await fetch(`http://localhost:5000/api/v1/article/getUserArticle`, {
       method: "GET",

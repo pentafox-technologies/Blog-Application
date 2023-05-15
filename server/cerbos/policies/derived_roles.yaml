@@ -36,7 +36,6 @@ derivedRoles:
               - expr: request.resource.attr.author == request.principal.attr.userName && request.resource.attr.status == "pending_verification" && request.principal.attr.userState == "active"
               - expr: request.resource.attr.author == request.principal.attr.userName && request.resource.attr.status == "pushback" && request.principal.attr.userState == "active"
               - expr: request.resource.attr.author == request.principal.attr.userName && request.resource.attr.status == "rejected" && request.principal.attr.userState == "active"
-              - expr: request.principal.attr.userType == "admin" && request.resource.attr.status == "published" && request.principal.attr.userState == "active"
 
     - name: myself
       parentRoles: ["member"]
