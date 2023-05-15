@@ -23,6 +23,7 @@ import Draft from "./Draft";
 import Pending from "./Pending";
 import Pushback from "./Pushback";
 import Rejected from "./Rejected";
+import AllPost from "./AllPost"
 
 function a11yProps(index) {
   return {
@@ -100,6 +101,7 @@ export default function Profile({token}) {
           <StyledTab label="Pending" {...a11yProps(4)} />
           <StyledTab label="Pushback" {...a11yProps(5)} />
           <StyledTab label="Rejected" {...a11yProps(6)} />
+          <StyledTab label="All Posts" {...a11yProps(7)} />
         </StyledTabs>
         <Account value={value} index={0} />
         <Password value={value} index={1} />
@@ -108,6 +110,7 @@ export default function Profile({token}) {
         <Pending value={value} index={4} token={token}  />
         <Pushback value={value} index={5} token={token}  />
         <Rejected value={value} index={6} token={token}  />
+        <AllPost value={value} index={7} token={token}  />
       </Box>
     </>
   );

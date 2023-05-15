@@ -8,7 +8,9 @@ const router=express.Router();
 
 router.route('/').get(articleController.getAllArticle).post(authController.protect, multer.upload("articleCoverImages").single("coverImage") ,articleController.createArticle);
 
-router.get('/getUserArticle', authController.protect, articleController.getUserArticle);
+router.get('/getUserArticle', articleController.getUserArticle);
+
+router.get('/getAllArticleAdmin', authController.protect, articleController.getAllArticleAdmin);
 
 router.get('/getUserDraft', authController.protect, articleController.getUserDraft);
 
