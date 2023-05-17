@@ -81,6 +81,7 @@ export default function AlertDialog({Article,update}) {
                     theme: "colored",
                   });
                 }
+                setOpen(false)
               });
           }} autoFocus>
             delete

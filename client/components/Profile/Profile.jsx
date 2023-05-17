@@ -71,6 +71,7 @@ const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
 );
 
 export default function Profile({data,updateNav}) {
+  console.log(data.userType)
   let i = 0;
   let j = 0;
   const [value, setValue] = React.useState(0);
@@ -107,9 +108,9 @@ export default function Profile({data,updateNav}) {
           <StyledTab label="Pushback" {...a11yProps(j++)} />
           <StyledTab label="Rejected" {...a11yProps(j++)} />
           {data.userType === 'moderator' && <StyledTab label="Validate" {...a11yProps(j++)} />}
-          <StyledTab label="Users" {...a11yProps(j++)} />
-
-          <StyledTab label="All Posts" {...a11yProps(8)} />
+          {data.userType === 'admin' && <StyledTab label="Validate" {...a11yProps(j++)} />}
+          {data.userType === 'admin' && <StyledTab label="Users" {...a11yProps(j++)} />}
+          {data.userType === 'admin' && <StyledTab label="All Posts" {...a11yProps(j++)} />}
         </StyledTabs>
         
         <Account value={value} userName={data.userName} index={i++} updateNav={updateNav} />
@@ -120,8 +121,9 @@ export default function Profile({data,updateNav}) {
         <Pushback value={value} index={i++} token={data.token}  />
         <Rejected value={value} index={i++} token={data.token}  />
         {data.userType === 'moderator' && <Validate value={value} index={i++} token={data.token}  />}
-        <Users value={value} index={i++} token={data.token} />
-        <AllPost value={value} index={8} token={data.token}  />
+        {data.userType === 'admin' && <Validate value={value} index={i++} token={data.token}  />}
+        {data.userType === 'admin' && <Users value={value} index={i++} token={data.token} />}
+        {data.userType === 'admin' && <AllPost value={value} index={i++} token={data.token}  />}
       </Box>
     </>
   );

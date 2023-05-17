@@ -80,6 +80,7 @@ export default function AlertDialog({User,update}) {
                     theme: "colored",
                   });
                 }
+                setOpen(false);
               });
           }} autoFocus>
             promote
