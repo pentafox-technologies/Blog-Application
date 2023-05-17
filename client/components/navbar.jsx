@@ -336,7 +336,7 @@ function Navbar({ token = null, userName = null, pic = null }) {
                       <Typography textAlign="center">
                         <Link
                           style={{ textDecoration: "none", color: "black" }}
-                          href="profile"
+                          href="/profile"
                         >
                           {setting}
                         </Link>
