@@ -272,6 +272,71 @@ A library for defining and enforcing the expected types and structures of React 
 
 <br/><br/>
 
+
+## FAQ
+
+1. **Why am I unable to post a blog with high-quality images?**  
+   The blog application has certain restrictions on the size of the files you can upload. To ensure a smooth uploading process and optimize the performance of the platform, the maximum allowed size for images is typically limited. Please ensure that the size of your image is within the specified limit, usually less than 5 MB, before attempting to upload it.
+
+2. **Why am I unable to post a blog with a file size even lower than 5 MB?**  
+   In some cases, if you encounter difficulties posting a blog with a file size smaller than the specified limit, it may be due to a session expiration issue. Try logging out of the blog application, then log in again and attempt to post your blog once more. This should refresh your session and allow you to successfully publish your blog.
+
+3. **Can I schedule my blog posts for future publication?**  
+   Yes, our applications offer the ability to schedule blog posts for future publication. Instead of immediately publishing a blog post, you can save it as a draft and schedule it to be published at a specific date and time. This feature is particularly useful for maintaining a consistent posting schedule and ensuring your content reaches your audience at the right time can maintain the consistency.
+
+4. **Is it possible to edit or update a published blog post?**  
+   No, once a blog post is published, it is generally not possible to edit or update it in our applications. The idea behind this is to maintain the integrity of the published content and ensure that readers have a consistent experience.
+
+5. **Can I categorize my blog posts into different topics or themes?**  
+   Yes, our applications offer the option to categorize your blog posts into different topics or themes. Categories help organize your content and make it easier for readers to navigate through your blog. You can create and assign categories to each blog post, allowing visitors to browse posts based on their interests or specific subjects.
+
+6. **Can I customize the appearance and layout of my blog?**  
+   Yes, our blog applications offer customization options to personalize the appearance and layout of your blog. You can often choose from a selection of templates or themes, modify colors, fonts, and other visual elements to align with your branding or personal style. Some applications may even provide advanced customization options through CSS or HTML editing using a tiny mce.
+
+7. **Are there any SEO features available to optimize my blog for search engines?**  
+   Our applications include built-in SEO features to help optimize your blog for search engines. These features may include the ability to set meta tags, customize URLs, add alt text to images, create XML sitemaps, and more. Optimizing your blog for search engines can improve its visibility and increase the likelihood of attracting organic traffic.
+
+8. **Can I integrate my blog with social media platforms?**  
+   Yes, most blog applications offer social media integration capabilities. You can typically connect your blog to your social media accounts, enabling automatic sharing of your blog posts on platforms like Facebook, Twitter, LinkedIn, and others. This integration allows you to extend the reach of your blog and engage with a wider audience.
+
+9. **Why can't I view the posts before logging in?**  
+   Viewing posts requires authentication to ensure privacy and control access to the content. By logging in, the blog application can verify your credentials and grant you access to view the posts. This also allows for a personalized experience, as the application can tailor the content based on your preferences or user-specific settings.
+
+10. **Why am I logging out once every seven days?**  
+    Logging out after a certain period, such as seven days, is a security measure implemented to protect your account. By automatically logging you out after a set
+
+ timeframe, our application helps minimize the risk of unauthorized access if you accidentally leave your account logged in on a public or shared device.
+
+11. **Why are there only a fixed set of top categories?**  
+    The top categories in the blog application are usually managed by administrators and moderators to ensure consistency and organization across the platform. These categories are often based on popular or commonly used topics. However, users can create their own custom categories that can be categorized under the top-level categories, providing flexibility and customization.
+
+12. **How can I set my profile photo?**  
+    To set your profile photo, follow these steps:
+    - If you don't have an account, first create an account by signing up or registering on the blog application.
+    - If you already have an account, log in to the application using your credentials.
+    - Once logged in, navigate to your account settings or profile settings section.
+    - Look for the option to change or upload your profile photo. Click on it.
+    - Choose a photo from your device or select one from a provided library.
+    - After selecting the desired photo, save or update your profile settings to apply the changes. Your new profile photo will be displayed on your blog and user profile.
+
+13. **Why my post is rejected publishing?**  
+    If your post is rejected for publishing, it could be because the moderator identified content within your post that violated the terms and conditions or privacy policy of the blog application. Moderators have the responsibility to review and ensure that all content aligns with the platform's guidelines and standards. Some common reasons for post rejection include:
+    - Harassment or hate speech
+    - Violations of privacy or personal information
+    - Inappropriate or explicit content
+    - Spam or irrelevant content
+
+14. **As a moderator, why am I unable to find my post to validate myself?**  
+    Moderators often have restricted access to their own posts to maintain objectivity and avoid conflicts of interest. This prevents moderators from easily approving their own content without thorough review. The platform aims to ensure fairness and consistency in the moderation process by having other moderators validate your posts.
+
+15. **Can moderators validate posts created by other users or moderators?**  
+    Yes, moderators typically have the ability to validate posts created by other users as well as fellow moderators. This ensures that there is a system of checks and balances in place, allowing different perspectives and opinions to contribute to the approval process. Validating each other's posts promotes impartiality and helps maintain the quality and integrity of the content on the platform.
+
+16. **Is it only administrators who can post without validation?**  
+    Yes, administrators hold elevated privileges within the blog application. They have the ability to publish posts without requiring validation from other moderators. Administrators are trusted individuals responsible for overseeing the overall functioning of the platform and ensuring its adherence to policies and guidelines.
+    
+<br></br>
+
 # Roles and Permissions
 
 This table shows the permissions associated with different roles:
