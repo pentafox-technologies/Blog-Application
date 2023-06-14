@@ -266,3 +266,16 @@ A library for validating and sanitizing data in JavaScript, providing utility fu
 ## [prop-types](https://github.com/facebook/prop-types)
 A library for defining and enforcing the expected types and structures of React component props, helping catch potential bugs and issues.
 
+
+# Roles and Permissions
+
+This table shows the permissions associated with different roles:
+
+| Roles           | View Post | Create Post | Support Post | Draft Post | Delete Post (In Draft) | Delete Post | Validate Post | Approve and Publish Post | Reject Post | Promote Moderator | Delete User | Create User |
+|-----------------|-----------|-------------|--------------|------------|-----------------------|-------------|----------------|--------------------------|-------------|-------------------|-------------|-------------|
+| Admin           | ✔️         | ✔️           | ✔️            | ✔️          | ✔️                     | ✔️           | ✔️               | ✔️                        | ✔️           | ✔️                 | ✔️           | ✔️           |
+| Moderator       | ✔️         | ✔️           | ✔️            | ✔️          | ✔️                     | ❌           | ✔️               | ✔️                        | ✔️           | ❌                 | ❌           | ❌           |
+| Standard User   | ✔️         | ✔️           | ✔️            | ✔️          | ✔️                     | ❌           | ❌               | ❌                        | ❌           | ❌                 | ❌           | ❌           |
+| Anonymous User  | ✔️         | ❌           | ❌            | ❌          | ❌                     | ❌           | ❌               | ❌                        | ❌           | ❌                 | ❌           | ❌           |
+
+
