@@ -129,18 +129,19 @@ restart the server each time you make a small change in code. To install, run
 `npm install -g nodemon`.
 <br>
 <br>
-**Obtaining API Keys:**
+<h2>Obtaining API Keys:</h2>
 
 To use any of the included APIs and Database facilities, you will need to obtain appropriate credentials: TinyMCE\_API\_KEY and Postgres\_Database\_credentials(User, Host, Password, Database\_name and Port\_number). You will need to go through each provider to generate new credentials.
-
-![Aspose Words cd06fab1-1ed8-4e40-b0f1-73e17886088b 001](https://github.com/coder-Sabarish/Blog-Application/assets/90779418/4243e223-eae7-4033-b74a-25054bf81516)
+<br/><br/><br/>
+![images](https://github.com/coder-Sabarish/Blog-Application/assets/90779418/d839470a-8284-4c73-a8a6-e24163ed50a3)
 
 - Visit [www](http://www.tiny.cloud)[.](http://www.tiny.cloud)[tiny](http://www.tiny.cloud)[.](http://www.tiny.cloud)[cloud](http://www.tiny.cloud)
 - Create a TinyMCE account with your email or google
 - Login to your account
 - In the Navbar choose “Cloud Dashboard”
 - Scroll down the page, In the bottom you will find your api key.
-
+<br/><br/><br/>
+![download](https://github.com/coder-Sabarish/Blog-Application/assets/90779418/49643443-4ffe-40ba-845a-36eac38d8574)
 
 - Visit your Postgres Database Dashboard (PG Admin)
 - Right click on Databases and select create Database
@@ -151,16 +152,16 @@ To use any of the included APIs and Database facilities, you will need to obtain
 
 
 
+<br/><br/>
 
 
 
+<h2>Project Structure:</h2>
 
-**Project Structure:**
-
-Client:
+<h4>Client:</h4>
 
 |**NAME**|**DESCRIPTION**|
-| :-: | :-: |
+| :- | :- |
 |pages/posts/[slug].js|view different articles based on the slug|
 |pages/validate/[slug].js|Get jwt Tokens from cookies after login|
 |pages/blogs.js|Display available blogs as cards for viewers|
@@ -185,10 +186,10 @@ Client:
 
 
 
-Server:
+<h4>Server:</h4>
 
 |**NAME**|**DESCRIPTION**|
-| :-: | :-: |
+| :- | :- |
 |cerbos/policies/derived\_roles.yaml|Different roles and their conditions|
 |cerbos/policies/resource\_.yaml|Permission to different resources for different users|
 |controllers/articleController.js|Api functions related to Articles|
@@ -211,9 +212,9 @@ Server:
 |package.json|NPM Dependencies|
 |package.lock.json|Contains exact versions of NPM dependencies in package.json.|
 
+<br/><br/>
 
-
-**List of Packages:**
+<h2>List of Packages:</h2>
 
 
 
