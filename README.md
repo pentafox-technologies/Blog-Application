@@ -2,6 +2,7 @@
 
 To use any of the included APIs and Database facilities, you will need to obtain appropriate credentials: TinyMCE\_API\_KEY and Postgres\_Database\_credentials(User, Host, Password, Database\_name and Port\_number). You will need to go through each provider to generate new credentials.
 
+![Aspose Words cd06fab1-1ed8-4e40-b0f1-73e17886088b 001](https://github.com/coder-Sabarish/Blog-Application/assets/90779418/4243e223-eae7-4033-b74a-25054bf81516)
 
 - Visit [www](http://www.tiny.cloud)[.](http://www.tiny.cloud)[tiny](http://www.tiny.cloud)[.](http://www.tiny.cloud)[cloud](http://www.tiny.cloud)
 - Create a TinyMCE account with your email or google
