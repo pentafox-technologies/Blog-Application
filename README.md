@@ -39,7 +39,7 @@ Table of Contents
 - [Obtaining API Keys](#obtaining-api-keys)
 - [Project Structure](#project-structure)
 - [List of Packages](#list-of-packages)
-- [Recommended Libraries](#recommended-nodejs-libraries)
+- [Recommended Libraries](#nodejs-libraries)
 - [FAQ](#faq)
 - [Roles and Permissions](#roles-and-permissions)
 - [Database diagram](#database-diagram)
@@ -218,3 +218,50 @@ To use any of the included APIs and Database facilities, you will need to obtain
 |mui-image|To get material UI images for our application|
 |validator|Input validation for forms|
 |next|React web framework|
+
+# Node.js Libraries
+
+## [nodemon](https://github.com/remy/nodemon)
+A development tool that automatically restarts your Node.js application whenever file changes are detected.
+
+## [jwt](https://github.com/auth0/node-jsonwebtoken)
+A library for creating and verifying JSON Web Tokens (JWT) used for secure authentication and data exchange between parties.
+
+## [pg](https://github.com/brianc/node-postgres)
+A PostgreSQL client library for Node.js that provides a convenient interface for interacting with PostgreSQL databases.
+
+## [slugify](https://github.com/simov/slugify)
+A library for creating URL-friendly slugs by converting strings into a format suitable for use in URLs.
+
+## [sharp](https://github.com/lovell/sharp)
+A powerful image processing library for Node.js that enables resizing, cropping, and manipulating images with high performance and quality.
+
+## [multer](https://github.com/expressjs/multer)
+A middleware for handling file uploads in Node.js web applications, allowing you to handle and process multipart form data.
+
+# Client-Side Libraries
+
+## [material UI](https://github.com/mui-org/material-ui)
+A popular React UI framework that provides pre-designed and customizable components following the Material Design guidelines.
+
+## [js-cookie](https://github.com/js-cookie/js-cookie)
+A lightweight JavaScript library for managing browser cookies, making it easier to create, read, and delete cookies in the browser.
+
+## [react-cookie](https://github.com/reactivestack/cookies/tree/master/packages/react-cookie)
+A React library that provides easy integration with browser cookies, allowing you to manage and access cookies within your React application.
+
+## [axios](https://github.com/axios/axios)
+A promise-based HTTP client for making HTTP requests from both browsers and Node.js, providing a simple and intuitive interface.
+
+## [react-fontawesome](https://github.com/FortAwesome/react-fontawesome)
+A library that provides React components for easily incorporating Font Awesome icons into React applications.
+
+## [react-toastify](https://github.com/fkhadra/react-toastify)
+A library for displaying toast notifications in React applications, offering customizable and responsive notification messages.
+
+## [validator](https://github.com/validatorjs/validator.js)
+A library for validating and sanitizing data in JavaScript, providing utility functions for validating various data types and formats.
+
+## [prop-types](https://github.com/facebook/prop-types)
+A library for defining and enforcing the expected types and structures of React component props, helping catch potential bugs and issues.
+
