@@ -220,6 +220,8 @@ To use any of the included APIs and Database facilities, you will need to obtain
 |validator|Input validation for forms|
 |next|React web framework|
 
+<br/><br/>
+
 # Node.js Libraries
 
 ## [nodemon](https://github.com/remy/nodemon)
@@ -239,6 +241,8 @@ A powerful image processing library for Node.js that enables resizing, cropping,
 
 ## [multer](https://github.com/expressjs/multer)
 A middleware for handling file uploads in Node.js web applications, allowing you to handle and process multipart form data.
+
+<br/><br/>
 
 # Client-Side Libraries
 
@@ -266,6 +270,7 @@ A library for validating and sanitizing data in JavaScript, providing utility fu
 ## [prop-types](https://github.com/facebook/prop-types)
 A library for defining and enforcing the expected types and structures of React component props, helping catch potential bugs and issues.
 
+<br/><br/>
 
 # Roles and Permissions
 
