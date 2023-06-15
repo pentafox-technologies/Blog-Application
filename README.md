@@ -348,4 +348,7 @@ This table shows the permissions associated with different roles:
 | Standard User   | ✔️         | ✔️           | ✔️            | ✔️          | ✔️                     | ❌           | ❌               | ❌                        | ❌           | ❌                 | ❌           | ❌           |
 | Anonymous User  | ✔️         | ❌           | ❌            | ❌          | ❌                     | ❌           | ❌               | ❌                        | ❌           | ❌                 | ❌           | ❌           |
 
+<br></br>
 
+# Database diagram
+![Article Blog DB](https://github.com/coder-Sabarish/Blog-Application/assets/90779418/ffaf52a7-5e11-482e-91b3-f281c97105e5)
