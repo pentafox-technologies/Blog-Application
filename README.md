@@ -214,7 +214,7 @@ To use any of the included APIs and Database facilities, you will need to obtain
 |express|Node.js web framework|
 |multer|Node.js middleware for handling multipart/form-data|
 |slugify|Slugifies a string|
-|url|utilities for URL resolution and parsing meant to have feature parity with node.js core [url](http://nodejs.org/api/url.html) module|
+|url|utilities for URL resolution and parsing meant to have feature parity with node.js core url module|
 |tinymce|To integrate TinyMCE editor with React|
 |mui-image|To get material UI images for our application|
 |validator|Input validation for forms|
