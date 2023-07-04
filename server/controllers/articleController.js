@@ -495,7 +495,7 @@ exports.getPendingArticles = async (req, res) => {
         }
     }
     else {
-        res.status(400).json({
+        res.status(401).json({
             message: 'access denied',
         });
     }

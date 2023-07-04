@@ -265,6 +265,92 @@
         "security": [{ "bearerAuth": [] }]
       }
     },
+    "/article/getPendingArticles": {
+      "get": {
+        "tags": ["article"],
+        "summary": "Returns pending articles",
+        "description": "Returns all articles that are pending for verification or on verification. For this, user must be authorized.",
+        "operationId": "getPendingArticles",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalSuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/article/getRejectedArticles": {
+      "get": {
+        "tags": ["article"],
+        "summary": "Returns rejected articles",
+        "description": "Returns all articles that are rejected by moderator. For this, user must be authorized.",
+        "operationId": "getRejectedArticles",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalSuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
     "/user/login": {
       "post": {
         "tags": ["authentication"],
@@ -344,6 +430,49 @@
         "requestBody": {
           "$ref": "#/components/requestbodies/SignupUser"
         }
+      }
+    },
+    "/user/isLoggedIn": {
+      "get": {
+        "tags": ["authentication"],
+        "summary": "To check whether a user is logged in or not",
+        "description": "A jwt token should be sent in request and if token is valid user is logged in or not logged in.",
+        "operationId": "isloggedin",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/isloginSuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
       }
     }
   },
@@ -514,6 +643,14 @@
               }
             }
           }
+        }
+      }
+    },
+    "isloginSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
         }
       }
     },
