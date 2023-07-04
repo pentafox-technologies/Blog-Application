@@ -1,0 +1,642 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "This is a content creation application.",
+    "version": "1.0.0",
+    "title": "Blog Application",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": { "email": "anishmahi946@gmail.com" },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:{port}/{basePath}",
+      "description": "The production API server",
+      "variables": {
+        "username": {
+          "default": "demo",
+          "description": "this value is assigned by the service provider, in this example `gigantic-server.com`"
+        },
+        "port": {
+          "enum": ["5000", "443"],
+          "default": "5000"
+        },
+        "basePath": {
+          "default": "api/v1"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "article",
+      "description": "Everything about articles"
+    },
+    {
+      "name": "authentication",
+      "description": "To login and signup"
+    }
+  ],
+  "schemes": ["https", "http"],
+  "paths": {
+    "/article": {
+      "get": {
+        "tags": ["article"],
+        "summary": "Returns all articles",
+        "description": "Returns all articles that are verified and published",
+        "operationId": "getArticle",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/allArticles"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/article/getUserArticle": {
+      "get": {
+        "tags": ["article"],
+        "summary": "Returns all articles of user",
+        "description": "Returns all articles of user that are published, verified or in draft. For this, user must be authorized",
+        "operationId": "getUserArticle",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/userArticles"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/article/{articleslug}": {
+      "get": {
+        "tags": ["article"],
+        "summary": "Returns a article",
+        "description": "Returns article that are published based on article slug.",
+        "operationId": "getSingleArticle",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "articleslug",
+            "in": "path",
+            "description": "Article Name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/singleArticle"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No article found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      },
+      "delete": {
+        "tags": ["article"],
+        "summary": "Delete article",
+        "description": "Deletes the article based on article slug. The user must be authorized for this operation.",
+        "operationId": "deleteArticle",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "articleslug",
+            "in": "path",
+            "description": "Article Name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalSuccess"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No article found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/article/sendForApproval/{articleslug}": {
+      "post": {
+        "tags": ["article"],
+        "summary": "Send article for approval",
+        "description": "Sends an article to moderator for approval. For this, user must be authorized.",
+        "operationId": "sendForApproval",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "articleslug",
+            "in": "path",
+            "description": "Article Name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalSuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": ["authentication"],
+        "summary": "Login into account",
+        "description": "Give username and password. A jwt token will be returned which can be used tob access proteced routes",
+        "operationId": "loginUser",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/loginSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect username and password OR Something went wrong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "$ref": "#/components/requestbodies/User"
+        }
+      }
+    },
+    "/user/signup": {
+      "post": {
+        "tags": ["authentication"],
+        "summary": "Login into account",
+        "description": "Give username and password. A jwt token will be returned which can be used tob access proteced routes",
+        "operationId": "signUpUser",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/loginSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Username not available OR Something went wrong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "$ref": "#/components/requestbodies/SignupUser"
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "GeneralError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+
+    "allArticles": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "slug": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "coverImage": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "publishedDate": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "requestbodies": {
+      "User": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "required": ["userName", "password"],
+              "properties": {
+                "userName": {
+                  "type": "string",
+                  "example": "anish"
+                },
+                "password": {
+                  "type": "string",
+                  "format": "password",
+                  "example": "anish123"
+                }
+              }
+            }
+          }
+        },
+        "description": "User details that are needed to be login"
+      },
+      "SignupUser": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "required": ["userName", "password"],
+
+              "properties": {
+                "userName": {
+                  "type": "string",
+                  "example": "anish"
+                },
+                "profilePic": {
+                  "type": "string",
+                  "example": "3135715.png"
+                },
+                "firstName": {
+                  "type": "string",
+                  "example": "Anish"
+                },
+                "lastName": {
+                  "type": "string",
+                  "example": "R M"
+                },
+                "emailAddress": {
+                  "type": "string",
+                  "example": "anishmahi946@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "format": "password",
+                  "example": "anish123"
+                }
+              }
+            }
+          }
+        },
+        "description": "User details that are needed to be signup. Please dont change the profile pic name."
+      }
+    },
+    "userArticles": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "slug": {
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "pushbackNotes": {
+                "type": "string"
+              },
+              "visibility": {
+                "type": "string"
+              },
+              "viewCount": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "coverImage": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "publishedDate": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    "loginSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "user": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "userName": {
+                    "type": "string"
+                  },
+                  "profilePic": {
+                    "type": "string"
+                  },
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "emailAddress": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "userType": {
+                    "type": "string"
+                  },
+                  "userCreatedDate": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "lastLogin": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "userState": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "generalSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "singleArticle": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string"
+            },
+            "author": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "content": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "pushbackNotes": {
+              "type": "string"
+            },
+            "visibility": {
+              "type": "string"
+            },
+            "viewCount": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string"
+            },
+            "coverImage": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "publishedDate": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}

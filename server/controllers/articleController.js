@@ -54,6 +54,7 @@ exports.createArticle = async (req, res) => {
             });
 
         } catch (err) {
+            console.log(err);
             res.status(400).json({
                 status: 'error',
                 message: err
@@ -78,7 +79,7 @@ exports.getAllArticle = async (req, res, next) => {
             tem = { ...Articles.rows[i], publishedDate: publishedDate.rows[0].updateTime };
             result.push(tem);
         }
-        res.status(201).json({
+        res.status(200).json({
             status: 'success',
             data: result,
         });
@@ -100,13 +101,13 @@ exports.getArticle = async (req, res, next) => {
         const Article=await client.query(`SELECT * FROM "Article" where slug = $1 and status=$2 and visibility=$3;`, [slug,"published","public"]);
         
         if(Article.rowCount==0){
-            res.status(201).json({
+            res.status(404).json({
                 status: 'error',
                 message: 'no article found',
             });
         }
         else {
-            res.status(201).json({
+            res.status(200).json({
                 status: 'success',
                 data: Article.rows[0],
             });
@@ -126,7 +127,7 @@ exports.getUserArticle = async (req, res) => {
         try {
             const client = await db;
             const Article = await client.query(`SELECT * FROM "Article" where "author"=$1 and "status"=$2;`, [req.user.userName, "published"]);
-            res.status(201).json({
+            res.status(200).json({
                 status: 'success',
                 data: Article.rows,
             });
@@ -250,12 +251,13 @@ exports.deleteArticle = async (req, res, next) => {
             });
         }
         else {
-            res.status(400).json({
+            res.status(401).json({
+                status : 'unauthorized',
                 message: 'access denied',
             });
         }
     } catch (error) {
-        res.status(401).json({
+        res.status(400).json({
             status: 'error',
             message: "Article not found"
         });
@@ -309,7 +311,7 @@ exports.sendForApproval = async (req, res) => {
         }
     }
     else {
-        res.status(400).json({
+        res.status(401).json({
             message: 'access denied',
         });
     }

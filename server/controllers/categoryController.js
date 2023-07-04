@@ -5,7 +5,7 @@ exports.getAllCategory = async (req, res, next) => {
     try{
         const client = await db;
         const categories = await client.query(`select "categoryName" from "TopCategory"`);
-        res.status(201).json({
+        res.status(200).json({
             status: 'success',
             data: categories.rows,
         });
