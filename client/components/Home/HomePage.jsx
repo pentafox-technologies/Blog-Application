@@ -88,11 +88,7 @@ function HomePage() {
         <div className="aboutUs">
           <h2 className="heading mt-5">About Us</h2>
           <p style={{ textAlign: "justify", marginRight: "1rem" }}>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            Cupiditate, error officia dignissimos quaerat aperiam sapiente
-            soluta accusantium rerum commodi non dolorum optio iusto est. Eos
-            neque quod ipsam quisquam reiciendis quam fugiat commodi, asperiores
-            beatae!
+          Pentafox Technologies is a Data age IT product solutions startup focused on transforming all kinds of business to the next level with the power of Cloud embedded with intelligence from wide range of AI/ML capabilities. Let’s discuss over a cup of coffee if you have an interesting usecase to solve!
           </p>
         </div>
         <div className="socialMedias">
