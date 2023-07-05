@@ -47,7 +47,7 @@ exports.login = async (req, res) => {
     if(!userName || !password){
         return res.status(400).json({
             status:'error',
-            message: 'Please provide email & password!'
+            message: 'Please provide username & password!'
         });
     }
     const client = await db;
@@ -72,7 +72,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign({userName}, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN
         });
-        res.status(201).json({
+        res.status(200).json({
             status: 'success',
             token,
             data: {

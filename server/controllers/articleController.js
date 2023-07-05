@@ -139,6 +139,7 @@ exports.createArticle = async (req, res) => {
             });
 
         } catch (err) {
+            console.log(err);
             res.status(400).json({
                 status: 'error',
                 message: err
@@ -230,12 +231,13 @@ exports.deleteArticle = async (req, res, next) => {
             });
         }
         else {
-            res.status(400).json({
+            res.status(401).json({
+                status : 'unauthorized',
                 message: 'access denied',
             });
         }
     } catch (error) {
-        res.status(401).json({
+        res.status(400).json({
             status: 'error',
             message: "Article not found"
         });
@@ -294,7 +296,7 @@ exports.approveAndPublish = async (req, res) => {
         }
     }
     else {
-        res.status(400).json({
+        res.status(401).json({
             message: 'access denied',
         });
     }
