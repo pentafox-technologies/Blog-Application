@@ -230,7 +230,7 @@ exports.updatePassword=async (req, res, next) =>
             }
     }
     else{
-        res.status(400).json({
+        res.status(401).json({
             message:'access denied',
         });
     }    
@@ -255,7 +255,7 @@ exports.updateProfile=async (req, res, next) =>
             }
     }
     else{
-        res.status(400).json({
+        res.status(401).json({
             message:'access denied',
         });
     }
@@ -281,7 +281,7 @@ exports.updateMail=async (req, res, next) =>
             }
     }
     else{
-        res.status(400).json({
+        res.status(401).json({
             message:'access denied',
         });
     }
@@ -302,14 +302,14 @@ exports.deleteUser=async (req, res, next) =>
                 message: 'user deleted successfully'
             });
         } catch(error) {
-            res.status(400).json({
+            res.status(404).json({
                 status: 'error',
                 message: error
             });
         }
     }
     else{
-        res.status(400).json({
+        res.status(401).json({
             message:'access denied',
         });
     }

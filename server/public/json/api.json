@@ -38,6 +38,10 @@
     {
       "name": "authentication",
       "description": "To login and signup"
+    },
+    {
+      "name": "user",
+      "description": "Everything about users"
     }
   ],
   "schemes": ["https", "http"],
@@ -73,6 +77,75 @@
           }
         },
         "security": []
+      },
+      "post": {
+        "tags": ["article"],
+        "summary": "Create article",
+        "description": "Creating an article by sending required data. For this, user must be authorized.",
+        "operationId": "createArticle",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Article Content",
+            "required": true,
+            "schema": {
+              
+              "title": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "topCategory": {
+                "type": "string"
+              },
+              "coverImage": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalSuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
       }
     },
     "/article/getUserArticle": {
@@ -210,6 +283,47 @@
           }
         },
         "security": [{ "bearerAuth": [] }]
+      },
+      "patch": {
+        "tags": ["article"],
+        "summary": "Updating the article",
+        "description": "Sending the changes that are need to update on article. For this, user must be authorized.",
+        "operationId": "updateArticle",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "articleslug",
+            "in": "path",
+            "description": "Article Name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article Updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
       }
     },
     "/article/sendForApproval/{articleslug}": {
@@ -308,14 +422,24 @@
         "security": [{ "bearerAuth": [] }]
       }
     },
-    "/article/getRejectedArticles": {
+    "/article/getRejectedArticles/{articleslug}": {
       "get": {
         "tags": ["article"],
         "summary": "Returns rejected articles",
         "description": "Returns all articles that are rejected by moderator. For this, user must be authorized.",
         "operationId": "getRejectedArticles",
         "produces": ["application/json"],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "articleslug",
+            "in": "path",
+            "description": "Article Name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -349,6 +473,380 @@
           }
         },
         "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/article/getPushbackArticles/{articleslug}": {
+      "get": {
+        "tags": ["article"],
+        "summary": "Returns pushback articles",
+        "description": "Returns all articles that are pushed back for correction by moderator. For this, user must be authorized.",
+        "operationId": "getPushbackArticles",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "articleslug",
+            "in": "path",
+            "description": "Article Name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalSuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/article/getBack/{articleslug}": {
+      "get": {
+        "tags": ["article"],
+        "summary": "Returns pushback articles",
+        "description": "Returns all articles that are pushed back for correction by moderator. For this, user must be authorized.",
+        "operationId": "getPushbackArticles",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "articleslug",
+            "in": "path",
+            "description": "Article Name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalSuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/article/getPendingVerification": {
+      "get": {
+        "tags": ["article"],
+        "summary": "Returns verification pending articles",
+        "description": "Returns all articles that are pending on verification. For this, user must be authorized.",
+        "operationId": "getPendingVerication",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalArticlesSchema"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/article/approveAndPublish/{articleslug}": {
+      "get": {
+        "tags": ["article"],
+        "summary": "Approve and publishing an article",
+        "description": "Approving the article to be published. For this, user must be authorized.",
+        "operationId": "approveAndPublish",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "articleslug",
+            "in": "path",
+            "description": "Article Name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalSuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/article/rejectPost/{articleslug}": {
+      "post": {
+        "tags": ["article"],
+        "summary": "Rejecting the article form publishing",
+        "description": "Rejects an article from publishing by moderator or admin. For this, user must be authorized.",
+        "operationId": "rejectPost",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "articleslug",
+            "in": "path",
+            "description": "Article Name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rejected The Post",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalSuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/article/pushbackArticle/{articleslug}": {
+      "post": {
+        "tags": ["article"],
+        "summary": "Pushing back the article with notes",
+        "description": "Pushing back the article with notes by moderator or admin. For this, user must be authorized.",
+        "operationId": "pushbackArticle",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "articleslug",
+            "in": "path",
+            "description": "Article Name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalSuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/article/getUserDraft": {
+      "get": {
+        "tags": ["article"],
+        "summary": "Get the saved draft",
+        "description": "Get the articles which are in draft status. For this, user must be authorized.",
+        "operationId": "getUserDraft",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalArticlesSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/article/searchTopCategory/{query}": {
+      "get": {
+        "tags": ["article"],
+        "summary": "Search article based on topcategory",
+        "description": "Searching article based on which top category they belongs to. For this, user must be authorized.",
+        "operationId": "searchTopCategory",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": []
       }
     },
     "/user/login": {
@@ -474,6 +972,344 @@
         },
         "security": [{ "bearerAuth": [] }]
       }
+    },
+    "/user": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Returns all users",
+        "description": "Returns all verified users",
+        "operationId": "getAllUser",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/allUsers"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/user/{usernameslug}": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Returns a user",
+        "description": "Returns user based on username slug.",
+        "operationId": "getUser",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "usernameslug",
+            "in": "path",
+            "description": "user Name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/singleUser"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No user found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      },
+      "delete": {
+        "tags": ["user"],
+        "summary": "Delete user",
+        "description": "Remove the user based on username slug. The user must be authorized as admin for this operation.",
+        "operationId": "deleteUser",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "usernameslug",
+            "in": "path",
+            "description": "User Name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalSuccess"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No user found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/{usernameslug}/profile": {
+      "patch": {
+        "tags": ["user"], 
+        "summary": "Update user profile",
+        "description": "Update the user profile based on the username slug",
+        "operationId": "updateProfile",
+        "produces": ["multipart/form-data"],
+        "parameters": [
+          {
+            "name": "usernameslug",
+            "in": "path",
+            "description": "user Name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/singleUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "$ref": "#/components/requestbodies/userProfile"
+        }
+      }
+    },
+    "/{user}/email": {
+      "patch": {
+        "tags": ["user"],
+        "summary": "Update user email",
+        "description": "Update the user Email Id based on the username slug",
+        "operationId": "updateMail",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/singleUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "$ref": "#/components/requestbodies/userProfile"
+        }
+      }
+    },
+    "/{user}/password": {
+      "patch": {
+        "tags": ["user"],
+        "summary": "Update user password",
+        "description": "Update the user password based on the username slug",
+        "operationId": "updatePassword",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "$ref": "#/components/requestbodies/passwordUpdate"
+        }
+      }
+    },
+    "/promote/{usernameslug}": {
+      "patch": {
+        "tags": ["user"],
+        "summary": "Promote the user",
+        "description": "Promote a standard user to a moderator",
+        "operationId": "PromoteUser",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "usernameslug",
+            "in": "path",
+            "description": "user Name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/generalSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Something went wrong!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/GeneralError"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
     }
   },
   "components": {
@@ -554,6 +1390,49 @@
         },
         "description": "User details that are needed to be login"
       },
+      "userProfile": {
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "firstName": {
+                "type": "string",
+                "example": "king"
+              },
+              "lastName": {
+                "type": "string",
+                "example": "sabarish"
+              },
+              "email": {
+                "type": "string",
+                "example": "sabarishk.20cse@kongu.edu"
+              },
+              "userProfile": {
+                "type": "object",
+                "properties": {
+                  "lastModifiedDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "Wed Jun 28 2023 10:09:43 GMT+0530"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "3135715.png"
+                  },
+                  "size": {
+                    "type": "string",
+                    "example": "1401065"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "image/jpeg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "User details to be updated. the profilepic object will be created automatically when you update the image."
+      },
       "SignupUser": {
         "content": {
           "application/json": {
@@ -585,6 +1464,27 @@
                   "type": "string",
                   "format": "password",
                   "example": "anish123"
+                }
+              }
+            }
+          }
+        },
+        "description": "User details that are needed to be signup. Please dont change the profile pic name."
+      },
+      "passwordUpdate": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "required": ["old password", "new password"],
+                
+                "old password": {
+                  "type": "string",
+                  "example": "sab 2003"
+                },
+                "new password": {
+                  "type": "string",
+                  "example": "sab 2003"
                 }
               }
             }
@@ -766,6 +1666,93 @@
             "publishedDate": {
               "type": "string",
               "format": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "allUsers": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "userName": {
+                "type": "string"
+              },
+              "profilePic": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "emailAddress": {
+                "type": "string"
+              },
+              "userType": {
+                "type": "string"
+              },
+              "userCreatedDate": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "lastLogin": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "userState": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "singleUser": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "userName": {
+              "type": "string"
+            },
+            "profilePic": {
+              "type": "string"
+            },
+            "firstName": {
+              "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            },
+            "emailAddress": {
+              "type": "string"
+            },
+            "userType": {
+              "type": "string"
+            },
+            "userCreatedDate": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "lastLogin": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "userState": {
+              "type": "string"
             }
           }
         }
