@@ -15,19 +15,19 @@ The web application is dynamic and stores all data in a database, enhancing the 
 
 <h4 align="center">Home Page</h4>
 
-<img align="center" alt="Coding" width="800" src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81pO4DXqveMskeQoL74SnMzQ4Zjo8HVxoPHCDZ7-ZT9K-Vo04L2CVHI0Q2ru7ZslsgPR06gFHjF3DYioUwBr7nnndBuv=s1600">
+<img align="center" alt="Coding" width="800" src="https://github.com/coder-Sabarish/Blog-Application/blob/main/readme%20images/home%20page.png">
 
 <h4 align="center">Editing Page</h4>
 
-<img align="center" alt="Coding" width="800" src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81oguX7-q2FJnPGHxE50FsiBuGqMK68d1jEzEyeaNQOPQlTmeM3GFn2oWKX4Fv8g3wpdGWqxnOvR8whIvhszsWCsaN_t=s1600">
+<img align="center" alt="Coding" width="800" src="https://github.com/coder-Sabarish/Blog-Application/blob/main/readme%20images/editing%20page.png">
 
 <h4 align="center">Profile Page</h4>
 
-<img align="center" alt="Coding" width="800" src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81oYNQFUfpVvtGhuk0PjNQxO2D5ShZDCpp7K0lVRRYF7vFyxA3hf_sEY8ba8Wwwq9gk1x_mc6RAa4-NC0lE9mmDrSAwsMA=s1600">
+<img align="center" alt="Coding" width="800" src="https://github.com/coder-Sabarish/Blog-Application/blob/main/readme%20images/profile%20page.png">
 
 <h4 align="center">Admin Dashboard</h4>
 
-<img align="center" alt="Coding" width="800" src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81rwQUDRRTRWYf0E1KxT9mCceAXVJb85j04nigDAWyQ-ti-o3Jy7_X3TiKSH4r2qDL2CxPqMvnvKGz17dHKLqXHoXcyElQ=s1600">
+<img align="center" alt="Coding" width="800" src="https://github.com/coder-Sabarish/Blog-Application/blob/main/readme%20images/admin%20page.png">
 
 
 Table of Contents
@@ -121,7 +121,7 @@ restart the server each time you make a small change in code. To install, run
 
 To use any of the included APIs and Database facilities, you will need to obtain appropriate credentials: TinyMCE\_API\_KEY and Postgres\_Database\_credentials(User, Host, Password, Database\_name and Port\_number). You will need to go through each provider to generate new credentials.
 <br/><br/><br/>
-![images](https://github.com/coder-Sabarish/Blog-Application/assets/90779418/d839470a-8284-4c73-a8a6-e24163ed50a3)
+![images](https://github.com/coder-Sabarish/Blog-Application/blob/main/readme%20images/tiny%20mce%20logo.svg)
 
 - Visit [www](http://www.tiny.cloud)[.](http://www.tiny.cloud)[tiny](http://www.tiny.cloud)[.](http://www.tiny.cloud)[cloud](http://www.tiny.cloud)
 - Create a TinyMCE account with your email or google
@@ -129,7 +129,7 @@ To use any of the included APIs and Database facilities, you will need to obtain
 - In the Navbar choose “Cloud Dashboard”
 - Scroll down the page, In the bottom you will find your api key.
 <br/><br/><br/>
-![download](https://github.com/coder-Sabarish/Blog-Application/assets/90779418/49643443-4ffe-40ba-845a-36eac38d8574)
+![download](https://github.com/coder-Sabarish/Blog-Application/blob/main/readme%20images/postgres%20logo.png)
 
 - Visit your Postgres Database Dashboard (PG Admin)
 - Right click on Databases and select create Database
