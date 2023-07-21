@@ -15,19 +15,19 @@ The web application is dynamic and stores all data in a database, enhancing the 
 
 <h4 align="center">Home Page</h4>
 
-<img align="center" alt="Coding" width="800" src="https://github.com/coder-Sabarish/Blog-Application/blob/main/readme%20images/home%20page.png">
+<img align="center" alt="Coding" width="800" src="https://github.com/pillar10/Blog-Application/blob/main/readme%20images/home%20page.png">
 
 <h4 align="center">Editing Page</h4>
 
-<img align="center" alt="Coding" width="800" src="https://github.com/coder-Sabarish/Blog-Application/blob/main/readme%20images/editing%20page.png">
+<img align="center" alt="Coding" width="800" src="https://github.com/pillar10/Blog-Application/blob/main/readme%20images/editing%20page.png">
 
 <h4 align="center">Profile Page</h4>
 
-<img align="center" alt="Coding" width="800" src="https://github.com/coder-Sabarish/Blog-Application/blob/main/readme%20images/profile%20page.png">
+<img align="center" alt="Coding" width="800" src="https://github.com/pillar10/Blog-Application/blob/main/readme%20images/profile%20page.png">
 
 <h4 align="center">Admin Dashboard</h4>
 
-<img align="center" alt="Coding" width="800" src="https://github.com/coder-Sabarish/Blog-Application/blob/main/readme%20images/admin%20page.png">
+<img align="center" alt="Coding" width="800" src="https://github.com/pillar10/Blog-Application/blob/main/readme%20images/admin%20page.png">
 
 
 Table of Contents
@@ -121,7 +121,7 @@ restart the server each time you make a small change in code. To install, run
 
 To use any of the included APIs and Database facilities, you will need to obtain appropriate credentials: TinyMCE\_API\_KEY and Postgres\_Database\_credentials(User, Host, Password, Database\_name and Port\_number). You will need to go through each provider to generate new credentials.
 <br/><br/><br/>
-![images](https://github.com/coder-Sabarish/Blog-Application/blob/main/readme%20images/tiny%20mce%20logo.svg)
+![images](https://github.com/pillar10/Blog-Application/blob/main/readme%20images/tiny%20mce%20logo.svg)
 
 - Visit [www](http://www.tiny.cloud)[.](http://www.tiny.cloud)[tiny](http://www.tiny.cloud)[.](http://www.tiny.cloud)[cloud](http://www.tiny.cloud)
 - Create a TinyMCE account with your email or google
@@ -129,7 +129,7 @@ To use any of the included APIs and Database facilities, you will need to obtain
 - In the Navbar choose “Cloud Dashboard”
 - Scroll down the page, In the bottom you will find your api key.
 <br/><br/><br/>
-![download](https://github.com/coder-Sabarish/Blog-Application/blob/main/readme%20images/postgres%20logo.png)
+![download](https://github.com/pillar10/Blog-Application/blob/main/readme%20images/postgres%20logo.png)
 
 - Visit your Postgres Database Dashboard (PG Admin)
 - Right click on Databases and select create Database
